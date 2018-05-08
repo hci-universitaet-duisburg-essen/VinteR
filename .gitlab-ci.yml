@@ -8,7 +8,7 @@ stages:
 before_script:
   - echo "Restoring NuGet Packages..."
   - '"./NuGet/nuget.exe" restore "VinteR/VinteR.sln"'
-  - 'call "%VSAPPIDDIR%..\Tools\vsdevcmd\ext\vcvars.bat"'
+  - 'call "%VSAPPIDDIR%\..\Tools\vsdevcmd\ext\vcvars.bat"'
 
 build:
  stage: build
