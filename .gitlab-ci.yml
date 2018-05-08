@@ -1,0 +1,13 @@
+stages:
+  - build
+
+before_script:
+  - 'nuget restore VinteR.sln'
+
+build:
+ stage: build
+ script:
+  - 'msbuild VinteR/VinteR.sln /t:Clean,ReBuild /p:Configuration=Debug;Platform="Any CPU"'
+  - 'msbuild VinteR/VinteR.sln /t:ReBuild /p:Configuration=Release;Platform="Any CPU"'
+ only:
+   - development
