@@ -2,7 +2,7 @@ stages:
   - build
 
 before_script:
-  - 'nuget restore VinteR.sln'
+  - 'nuget restore VinteR/VinteR.sln'
 
 build:
  stage: build
