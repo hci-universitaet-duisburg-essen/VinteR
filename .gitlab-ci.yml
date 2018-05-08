@@ -1,5 +1,6 @@
 variables:
   MSBUILD: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
+  VSAPPIDDIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE'
 
 stages:
   - build
