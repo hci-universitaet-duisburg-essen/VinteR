@@ -2,7 +2,8 @@ stages:
   - build
 
 before_script:
-  - 'nuget restore VinteR/VinteR.sln'
+  - echo "Restoring NuGet Packages..."
+  - '".NuGet\nuget.exe" restore "VinteR/VinteR.sln"'
 
 build:
  stage: build
