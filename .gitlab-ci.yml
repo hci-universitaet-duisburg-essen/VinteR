@@ -1,14 +1,18 @@
+variables:
+  MSBUILD: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
+
 stages:
   - build
 
 before_script:
   - echo "Restoring NuGet Packages..."
   - '"./NuGet/nuget.exe" restore "VinteR/VinteR.sln"'
+  - 'call "%VSAPPIDDIR%..\Tools\vsdevcmd\ext\vcvars.bat"'
 
 build:
  stage: build
  script:
-  - 'msbuild VinteR/VinteR.sln /t:Clean,ReBuild /p:Configuration=Debug;Platform="Any CPU"'
-  - 'msbuild VinteR/VinteR.sln /t:ReBuild /p:Configuration=Release;Platform="Any CPU"'
+  - '%MSBUILD% VinteR/VinteR.sln /t:Clean,ReBuild /p:Configuration=Debug;Platform="Any CPU"'
+  - '%MSBUILD% VinteR/VinteR.sln /t:ReBuild /p:Configuration=Release;Platform="Any CPU"'
  only:
    - development
