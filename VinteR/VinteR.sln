@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinteR", "VinteR.csproj", "{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {25E7668A-0E9E-4780-A423-50D06B75AFF3}
+	EndGlobalSection
+EndGlobal
