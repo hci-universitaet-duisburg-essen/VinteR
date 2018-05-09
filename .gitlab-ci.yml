@@ -1,17 +1,19 @@
 variables:
-  MSBUILD: '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe"'
+  MSBUILD: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
+  NUGET: 'NuGet\nuget.exe'
+  VINTER_SLN: 'VinteR\VinteR.sln'
 
 stages:
   - build
 
 before_script:
   - echo "Restoring NuGet Packages..."
-  - '"./NuGet/nuget.exe" restore "VinteR/VinteR.sln"'
+  - '& $env:NUGET restore $env:VINTER_SLN'
 
 build:
  stage: build
  script:
-  - '%MSBUILD% VinteR/VinteR.sln /t:Clean,ReBuild /p:Configuration=Debug;Platform="Any CPU"'
-  - '%MSBUILD% VinteR/VinteR.sln /t:ReBuild /p:Configuration=Release;Platform="Any CPU"'
+  - '& $env:MSBUILD $env:VINTER_SLN /t:Clean,ReBuild /p:Configuration=Debug'
+  - '& $env:MSBUILD $env:VINTER_SLN /t:ReBuild /p:Configuration=Release'
  only:
    - development
