@@ -15,5 +15,3 @@ build:
  script:
   - '& $env:MSBUILD $env:VINTER_SLN /t:Clean,ReBuild /p:Configuration=Debug'
   - '& $env:MSBUILD $env:VINTER_SLN /t:ReBuild /p:Configuration=Release'
- only:
-   - development
