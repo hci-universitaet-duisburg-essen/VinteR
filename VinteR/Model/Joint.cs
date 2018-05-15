@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,25 +20,18 @@ namespace VinteR.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// Global x coordinate of the joint in millimeter
+        /// Global position of this joint.
         /// </summary>
-        public float X { get; set; }
-
-        /// <summary>
-        /// Global y coordinate of the joint in millimeter
-        /// </summary>
-        public float Y { get; set; }
-
-        /// <summary>
-        /// Global z coordinate of the joint in millimeter
-        /// </summary>
-        public float Z { get; set; }
+        public Vector3 Position { get; set; }
 
         public Joint(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            this.Position = new Vector3(x, y, z);
+        }
+
+        public Joint(Vector3 position)
+        {
+            this.Position = position;
         }
     }
 }
