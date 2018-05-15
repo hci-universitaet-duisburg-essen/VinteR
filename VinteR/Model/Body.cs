@@ -67,6 +67,6 @@ namespace VinteR.Model
 
     public class OptiTrackBody : Body
     {
-        public BodyType Type { get; set; }
+        public BodyTypeEnum Type { get; set; }
     }
 }
