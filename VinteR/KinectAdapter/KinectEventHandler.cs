@@ -3,21 +3,32 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
 using VinteR.Model;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace VinteR.KinectAdapter
 {
+    /*
+     * This class contains all EventHandler for the Sensor Data
+     * Frame Creation is also handled here using the Model Definition before the Data Merger.
+     */
     class KinectEventHandler
     {
         List<MocapFrame> frameList = new List<MocapFrame>();
         JsonSerializer serializer = new JsonSerializer();
+        Stopwatch syncroWatch;
+        
+        public KinectEventHandler(Stopwatch syncroWatch)
+        {
+            this.syncroWatch = syncroWatch;
+        }
 
-        public void flushFrames()
+        public void flushFrames(string path)
         {
             // Implement the JSON Serialization of FrameList here! to file
             Debug.WriteLine(frameList);
             // Serialize
-            using (StreamWriter sw = new StreamWriter(@"c:\mocapjson.txt"))
+            using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 serializer.Serialize(writer, frameList);
@@ -54,12 +65,15 @@ namespace VinteR.KinectAdapter
                             jointList.Add(currentJointModel);
                         }
 
+                        // Create and append the frame
+                        Body body = new KinectBody(jointList, Body.BodyTypeEnum.Skeleton);
+                        frame.AddBody(ref body);
                     }
 
-                    // Create and append the frame
-                    Body body = new KinectBody(jointList, Body.BodyTypeEnum.Skeleton);
-                    frame.AddBody(ref body);
+                    // Attach the timestamp to the motion frame
+                    frame.timestamp = this.syncroWatch.Elapsed.ToString();
                     frameList.Add(frame);
+
                 }
             }
 

@@ -13,6 +13,10 @@ namespace VinteR.Model
     /// </summary>
     public class MocapFrame
     {
+
+        // String for Timestamp (multiple Frames represent a Time Series)
+        public string timestamp;
+
         /// <summary>
         /// Name of the input adapter that sends the frame
         /// </summary>

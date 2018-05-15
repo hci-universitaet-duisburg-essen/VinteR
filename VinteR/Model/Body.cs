@@ -44,7 +44,10 @@ namespace VinteR.Model
 
 
     /*
-     * The standard body type for the Kinect
+     * The standard body type for the Kinect (Skeleton)
+     * There is currently no explicit player tracking implemented,
+     * player assignment will be likely done by matching a single marker from optitrack
+     * to a Joint of the Skeleton i.e. Head.
      */
     public class KinectBody : Body {
 
