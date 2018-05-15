@@ -39,9 +39,4 @@ namespace VinteR.Model
     // TODO: remove these sample classes into specific input adapter implementations
 
     public class KinectBody : Body { }
-
-    public class OptiTrackBody : Body
-    {
-        public BodyType Type { get; set; }
-    }
 }
