@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinteR", "VinteR.csproj", "
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|x64.ActiveCfg = Debug|x64
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|x64.Build.0 = Debug|x64
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.ActiveCfg = Release|x64
+		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

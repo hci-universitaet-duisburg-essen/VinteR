@@ -310,3 +310,4 @@ __pycache__/
 
 !lib/x64
 !lib/x86
+builds/
