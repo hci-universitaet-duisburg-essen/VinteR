@@ -44,6 +44,4 @@ namespace VinteR.Model
     {
         public BodyType Type { get; set; }
     }
-
-    public class LeapMotionBody : Body { }
 }
