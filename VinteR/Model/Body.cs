@@ -14,14 +14,18 @@ namespace VinteR.Model
     /// a rotation based on the global coordinate system.
     /// </summary>
     public class Body
-    {
-        public enum BodyType
+    {   
+        // This just defines a BodyType Enum we need a separate of type BodyType to hold the information
+        public enum BodyTypeEnum
         {
             Marker,
             MarkerSet,
             RigidBody,
             Skeleton
         }
+
+        // The Body Type of the Body object
+        public BodyTypeEnum BodyType { get; set; }
 
         /// <summary>
         /// Collection of joints that may be connected or are
@@ -38,7 +42,25 @@ namespace VinteR.Model
 
     // TODO: remove these sample classes into specific input adapter implementations
 
-    public class KinectBody : Body { }
+
+    /*
+     * The standard body type for the Kinect
+     */
+    public class KinectBody : Body {
+
+        // Rotation, the Skeleton of a Kinect has no orientation information, it is always oriented towards the Kinect i.e. fixed
+
+        // The Kinect has also a video frame and a depth frame with pixels, this is ignored here
+        // and extension can be provided to the KinectBody once this information is required.
+
+        public KinectBody(List<Joint> list, BodyTypeEnum type)
+        {
+            this.Joints = list;
+            this.BodyType = type;
+        }
+
+
+    }
 
     public class OptiTrackBody : Body
     {
