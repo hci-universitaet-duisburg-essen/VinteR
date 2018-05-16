@@ -40,16 +40,14 @@ namespace VinteR.Model
         public Quaternion Rotation { get; set; }
     }
 
-    // TODO: remove these sample classes into specific input adapter implementations
-
-
     /*
      * The standard body type for the Kinect (Skeleton)
      * There is currently no explicit player tracking implemented,
      * player assignment will be likely done by matching a single marker from optitrack
      * to a Joint of the Skeleton i.e. Head.
      */
-    public class KinectBody : Body {
+    public class KinectBody : Body 
+    {
 
         // Rotation, the Skeleton of a Kinect has no orientation information, it is always oriented towards the Kinect i.e. fixed
 
@@ -61,12 +59,5 @@ namespace VinteR.Model
             this.Joints = list;
             this.BodyType = type;
         }
-
-
-    }
-
-    public class OptiTrackBody : Body
-    {
-        public BodyTypeEnum Type { get; set; }
     }
 }

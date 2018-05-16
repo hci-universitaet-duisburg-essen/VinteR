@@ -66,6 +66,14 @@
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\MocapFrame.cs" />
+    <Compile Include="Model\OptiTrack\OptiTrackBody.cs" />
+    <Compile Include="Model\OptiTrack\RigidBody.cs" />
+    <Compile Include="Model\OptiTrack\Skeleton.cs" />
+    <Compile Include="Model\SideType.cs" />
+    <Compile Include="Model\LeapMotion\LeapMotionBody.cs" />
+    <Compile Include="Model\LeapMotion\Hand.cs" />
+    <Compile Include="Model\LeapMotion\Finger.cs" />
+    <Compile Include="Model\LeapMotion\FingerBone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

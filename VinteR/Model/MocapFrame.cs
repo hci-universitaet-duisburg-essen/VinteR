@@ -29,6 +29,12 @@ namespace VinteR.Model
         /// </summary>
         public string Gesture { get; set; }
 
+        /// <summary>
+        /// Contains the time when all tracking data is processed and
+        /// ready to be streamed.
+        /// </summary>
+        public float Latency { get; set; }
+
         private IList<Body> _bodies;
 
         /// <summary>
