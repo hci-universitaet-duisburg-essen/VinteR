@@ -18,12 +18,12 @@
         /// <summary>
         /// Type of the body, MarkerSet by default.
         /// </summary>
-        public BodyType Type { get; protected set; }
+        public BodyTypeEnum Type { get; protected set; }
 
         public OptiTrackBody(string id)
         {
             this.OptiTrackId = id;
-            this.Type = BodyType.MarkerSet;
+            this.Type = BodyTypeEnum.MarkerSet;
         }
     }
 }

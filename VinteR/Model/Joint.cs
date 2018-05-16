@@ -19,6 +19,14 @@ namespace VinteR.Model
         /// </summary>
         public string Name { get; set; }
 
+        /*
+         * Allows to get information the validity of the Joint
+         * The joint can be untracked (no acurate information available)
+         * or tracked and there are valid information avaialble or
+         * kust inferred (approximated by the position of other Joints)
+         */
+        public string State { get; set; }
+
         /// <summary>
         /// Global position of this joint.
         /// </summary>
