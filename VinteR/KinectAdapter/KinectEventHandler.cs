@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Kinect;
 using VinteR.Model;
 using Newtonsoft.Json;
+using VinteR.Model.Kinect;
 
 namespace VinteR.KinectAdapter
 {
