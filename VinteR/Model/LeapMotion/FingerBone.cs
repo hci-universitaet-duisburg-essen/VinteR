@@ -21,17 +21,17 @@ namespace VinteR.Model.LeapMotion
         public Vector3 LocalEndPosition { get; set; }
 
         /// <summary>
-        /// Type of the bone. <see cref="FingerBoneType"/>
+        /// Type of the bone. <see cref="EFingerBoneType"/>
         /// </summary>
-        public FingerBoneType  Type { get; }
+        public EFingerBoneType  Type { get; }
 
-        public FingerBone(FingerBoneType type)
+        public FingerBone(EFingerBoneType type)
         {
             this.Type = type;
         }
     }
 
-    public enum FingerBoneType
+    public enum EFingerBoneType
     {
         Metacarpal,
         Proximal,

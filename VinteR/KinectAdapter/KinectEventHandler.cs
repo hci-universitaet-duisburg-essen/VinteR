@@ -66,7 +66,7 @@ namespace VinteR.KinectAdapter
                         }
 
                         // Create and append the frame
-                        Body body = new KinectBody(jointList, Body.BodyTypeEnum.Skeleton);
+                        Body body = new KinectBody(jointList, Body.EBodyType.Skeleton);
                         frame.AddBody(ref body);
                     }
 

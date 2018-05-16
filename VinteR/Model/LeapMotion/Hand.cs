@@ -3,12 +3,18 @@ using System.Numerics;
 
 namespace VinteR.Model.LeapMotion
 {
+    /// <inheritdoc />
     /// <summary>
     /// A leap motion hand reprsents one hand that was detected
     /// by a Leap Motion device.
     /// </summary>
-    public class Hand
+    public class Hand : Body
     {
+        public Hand()
+        {
+            this.BodyType = EBodyType.Hand;
+        }
+
         /// <summary>
         /// Rotation of the object in relation to the coordinate
         /// system of the Leap Motion
@@ -29,6 +35,6 @@ namespace VinteR.Model.LeapMotion
         /// <summary>
         /// Left or right hand.
         /// </summary>
-        public SideType Side { get; set; }
+        public ESideType Side { get; set; }
     }
 }

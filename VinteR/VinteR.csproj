@@ -70,8 +70,7 @@
     <Compile Include="Model\OptiTrack\OptiTrackBody.cs" />
     <Compile Include="Model\OptiTrack\RigidBody.cs" />
     <Compile Include="Model\OptiTrack\Skeleton.cs" />
-    <Compile Include="Model\SideType.cs" />
-    <Compile Include="Model\LeapMotion\LeapMotionBody.cs" />
+    <Compile Include="Model\ESideType.cs" />
     <Compile Include="Model\LeapMotion\Hand.cs" />
     <Compile Include="Model\LeapMotion\Finger.cs" />
     <Compile Include="Model\LeapMotion\FingerBone.cs" />

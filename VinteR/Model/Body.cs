@@ -16,16 +16,17 @@ namespace VinteR.Model
     public class Body
     {   
         // This just defines a BodyType Enum we need a separate of type BodyType to hold the information
-        public enum BodyTypeEnum
+        public enum EBodyType
         {
             Marker,
             MarkerSet,
             RigidBody,
-            Skeleton
+            Skeleton,
+            Hand
         }
 
         // The Body Type of the Body object
-        public BodyTypeEnum BodyType { get; set; }
+        public EBodyType BodyType { get; set; }
 
         /// <summary>
         /// Collection of joints that may be connected or are

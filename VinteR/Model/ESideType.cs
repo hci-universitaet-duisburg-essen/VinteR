@@ -1,6 +1,6 @@
 ﻿namespace VinteR.Model
 {
-    public enum SideType
+    public enum ESideType
     {
         Left,
         Right

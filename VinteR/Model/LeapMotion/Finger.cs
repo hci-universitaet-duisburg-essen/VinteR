@@ -11,20 +11,20 @@ namespace VinteR.Model.LeapMotion
         /// <summary>
         /// Type of the finger, for example Thumb.
         /// </summary>
-        public FingerType Type { get; }
+        public EFingerType Type { get; }
 
         /// <summary>
         /// All recognized bones by the leap motion
         /// </summary>
         public IList<FingerBone> Bones { get; set; }
 
-        public Finger(FingerType type)
+        public Finger(EFingerType type)
         {
             this.Type = type;
         }
     }
 
-    public enum FingerType
+    public enum EFingerType
     {
         Thumb,
         Index,

@@ -17,7 +17,7 @@ namespace VinteR.Model.Kinect
         // The Kinect has also a video frame and a depth frame with pixels, this is ignored here
         // and extension can be provided to the KinectBody once this information is required.
 
-        public KinectBody(IList<Joint> list, BodyTypeEnum type)
+        public KinectBody(IList<Joint> list, EBodyType type)
         {
             this.Joints = list;
             this.BodyType = type;
