@@ -12,9 +12,12 @@ namespace VinteR
     internal class Program
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static bool keepRunning = true;
 
         public static void Main(string[] args)
         {
+           
+
             // Create a common watch as a synchronization mechanism - hope it is threadsafe :D
             Stopwatch syncrowatch = new Stopwatch();
             syncrowatch.Start();
@@ -23,6 +26,23 @@ namespace VinteR
             VinteR.KinectAdapter.KinectAdapter kinectAdapter = new KinectAdapter.KinectAdapter(syncrowatch);
 
             Logger.Info("VinteR server started");
+
+            // Event for stopping the program
+            Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e) {
+                e.Cancel = true;
+                kinectAdapter.flushData("C:\\Users\\hci-one\\Documents\\Kinect\\Test\\frames.json");
+                Program.keepRunning = false;
+            };
+
+            while (Program.keepRunning)
+            {
+                // Run the Server till we press Cancel
+                
+            }
+            Logger.Info("Exited gracefully");
+        
         }
+
     }
+    
 }

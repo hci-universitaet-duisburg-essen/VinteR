@@ -27,11 +27,13 @@ namespace VinteR.KinectAdapter
         {
             // Implement the JSON Serialization of FrameList here! to file
             Debug.WriteLine(frameList);
-            // Serialize
+            // Since the FrameList changes permanent - freeze for serialize
+            List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
+            // Serialize 
             using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
-                serializer.Serialize(writer, frameList);
+                serializer.Serialize(writer, serializeList);
             }
 
         }
@@ -72,6 +74,7 @@ namespace VinteR.KinectAdapter
 
                     // Attach the timestamp to the motion frame
                     frame.timestamp = this.syncroWatch.Elapsed.ToString();
+                    Debug.WriteLine(frame.ToString());
                     frameList.Add(frame);
 
                 }
