@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
 using VinteR.Model;
-using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace VinteR.KinectAdapter

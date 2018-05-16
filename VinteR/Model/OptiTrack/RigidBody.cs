@@ -21,7 +21,7 @@ namespace VinteR.Model.OptiTrack
 
         public RigidBody(string id) : base(id)
         {
-            this.Type = BodyType.RigidBody;
+            this.Type = BodyTypeEnum.RigidBody;
         }
     }
 }
