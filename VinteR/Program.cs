@@ -21,6 +21,7 @@ namespace VinteR
             //TBD
             // Create adapter and give the watch (No loose coupling here, needs to change in future) till we have a mechanism and interface defined
             VinteR.KinectAdapter.KinectAdapter kinectAdapter = new KinectAdapter.KinectAdapter(syncrowatch);
+            VinteR.LeapMotionAdapter.LeapMotionAdapter leapMotionAdapter = new LeapMotionAdapter.LeapMotionAdapter(syncrowatch);
 
             Logger.Info("VinteR server started");
         }
