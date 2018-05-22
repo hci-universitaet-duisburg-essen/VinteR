@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Kinect;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.Kinect;
 
-namespace VinteR.KinectAdapter
+namespace VinteR.Adapter.Kinect
 {
-    class KinectAdapter
+    class KinectAdapter : IInputAdapter
     {
+        public event MocapFrameAvailableEventHandler FrameAvailable;
+
         private KinectSensor sensor;
         private KinectEventHandler kinectHandler;
         private Stopwatch syncroWatch;
@@ -73,7 +71,5 @@ namespace VinteR.KinectAdapter
             // Write all Frames to the given JSON File
             this.kinectHandler.flushFrames(path);
         }
-
-
-}
+    }
 }

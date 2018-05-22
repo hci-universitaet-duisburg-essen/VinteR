@@ -61,8 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KinectAdapter\KinectAdapter.cs" />
-    <Compile Include="KinectAdapter\KinectEventHandler.cs" />
+    <Compile Include="Adapter\IInputAdapter.cs" />
+    <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
+    <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
