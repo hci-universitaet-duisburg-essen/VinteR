@@ -28,7 +28,7 @@ namespace VinteR
             // Event for stopping the program
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e) {
                 e.Cancel = true;
-                kinectAdapter.flushData("C:\\Users\\hci-one\\Documents\\Kinect\\Test\\frames.json");
+                kinectAdapter.flushMocapData("C:\\Users\\hci-one\\Documents\\Kinect\\Test\\frames.json");
                 Program.keepRunning = false;
             };
 
