@@ -1,0 +1,71 @@
+﻿{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "adapter": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Tell the application if the adapter is available or not"
+                },
+                "canHandleGlobalCoordinateSystem": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "true if the adapter is able to handle position of other adapters inside the global coordinate system"
+                } 
+            }
+        },
+        "kinect": {
+            "allOf": [
+                { "$ref": "#/definitions/adapter" }
+            ]
+        },
+        "leapmotion": {
+            "allOf": [
+                { "$ref": "#/definitions/adapter" }
+            ]
+        },
+        "optitrack": {
+            "allOf": [
+                { "$ref": "#/definitions/adapter" },
+                {
+                    "properties": {
+                        "server.ip": {
+                            "type": "string",
+                            "default": "127.0.0.1",
+                            "description": "Server ip address to connect to optitrack"
+                        },
+                        "client.ip": {
+                            "type": "string",
+                            "default": "127.0.0.1",
+                            "description": "Client ip that this client uses to communicate with optitrack"
+                        },
+                        "connection.type": {
+                            "type": "string",
+                            "default": "unicast",
+                            "enum": ["multicast", "unicast"]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+
+    "type": "object",
+
+    "properties": {
+        "home.dir": {
+            "type": "string",
+            "description": "Base directory where files etc. are stored"
+        },
+        "adapters": {
+            "type": "object",
+            "properties": {
+                "kinect": { "$ref": "#/definitions/kinect" },
+                "leapmotion": { "$ref": "#/definitions/leapmotion" },
+                "optitrack": { "$ref": "#/definitions/optitrack" }
+            }
+        }
+    }
+}
