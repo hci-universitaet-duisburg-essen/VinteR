@@ -41,6 +41,7 @@ namespace VinteR.Configuration
     public class OptiTrack : Adapter
     {
         [JsonProperty("server.ip")] public string ServerIp { get; set; }
+
         [JsonProperty("client.ip")] public string ClientIp { get; set; }
 
         [JsonProperty("connection.type")] public string ConnectionType { get; set; }
