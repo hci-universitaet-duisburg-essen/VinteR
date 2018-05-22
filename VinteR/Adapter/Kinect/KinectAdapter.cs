@@ -7,9 +7,18 @@ namespace VinteR.Adapter.Kinect
 {
     class KinectAdapter : IInputAdapter
     {
+        // MocapFrame Event Handling
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
-        private KinectSensor sensor;
+        // ColorFrame Event Handling
+        public delegate void KinectColorEventHandler(KinectAdapter adapter, byte[] colorPixels);
+        public event KinectColorEventHandler ColorFramAvailable;
+
+        // DepthFrame Event Handling
+        public delegate void KinectDepthEventHandler(KinectAdapter adapter, DepthImagePixel[] depthImage);
+        public event KinectDepthEventHandler DepthFramAvailable;
+
+        public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
         private Stopwatch syncroWatch;
 
@@ -41,9 +50,11 @@ namespace VinteR.Adapter.Kinect
 
                 // Update the SensorData - register EventHandler
                 this.sensor.SkeletonFrameReady += this.kinectHandler.SensorSkeletonFrameReady;
+                this.sensor.DepthFrameReady += this.kinectHandler.SensorDepthFrameReady;
+                this.sensor.ColorFrameReady += this.kinectHandler.SensorColorFrameReady;
 
                 // Further EventListener can be appended here, currently no support for depth frame etc. intended.
-                
+
                 // Start the sensor!
                 try
                 {
@@ -66,10 +77,22 @@ namespace VinteR.Adapter.Kinect
        /*
        * Write all Data out using the File Based Writers
        */
-        public void flushData(string path)
+        public void flushMocapData(string path)
         {
             // Write all Frames to the given JSON File
             this.kinectHandler.flushFrames(path);
+        }
+
+        public void flushDepthData(string path)
+        {
+            // Write all Depth information to the given JSON File
+            this.kinectHandler.flushDepth(path);
+        }
+
+        public void flushColorData(string path)
+        {
+            // Write all Color bytes to the given JSON File
+            this.kinectHandler.flushColor(path);
         }
 
         public virtual void OnFrameAvailable(Model.MocapFrame frame)
@@ -77,6 +100,22 @@ namespace VinteR.Adapter.Kinect
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
                 FrameAvailable(this, frame);
+            }
+        }
+
+        public virtual void OnDepthFrameAvailable(DepthImagePixel[] depthImage)
+        {
+            if (DepthFramAvailable != null) // Check if there are subscribers to the event
+            {
+                DepthFramAvailable(this, depthImage);
+            }
+        }
+
+        public virtual void OnColorFrameAvailable(byte[] colorPixels)
+        {
+            if (DepthFramAvailable != null) // Check if there are subscribers to the event
+            {
+                ColorFramAvailable(this, colorPixels);
             }
         }
     }
