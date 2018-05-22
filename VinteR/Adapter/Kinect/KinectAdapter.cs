@@ -19,7 +19,7 @@ namespace VinteR.Adapter.Kinect
             // Create the Kinect Handler
 
             this.syncroWatch = synchroWatch;
-            this.kinectHandler = new KinectEventHandler(this.syncroWatch);
+            this.kinectHandler = new KinectEventHandler(this.syncroWatch, this);
 
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
@@ -70,6 +70,14 @@ namespace VinteR.Adapter.Kinect
         {
             // Write all Frames to the given JSON File
             this.kinectHandler.flushFrames(path);
+        }
+
+        public virtual void OnFrameAvailable(Model.MocapFrame frame)
+        {
+            if (FrameAvailable != null) // Check if there are subscribers to the event
+            {
+                FrameAvailable(this, frame);
+            }
         }
     }
 }
