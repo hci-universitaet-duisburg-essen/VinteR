@@ -86,6 +86,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="vinter.settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="vinter.settings.schema.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="KinectManagement">
@@ -98,5 +104,13 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties vinter_1settings_1json__JSONSchema="vinter.settings.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
