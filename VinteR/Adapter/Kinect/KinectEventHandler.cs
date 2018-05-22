@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
-using VinteR.Model;
 using Newtonsoft.Json;
+using VinteR.Model;
 using VinteR.Model.Kinect;
 
-namespace VinteR.KinectAdapter
+namespace VinteR.Adapter.Kinect
 {
     /*
      * This class contains all EventHandler for the Sensor Data
