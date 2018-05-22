@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Kinect;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.Kinect;
 
-namespace VinteR.KinectAdapter
+namespace VinteR.Adapter.Kinect
 {
-    class KinectAdapter
+    class KinectAdapter : IInputAdapter
     {
+        public event MocapFrameAvailableEventHandler FrameAvailable;
+
         private KinectSensor sensor;
         private KinectEventHandler kinectHandler;
         private Stopwatch syncroWatch;
@@ -21,7 +19,7 @@ namespace VinteR.KinectAdapter
             // Create the Kinect Handler
 
             this.syncroWatch = synchroWatch;
-            this.kinectHandler = new KinectEventHandler(this.syncroWatch);
+            this.kinectHandler = new KinectEventHandler(this.syncroWatch, this);
 
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
@@ -74,6 +72,12 @@ namespace VinteR.KinectAdapter
             this.kinectHandler.flushFrames(path);
         }
 
-
-}
+        public virtual void OnFrameAvailable(Model.MocapFrame frame)
+        {
+            if (FrameAvailable != null) // Check if there are subscribers to the event
+            {
+                FrameAvailable(this, frame);
+            }
+        }
+    }
 }
