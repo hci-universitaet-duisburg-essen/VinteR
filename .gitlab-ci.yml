@@ -1,7 +1,7 @@
 variables:
-  EXE_RELEASE_FOLDER: 'VinteR\bin\Release'
-  MSI_RELEASE_FOLDER: 'Setup\bin\Release'
-  TEST_FOLDER: 'Tests\bin\Release'
+  EXE_RELEASE_FOLDER: 'VinteR\bin\x64\Release'
+  MSI_RELEASE_FOLDER: 'Setup\bin\x64\Release'
+  TEST_FOLDER: 'VinteR.Tests\bin\x64\Release'
   DEPLOY_FOLDER: 'C:\Projects\VinteR\Builds'
 
   MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
