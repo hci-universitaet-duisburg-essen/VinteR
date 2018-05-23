@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -11,7 +10,6 @@ namespace VinteR.Configuration
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private const string ConfigFileName = "vinter.config.json";
-        private const string LocalConfigFileName = "vinter.config.local.json";
         private const string SchemaFileName = "vinter.config.schema.json";
 
         private JSchema _schema;
@@ -31,11 +29,7 @@ namespace VinteR.Configuration
         {
             LoadSchema();
             var config = ReadJson(ConfigFileName);
-            var localConfig = ReadJson(LocalConfigFileName, true);
-
-            // overwrites config values with localConfig values
-            config.Merge(localConfig, new JsonMergeSettings() {MergeArrayHandling = MergeArrayHandling.Union});
-
+            
             if (config.IsValid(_schema))
             {
                 // load the config object from 
@@ -55,23 +49,14 @@ namespace VinteR.Configuration
             this._schema = JSchema.Load(json.CreateReader());
         }
 
-        private static JObject ReadJson(string file, bool quiet = false)
+        private static JObject ReadJson(string file)
         {
-            var obj = new JObject();
-            try
+            JObject obj;
+            using (var reader = new StreamReader(file))
             {
-                using (var reader = new StreamReader(file))
-                {
-                    obj = JObject.Load(new JsonTextReader(reader));
-                    Logger.Info("Loaded config {0}", file);
-                }
+                obj = JObject.Load(new JsonTextReader(reader));
+                Logger.Info("Loaded config {0}", file);
             }
-            catch (Exception)
-            {
-                if (!quiet)
-                    throw;
-            }
-
             return obj;
         }
     }

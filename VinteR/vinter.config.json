@@ -1,5 +1,5 @@
 ﻿{
-    "home.dir": "~/VinteRData",
+    "home.dir": "C:\\VinteRData",
     "adapters": {
         "kinect": {
             "enabled": true
