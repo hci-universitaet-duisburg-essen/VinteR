@@ -107,7 +107,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="vinter.config.local.json" />
     <None Include="vinter.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
