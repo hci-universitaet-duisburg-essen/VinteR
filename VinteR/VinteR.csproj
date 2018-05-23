@@ -67,8 +67,8 @@
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
-    <Compile Include="LeapMotionAdapter\LeapMotionAdapter.cs" />
-    <Compile Include="LeapMotionAdapter\LeapMotionEventHandler.cs" />
+    <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
+    <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
