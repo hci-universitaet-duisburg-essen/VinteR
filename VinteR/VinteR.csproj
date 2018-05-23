@@ -108,7 +108,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="vinter.config.local.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="vinter.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
