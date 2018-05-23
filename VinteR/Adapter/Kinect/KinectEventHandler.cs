@@ -2,11 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
-using VinteR.Model;
 using Newtonsoft.Json;
+using VinteR.Model;
 using VinteR.Model.Kinect;
 
-namespace VinteR.KinectAdapter
+
+namespace VinteR.Adapter.Kinect
 {
     /*
      * This class contains all EventHandler for the Sensor Data
@@ -17,21 +18,25 @@ namespace VinteR.KinectAdapter
         List<MocapFrame> frameList = new List<MocapFrame>();
         JsonSerializer serializer = new JsonSerializer();
         Stopwatch syncroWatch;
+        KinectAdapter adapter;
         
-        public KinectEventHandler(Stopwatch syncroWatch)
+        public KinectEventHandler(Stopwatch syncroWatch, KinectAdapter adapter)
         {
             this.syncroWatch = syncroWatch;
+            this.adapter = adapter;
         }
 
         public void flushFrames(string path)
         {
             // Implement the JSON Serialization of FrameList here! to file
             Debug.WriteLine(frameList);
-            // Serialize
+            // Since the FrameList changes permanent - freeze for serialize
+            List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
+            // Serialize 
             using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
-                serializer.Serialize(writer, frameList);
+                serializer.Serialize(writer, serializeList);
             }
 
         }
@@ -72,8 +77,9 @@ namespace VinteR.KinectAdapter
 
                     // Attach the timestamp to the motion frame
                     frame.timestamp = this.syncroWatch.Elapsed.ToString();
+                    Debug.WriteLine(frame.ToString());
                     frameList.Add(frame);
-
+                    adapter.OnFrameAvailable(frame); // publish MocapFrame
                 }
             }
 

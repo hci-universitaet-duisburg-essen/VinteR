@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VinteR.KinectAdapter;
 using System.Diagnostics;
 using Microsoft.Kinect;
 
@@ -12,6 +11,7 @@ namespace VinteR
     internal class Program
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static bool keepRunning = true;
 
         public static void Main(string[] args)
         {
@@ -20,10 +20,26 @@ namespace VinteR
             syncrowatch.Start();
             //TBD
             // Create adapter and give the watch (No loose coupling here, needs to change in future) till we have a mechanism and interface defined
-            VinteR.KinectAdapter.KinectAdapter kinectAdapter = new KinectAdapter.KinectAdapter(syncrowatch);
+            Adapter.Kinect.KinectAdapter kinectAdapter = new Adapter.Kinect.KinectAdapter(syncrowatch);
             VinteR.LeapMotionAdapter.LeapMotionAdapter leapMotionAdapter = new LeapMotionAdapter.LeapMotionAdapter(syncrowatch);
+            kinectAdapter.FrameAvailable += (adapter, frame) => Logger.Info("{Frame #{0} available from {1}", frame.timestamp, adapter.GetType().Name);
 
             Logger.Info("VinteR server started");
+
+            // Event for stopping the program
+            Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e) {
+                e.Cancel = true;
+                kinectAdapter.flushData("C:\\Users\\hci-one\\Documents\\Kinect\\Test\\frames.json");
+                Program.keepRunning = false;
+            };
+
+            while (Program.keepRunning)
+            {
+                // Run the Server till we press Cancel
+                
+            }
+            Logger.Info("Exited gracefully");
+        
         }
     }
 }

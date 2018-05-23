@@ -64,8 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KinectAdapter\KinectAdapter.cs" />
-    <Compile Include="KinectAdapter\KinectEventHandler.cs" />
+    <Compile Include="Adapter\IInputAdapter.cs" />
+    <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
+    <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="LeapMotionAdapter\LeapMotionAdapter.cs" />
     <Compile Include="LeapMotionAdapter\LeapMotionEventHandler.cs" />
     <Compile Include="Model\Body.cs" />
