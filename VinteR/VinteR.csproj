@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LeapCSharp.NET4.5">
+      <HintPath>..\lib\x64\LeapCSharp.NET4.5.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="NatNetML">
       <HintPath>..\lib\x64\NatNetML.dll</HintPath>
@@ -64,6 +67,8 @@
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
+    <Compile Include="LeapMotionAdapter\LeapMotionAdapter.cs" />
+    <Compile Include="LeapMotionAdapter\LeapMotionEventHandler.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
@@ -99,5 +104,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
