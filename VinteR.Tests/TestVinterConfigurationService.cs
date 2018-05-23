@@ -11,7 +11,9 @@ namespace VinteR.Tests
         {
             var configurationService = new VinterConfigurationService();
             var configuration = configurationService.GetConfiguration();
+
             Assert.IsNotNull(configuration);
+            Assert.AreEqual("C:\\VinteRData", configuration.HomeDir);
         }
     }
 }
