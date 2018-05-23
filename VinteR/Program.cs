@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.Kinect;
+using Ninject;
+using Ninject.Planning.Bindings;
+using VinteR.Configuration;
 
 namespace VinteR
 {
@@ -15,6 +18,9 @@ namespace VinteR
 
         public static void Main(string[] args)
         {
+            // create and load dependency injection kernel
+            var kernel = new StandardKernel(new VinterNinjectModule());
+
             // Create a common watch as a synchronization mechanism - hope it is threadsafe :D
             Stopwatch syncrowatch = new Stopwatch();
             syncrowatch.Start();

@@ -1,17 +1,41 @@
 variables:
-  MSBUILD: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
-  NUGET: 'NuGet\nuget.exe'
-  VINTER_SLN: 'VinteR\VinteR.sln'
+  EXE_RELEASE_FOLDER: 'VinteR\bin\x64\Release'
+  MSI_RELEASE_FOLDER: 'Setup\bin\x64\Release'
+  TEST_FOLDER: 'VinteR.Tests\bin\x64\Release'
+  DEPLOY_FOLDER: 'C:\Projects\VinteR\Builds'
+
+  MSBUILD_PATH: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
+  NUGET_PATH: 'NuGet\nuget.exe'
+  NUNIT_PATH: 'VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe'
+  VINTER_SLN_PATH: 'VinteR\VinteR.sln'
 
 stages:
   - build
+  - test
 
 before_script:
   - echo "Restoring NuGet Packages..."
-  - '& $env:NUGET restore $env:VINTER_SLN'
+  - '& $env:NUGET_PATH restore $env:VINTER_SLN_PATH'
 
 build:
- stage: build
- script:
-  - '& $env:MSBUILD $env:VINTER_SLN /t:Clean,ReBuild /p:Configuration=Debug'
-  - '& $env:MSBUILD $env:VINTER_SLN /t:ReBuild /p:Configuration=Release'
+  stage: build
+  script:
+    - echo "Building debug and release..."
+    - '& $env:MSBUILD_PATH $env:VINTER_SLN_PATH /t:Clean,ReBuild /p:Configuration=Debug'
+    - '& $env:MSBUILD_PATH $env:VINTER_SLN_PATH /t:ReBuild /p:Configuration=Release'
+  artifacts:
+    expire_in: 1 week # save gitlab server space, we copy the files we need to deploy folder later on
+    paths:
+      - '$env:EXE_RELEASE_FOLDER\VinteR.exe' # saving exe to copy to deploy folder
+      - '$env:MSI_RELEASE_FOLDER\VinteR Setup.msi' # saving msi to copy to deploy folder
+      - '$env:TEST_FOLDER\' # saving entire Test project so NUnit can run tests
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - 'xcopy VinteR\vinter.config.json .'
+    - 'xcopy VinteR\vinter.config.schema.json .'
+    - '& $env:NUNIT_PATH $env:TEST_FOLDER\VinteR.Tests.dll'
+  dependencies:
+    - build

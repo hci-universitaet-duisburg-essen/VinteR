@@ -43,6 +43,12 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.Schema.3.0.10\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>packages\NLog.4.5.4\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -69,6 +75,9 @@
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\IConfigurationService.cs" />
+    <Compile Include="Configuration\VinterConfigurationService.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
@@ -82,6 +91,7 @@
     <Compile Include="Model\LeapMotion\FingerBone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VinterNinjectModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -92,6 +102,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="vinter.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="vinter.config.schema.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="KinectManagement">
@@ -109,4 +125,9 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties vinter_1settings_1json__JSONSchema="vinter.settings.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
