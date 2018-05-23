@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinteR", "VinteR.csproj", "{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinteR.Tests", "..\VinteR.Tests\VinteR.Tests.csproj", "{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +17,10 @@ Global
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|x64.Build.0 = Debug|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.ActiveCfg = Release|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.Build.0 = Release|x64
+		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Debug|x64.ActiveCfg = Debug|x64
+		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Debug|x64.Build.0 = Debug|x64
+		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Release|x64.ActiveCfg = Release|x64
+		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
