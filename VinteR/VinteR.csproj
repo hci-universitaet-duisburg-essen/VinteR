@@ -70,19 +70,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
-=======
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="Configuration\VinterConfigurationService.cs" />
-    <Compile Include="KinectAdapter\KinectAdapter.cs" />
-    <Compile Include="KinectAdapter\KinectEventHandler.cs" />
->>>>>>> Added loading of configuration and retrieval of service via di
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
