@@ -70,7 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
@@ -79,13 +78,6 @@
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="Configuration\VinterConfigurationService.cs" />
-=======
-    <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Configuration\IConfigurationService.cs" />
-    <Compile Include="Configuration\VinterConfigurationService.cs" />
-    <Compile Include="KinectAdapter\KinectAdapter.cs" />
-    <Compile Include="KinectAdapter\KinectEventHandler.cs" />
->>>>>>> 34779d61c7fea93d68d3c43c42859a718e27eac3
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Joint.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
@@ -130,7 +122,6 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-<<<<<<< HEAD
   <PropertyGroup>
     <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
@@ -139,7 +130,4 @@
       <UserProperties vinter_1settings_1json__JSONSchema="vinter.settings.schema.json" />
     </VisualStudio>
   </ProjectExtensions>
-=======
-  <ProjectExtensions />
->>>>>>> 34779d61c7fea93d68d3c43c42859a718e27eac3
 </Project>
