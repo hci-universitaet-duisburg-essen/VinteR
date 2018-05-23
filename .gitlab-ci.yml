@@ -27,4 +27,4 @@ test:
     - 'xcopy VinteR\vinter.config.json .'
     - 'xcopy VinteR\vinter.config.schema.json .'
     - 'xcopy VinteR\vinter.config.local.json .'
-    - '& $env:NUNIT_PATH $env:TEST_FOLDER\VinteR.Tests.dll"'
+    - '& $env:NUNIT_PATH $env:TEST_FOLDER\VinteR.Tests.dll'
