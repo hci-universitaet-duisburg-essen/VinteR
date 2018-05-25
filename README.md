@@ -21,12 +21,16 @@ Registration requires a token to authorize the Runner to send results back to Gi
 
 If the Runner is successfully installed and registered, the configuration file `config.toml` must be added to the gitlab runner exe. If necessary, this is already available. For the Runner to run from the Powershell, the file must be modified:
 
-> executor = "shell"
-> shell = "powershell"
+```ini
+executor = "shell"
+shell = "powershell"
+```
 
 To execute the runner locally execute the following command in a powershell instance.
 
-> "C:\GitLab-Runner\gitlab-runner.exe" exec shell build --shell=powershell
+```console
+"C:\GitLab-Runner\gitlab-runner.exe" exec shell build --shell=powershell
+```
 
 This command must be executed inside the folder that contains the solution (`VinteR.sln`).
 
@@ -34,6 +38,11 @@ This command must be executed inside the folder that contains the solution (`Vin
 
 Unit and integration tests can be written with the use of [NUnit](https://github.com/nunit/docs/wiki/). Write your tests inside the `VinteR.Tests` project. All test classes must be annotated with the `[TestFixture]` attribute. Test methods must also be annotated with the `[Test]` attribute. All tests are executed on the continuous integration system. If you want to execute your tests on your local machine open a terminal window and navigate to the `TheApplication` folder. To run all tests you have to make a copy of the `vinter.config.json` and `vinter.config.schema.json` otherwise the `TestVinterConfigurationService` failes.
 
-> xcopy VinteR\config.config.json .
-> xcopy VinteR\config.config.schema.json .
-> VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Release\VinteR.Tests.dll
+```console
+# copy configuration
+xcopy VinteR\config.config.json .
+xcopy VinteR\config.config.schema.json .
+
+# run the tests
+VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Release\VinteR.Tests.dll
+```
