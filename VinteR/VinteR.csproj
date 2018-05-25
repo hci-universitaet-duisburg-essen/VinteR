@@ -91,6 +91,8 @@
     <Compile Include="Model\LeapMotion\FingerBone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transform\ITransformator.cs" />
+    <Compile Include="Transform\Transformator.cs" />
     <Compile Include="VinterNinjectModule.cs" />
   </ItemGroup>
   <ItemGroup>

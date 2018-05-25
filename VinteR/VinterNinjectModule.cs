@@ -1,5 +1,6 @@
 ﻿using Ninject.Modules;
 using VinteR.Configuration;
+using VinteR.Transform;
 
 namespace VinteR
 {
@@ -9,6 +10,7 @@ namespace VinteR
         public override void Load()
         {
             Bind<IConfigurationService>().To<VinterConfigurationService>();
+            Bind<ITransformator>().To<Transformator>();
         }
     }
 }
