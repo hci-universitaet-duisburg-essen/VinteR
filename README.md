@@ -14,8 +14,8 @@ The leap motion requires 4.5.x! 4.6 and higher might work but are not tested. Fo
 
 On the GitLab is a [.NET project](https://git.uni-due.de/VinteR/TheApplication) created which has CI configurations. Unfortunately, CI jobs cannot run on the GitLab because an installed Visual Studio 2017 Enterprise is required. Currently, the jobs are running on different developer machines. A GitLab runner has been installed and registered for this purpose. This was done according to the following instructions:
 
-1.[Installation](https://docs.gitlab.com/runner/install/windows.html)
-2.[Registration](https://docs.gitlab.com/runner/register/index.html#windows)
+1. [Installation](https://docs.gitlab.com/runner/install/windows.html)
+2. [Registration](https://docs.gitlab.com/runner/register/index.html#windows)
 
 Registration requires a token to authorize the Runner to send results back to GitLab. In the[CI Settings](https://git.uni-due.de/VinteR/TheApplication/settings/ci_cd) -> Runner Settings -> Specific Runners -> Setup a specific Runner manually you can see an installation manual containing the token.
 
@@ -23,3 +23,17 @@ If the Runner is successfully installed and registered, the configuration file `
 
 > executor = "shell"
 > shell = "powershell"
+
+To execute the runner locally execute the following command in a powershell instance.
+
+> "C:\GitLab-Runner\gitlab-runner.exe" exec shell build --shell=powershell
+
+This command must be executed inside the folder that contains the solution (`VinteR.sln`).
+
+# Writing tests
+
+Unit and integration tests can be written with the use of [NUnit](https://github.com/nunit/docs/wiki/). Write your tests inside the `VinteR.Tests` project. All test classes must be annotated with the `[TestFixture]` attribute. Test methods must also be annotated with the `[Test]` attribute. All tests are executed on the continuous integration system. If you want to execute your tests on your local machine open a terminal window and navigate to the `TheApplication` folder. To run all tests you have to make a copy of the `vinter.config.json` and `vinter.config.schema.json` otherwise the `TestVinterConfigurationService` failes.
+
+> xcopy VinteR\config.config.json .
+> xcopy VinteR\config.config.schema.json .
+> VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Release\VinteR.Tests.dll
