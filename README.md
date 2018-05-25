@@ -40,8 +40,8 @@ Unit and integration tests can be written with the use of [NUnit](https://github
 
 ```console
 # copy configuration
-xcopy VinteR\config.config.json .
-xcopy VinteR\config.config.schema.json .
+xcopy VinteR\vinter.config.json .
+xcopy VinteR\vinter.config.schema.json .
 
 # run the tests
 VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Release\VinteR.Tests.dll
