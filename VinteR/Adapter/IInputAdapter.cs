@@ -1,4 +1,5 @@
-﻿using VinteR.Model;
+﻿using System.Diagnostics;
+using VinteR.Model;
 
 namespace VinteR.Adapter
 {
@@ -7,5 +8,11 @@ namespace VinteR.Adapter
     public interface IInputAdapter
     {
         event MocapFrameAvailableEventHandler FrameAvailable;
+
+        bool ShouldRun { get; }
+
+        void Run(Stopwatch synchronizationWatch);
+
+        void Stop();
     }
 }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
+using VinteR.Configuration;
 
 namespace VinteR.Adapter.Kinect
 {
@@ -12,13 +13,21 @@ namespace VinteR.Adapter.Kinect
         private KinectSensor sensor;
         private KinectEventHandler kinectHandler;
         private Stopwatch syncroWatch;
+        private readonly IConfigurationService _configurationService;
 
-        public KinectAdapter(Stopwatch synchroWatch)
+        public bool ShouldRun => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
+
+        public KinectAdapter(IConfigurationService configurationService)
+        {
+            this._configurationService = configurationService;
+        }
+
+        public void Run(Stopwatch synchronizationWatch)
         {
 
             // Create the Kinect Handler
 
-            this.syncroWatch = synchroWatch;
+            this.syncroWatch = synchronizationWatch;
             this.kinectHandler = new KinectEventHandler(this.syncroWatch, this);
 
             // Look through all sensors and start the first connected one.
@@ -43,12 +52,12 @@ namespace VinteR.Adapter.Kinect
                 this.sensor.SkeletonFrameReady += this.kinectHandler.SensorSkeletonFrameReady;
 
                 // Further EventListener can be appended here, currently no support for depth frame etc. intended.
-                
+
                 // Start the sensor!
                 try
                 {
                     this.sensor.Start();
-                   
+
                 }
                 catch (IOException)
                 {
@@ -60,12 +69,17 @@ namespace VinteR.Adapter.Kinect
             {
                 throw new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!");
             }
-
         }
 
-       /*
-       * Write all Data out using the File Based Writers
-       */
+        public void Stop()
+        {
+            var logFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
+            flushData(logFile);
+        }
+
+        /*
+        * Write all Data out using the File Based Writers
+        */
         public void flushData(string path)
         {
             // Write all Frames to the given JSON File
