@@ -15,6 +15,7 @@ namespace VinteR
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
             Bind<IInputAdapter>().To<LeapMotionAdapter>();
             Bind<IInputAdapter>().To<KinectAdapter>();
+            Bind<ITransformator>().To<Transformator>();
         }
     }
 }
