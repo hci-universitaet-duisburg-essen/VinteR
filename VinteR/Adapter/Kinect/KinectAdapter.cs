@@ -47,7 +47,8 @@ namespace VinteR.Adapter.Kinect
             {
                 // Turn on the skeleton stream to receive skeleton frames
                 this.sensor.SkeletonStream.Enable();
-
+                this.sensor.ColorStream.Enable();
+                this.sensor.DepthStream.Enable();
                 // Update the SensorData - register EventHandler
                 this.sensor.SkeletonFrameReady += this.kinectHandler.SensorSkeletonFrameReady;
                 this.sensor.DepthFrameReady += this.kinectHandler.SensorDepthFrameReady;
