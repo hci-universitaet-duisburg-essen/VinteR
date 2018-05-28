@@ -127,9 +127,5 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties vinter_1settings_1json__JSONSchema="vinter.settings.schema.json" />
-    </VisualStudio>
-  </ProjectExtensions>
+  <ProjectExtensions />
 </Project>

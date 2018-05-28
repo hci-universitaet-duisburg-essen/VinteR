@@ -1,4 +1,7 @@
 ﻿using Ninject.Modules;
+using VinteR.Adapter;
+using VinteR.Adapter.Kinect;
+using VinteR.Adapter.LeapMotion;
 using VinteR.Configuration;
 using VinteR.Transform;
 
@@ -9,8 +12,9 @@ namespace VinteR
 
         public override void Load()
         {
-            Bind<IConfigurationService>().To<VinterConfigurationService>();
-            Bind<ITransformator>().To<Transformator>();
+            Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
+            Bind<IInputAdapter>().To<LeapMotionAdapter>();
+            Bind<IInputAdapter>().To<KinectAdapter>();
         }
     }
 }
