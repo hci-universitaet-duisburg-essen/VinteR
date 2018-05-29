@@ -10,6 +10,7 @@ namespace VinteR.Datamerge
         {
             //TODO complete leap motion merge implementation
             var result = new Body { BodyType = Body.EBodyType.Hand };
+            OnMergedBodyAvailable(result);
             return result;
         }
     }

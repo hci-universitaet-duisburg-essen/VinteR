@@ -10,6 +10,7 @@ namespace VinteR.Datamerge
         {
             //TODO complete optitrack merge implementation
             var result = new Body {BodyType = Body.EBodyType.MarkerSet};
+            OnMergedBodyAvailable(result);
             return result;
         }
     }

@@ -10,6 +10,7 @@ namespace VinteR.Datamerge
         {
             //TODO complete kinect merge implementation
             var result = new Body { BodyType = Body.EBodyType.Skeleton};
+            OnMergedBodyAvailable(result);
             return result;
         }
     }

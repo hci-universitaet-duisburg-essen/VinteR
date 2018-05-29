@@ -11,6 +11,8 @@ using Ninject;
 using Ninject.Planning.Bindings;
 using VinteR.Adapter;
 using VinteR.Configuration;
+using VinteR.Datamerge;
+using VinteR.Stream;
 
 namespace VinteR
 {
@@ -27,14 +29,20 @@ namespace VinteR
             var adapters = from adapter in kernel.GetAll<IInputAdapter>()
                     where adapter.Enabled
                     select adapter;
+            var merger = new DataMerger();
+            var processStream = new StreamingManager(new DataMerger());
 
-            // Create a common watch as a synchronization mechanism - hope it is threadsafe :D
-            Stopwatch syncrowatch = new Stopwatch();
-            syncrowatch.Start();
 
             foreach (var adapter in adapters)
             {
-                adapter.FrameAvailable += (a, f) => Logger.Info("{Frame #{0} available from {1}", f.timestamp, a.GetType().Name);
+                adapter.FrameAvailable += (a, f) =>
+                {
+                    Logger.Info("{Frame #{0} available from {1}", f.timestamp, a.GetType().Name);
+                    merger.handleFrame(f);
+                };
+                adapter.ErrorEvent += (a, e) => {
+                    Logger.Error("Adapter: {0}, has severe problems: {1}", a.GetType().Name, e.Message); Program.keepRunning = false;
+                };
                 var thread = new Thread(() => adapter.Run());
                 thread.Start();
                 Logger.Info("Adapter {0,20} started", adapter.GetType().Name);

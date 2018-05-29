@@ -82,6 +82,7 @@
     <Compile Include="Configuration\VinterConfigurationService.cs" />
     <Compile Include="Datamerge\KinectMerger.cs" />
     <Compile Include="Datamerge\LeapMotionMerger.cs" />
+    <Compile Include="Datamerge\Merger.cs" />
     <Compile Include="Datamerge\OptiTrackMerger.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Point.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Model\LeapMotion\FingerBone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stream\StreamingManager.cs" />
     <Compile Include="Transform\ITransformator.cs" />
     <Compile Include="Transform\Transformator.cs" />
     <Compile Include="VinterNinjectModule.cs" />
