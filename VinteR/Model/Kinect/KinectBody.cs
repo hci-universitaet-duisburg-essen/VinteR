@@ -7,7 +7,7 @@ namespace VinteR.Model.Kinect
     /// The standard body type for the Kinect (Skeleton)
     /// There is currently no explicit player tracking implemented,
     /// player assignment will be likely done by matching a single marker from optitrack
-    /// to a Joint of the Skeleton i.e. Head.
+    /// to a Point of the Skeleton i.e. Head.
     /// </summary>
     public class KinectBody : Body
     {
@@ -17,7 +17,7 @@ namespace VinteR.Model.Kinect
         // The Kinect has also a video frame and a depth frame with pixels, this is ignored here
         // and extension can be provided to the KinectBody once this information is required.
 
-        public KinectBody(IList<Joint> list, EBodyType type)
+        public KinectBody(IList<Point> list, EBodyType type)
         {
             this.Joints = list;
             this.BodyType = type;

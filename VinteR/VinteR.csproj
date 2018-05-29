@@ -80,7 +80,7 @@
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="Configuration\VinterConfigurationService.cs" />
     <Compile Include="Model\Body.cs" />
-    <Compile Include="Model\Joint.cs" />
+    <Compile Include="Model\Point.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
     <Compile Include="Model\MocapFrame.cs" />
     <Compile Include="Model\OptiTrack\OptiTrackBody.cs" />
