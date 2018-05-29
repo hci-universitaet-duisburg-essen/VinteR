@@ -36,6 +36,7 @@
     <Reference Include="LeapCSharp.NET4.5">
       <HintPath>..\lib\x64\LeapCSharp.NET4.5.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Kinect, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="NatNetML">
       <HintPath>..\lib\x64\NatNetML.dll</HintPath>
@@ -50,7 +51,7 @@
       <HintPath>packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>packages\NLog.4.5.4\lib\net45\NLog.dll</HintPath>
+      <HintPath>packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />

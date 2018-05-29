@@ -8,6 +8,9 @@ namespace VinteR.Adapter.Kinect
 {
     class KinectAdapter : IInputAdapter
     {
+        // Logger
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         // MocapFrame Event Handling
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
@@ -21,7 +24,7 @@ namespace VinteR.Adapter.Kinect
 
         public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
-        private Stopwatch syncroWatch;
+ 
         private readonly IConfigurationService _configurationService;
 
         public bool Enabled => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
@@ -29,15 +32,12 @@ namespace VinteR.Adapter.Kinect
         public KinectAdapter(IConfigurationService configurationService)
         {
             this._configurationService = configurationService;
+            // Create the Kinect Handler
+            this.kinectHandler = new KinectEventHandler(this);
         }
 
-        public void Run(Stopwatch synchronizationWatch)
+        public void Run()
         {
-
-            // Create the Kinect Handler
-
-            this.syncroWatch = synchronizationWatch;
-            this.kinectHandler = new KinectEventHandler(this.syncroWatch, this);
 
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
@@ -54,14 +54,22 @@ namespace VinteR.Adapter.Kinect
 
             if (null != this.sensor)
             {
-                // Turn on the skeleton stream to receive skeleton frames
+                // Skeleton Stream - always on !
                 this.sensor.SkeletonStream.Enable();
-                this.sensor.ColorStream.Enable();
-                this.sensor.DepthStream.Enable();
-                // Update the SensorData - register EventHandler
                 this.sensor.SkeletonFrameReady += this.kinectHandler.SensorSkeletonFrameReady;
-                this.sensor.DepthFrameReady += this.kinectHandler.SensorDepthFrameReady;
-                this.sensor.ColorFrameReady += this.kinectHandler.SensorColorFrameReady;
+
+                // Enable Color Stream
+                if (_configurationService.GetConfiguration().Adapters.Kinect.ColorStreamEnabled)
+                {
+                    this.sensor.ColorStream.Enable();
+                    this.sensor.ColorFrameReady += this.kinectHandler.SensorColorFrameReady;
+                }
+
+                if (_configurationService.GetConfiguration().Adapters.Kinect.DepthStreamEnabled)
+                {
+                    this.sensor.DepthStream.Enable();
+                    this.sensor.DepthFrameReady += this.kinectHandler.SensorDepthFrameReady;
+                }
 
                 // Further EventListener can be appended here, currently no support for depth frame etc. intended.
 
@@ -81,12 +89,28 @@ namespace VinteR.Adapter.Kinect
             {
                 throw new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!");
             }
+
         }
 
         public void Stop()
         {
-            var logFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
-            flushMocapData(logFile);
+            if (_configurationService.GetConfiguration().Adapters.Kinect.SkeletonStreamFlush)
+            {
+                var SkeletonLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
+                flushMocapData(SkeletonLogFile);
+            }
+
+            if (_configurationService.GetConfiguration().Adapters.Kinect.ColorStreamEnabled && _configurationService.GetConfiguration().Adapters.Kinect.ColorStreamFlush)
+            {
+                var colorStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "colorStream.json");
+                flushColorData(colorStreamLogFile);
+            }
+
+            if (_configurationService.GetConfiguration().Adapters.Kinect.DepthStreamEnabled && _configurationService.GetConfiguration().Adapters.Kinect.DepthStreamFlush)
+            {
+                var depthStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "depthStream.json");
+                flushColorData(depthStreamLogFile);
+            }
         }
 
        /*
@@ -94,20 +118,42 @@ namespace VinteR.Adapter.Kinect
        */
         public void flushMocapData(string path)
         {
-            // Write all Frames to the given JSON File
-            this.kinectHandler.flushFrames(path);
+            if (this.kinectHandler != null)
+            {
+                // Write all Frames to the given JSON File
+                this.kinectHandler.flushFrames(path);
+            }  else
+            {
+                Logger.Debug("Could not Write Skeleton Data! this.kinectHandler is null");
+            }
         }
 
         public void flushDepthData(string path)
         {
-            // Write all Depth information to the given JSON File
-            this.kinectHandler.flushDepth(path);
+            if (this.kinectHandler != null)
+            {
+                // Write all Depth information to the given JSON File
+                this.kinectHandler.flushDepth(path);
+            }
+            else
+            {
+                Logger.Debug("Could not Write Depth Data! this.kinectHandler is null");
+            }
+            
         }
 
         public void flushColorData(string path)
         {
-            // Write all Color bytes to the given JSON File
-            this.kinectHandler.flushColor(path);
+            if (this.kinectHandler != null)
+            {
+                // Write all Color bytes to the given JSON File
+                this.kinectHandler.flushColor(path);
+
+            } else
+            {
+                Logger.Debug("Could not Write Color Data! this.kinectHandler is null");
+            }
+                
         }
 
         public virtual void OnFrameAvailable(Model.MocapFrame frame)

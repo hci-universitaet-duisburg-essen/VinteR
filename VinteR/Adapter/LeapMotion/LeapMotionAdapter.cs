@@ -40,10 +40,10 @@ namespace VinteR.Adapter.LeapMotion
             Logger.Info("Destructor Leap Motion Adapter finished");
         }
 
-        public void Run(Stopwatch synchronizationWatch)
+        public void Run()
         {
             controller = new Controller();
-            listener = new LeapMotionEventHandler(synchronizationWatch, this);
+            listener = new LeapMotionEventHandler(this);
             controller.Connect += listener.OnServiceConnect;
             controller.Device += listener.OnConnect;
             controller.DeviceLost += listener.OnDisconnect;

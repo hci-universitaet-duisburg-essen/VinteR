@@ -1,9 +1,15 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
     "adapters": {
-        "kinect": {
-            "enabled": true
-        },
+      "kinect": {
+        "enabled": true,
+        "colorStream.enabled": true,
+        "colorStream.flush": true,
+        "depthStream.enabled": true,
+        "depthStream.flush": true,
+        "skeletonStream.flush":  true
+
+      },
         "leapmotion": {
             "enabled": true
         },
