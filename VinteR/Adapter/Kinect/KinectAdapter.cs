@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Kinect;
+using VinteR.Configuration;
 
 namespace VinteR.Adapter.Kinect
 {
@@ -21,13 +22,21 @@ namespace VinteR.Adapter.Kinect
         public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
         private Stopwatch syncroWatch;
+        private readonly IConfigurationService _configurationService;
 
-        public KinectAdapter(Stopwatch synchroWatch)
+        public bool ShouldRun => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
+
+        public KinectAdapter(IConfigurationService configurationService)
+        {
+            this._configurationService = configurationService;
+        }
+
+        public void Run(Stopwatch synchronizationWatch)
         {
 
             // Create the Kinect Handler
 
-            this.syncroWatch = synchroWatch;
+            this.syncroWatch = synchronizationWatch;
             this.kinectHandler = new KinectEventHandler(this.syncroWatch, this);
 
             // Look through all sensors and start the first connected one.
@@ -60,7 +69,7 @@ namespace VinteR.Adapter.Kinect
                 try
                 {
                     this.sensor.Start();
-                   
+
                 }
                 catch (IOException)
                 {
@@ -72,7 +81,12 @@ namespace VinteR.Adapter.Kinect
             {
                 throw new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!");
             }
+        }
 
+        public void Stop()
+        {
+            var logFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
+            flushData(logFile);
         }
 
        /*
