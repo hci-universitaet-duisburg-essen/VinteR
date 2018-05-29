@@ -86,7 +86,7 @@ namespace VinteR.Adapter.Kinect
         public void Stop()
         {
             var logFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
-            flushData(logFile);
+            flushMocapData(logFile);
         }
 
        /*
