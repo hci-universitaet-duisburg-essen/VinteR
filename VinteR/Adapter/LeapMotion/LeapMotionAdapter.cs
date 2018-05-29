@@ -21,6 +21,9 @@ namespace VinteR.Adapter.LeapMotion
         private LeapMotionEventHandler listener;
         private readonly IConfigurationService _configurationService;
 
+        // Error Handling
+        public event ErrorEventHandler ErrorEvent;
+
 
         /**
          * Init Leap Motion Listener and add subscriber methods for controller events
@@ -61,6 +64,15 @@ namespace VinteR.Adapter.LeapMotion
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
                 FrameAvailable(this, frame);
+            }
+        }
+
+        public virtual void OnError(Exception e)
+        {
+            if (ErrorEvent != null) // Check if there are subscribers to the event
+            {
+                // Raise an Error Event
+                ErrorEvent(this, e);
             }
         }
     }

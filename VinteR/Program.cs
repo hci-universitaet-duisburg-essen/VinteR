@@ -35,6 +35,7 @@ namespace VinteR
             foreach (var adapter in adapters)
             {
                 adapter.FrameAvailable += (a, f) => Logger.Info("{Frame #{0} available from {1}", f.timestamp, a.GetType().Name);
+                adapter.ErrorEvent += (a, e) => { Logger.Error("Adapter: {0}, has severe problems: {1}", a.GetType().Name, e.Message); Program.keepRunning = false; };
                 var thread = new Thread(() => adapter.Run());
                 thread.Start();
                 Logger.Info("Adapter {0,20} started", adapter.GetType().Name);

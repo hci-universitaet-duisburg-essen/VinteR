@@ -22,6 +22,9 @@ namespace VinteR.Adapter.Kinect
         public delegate void KinectDepthEventHandler(KinectAdapter adapter, DepthImagePixel[] depthImage);
         public event KinectDepthEventHandler DepthFramAvailable;
 
+        // Error Handling
+        public event ErrorEventHandler ErrorEvent;
+
         public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
  
@@ -87,7 +90,7 @@ namespace VinteR.Adapter.Kinect
 
             if (null == this.sensor)
             {
-                throw new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!");
+                OnError( new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!") );
             }
 
         }
@@ -177,6 +180,15 @@ namespace VinteR.Adapter.Kinect
             if (DepthFramAvailable != null) // Check if there are subscribers to the event
             {
                 ColorFramAvailable(this, colorPixels);
+            }
+        }
+
+        public virtual void OnError(Exception e)
+        {
+            if (ErrorEvent != null) // Check if there are subscribers to the event
+            {
+                // Raise an Error Event
+                ErrorEvent(this, e);
             }
         }
     }
