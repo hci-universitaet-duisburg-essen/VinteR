@@ -11,12 +11,10 @@ namespace VinteR.Adapter.LeapMotion
     class LeapMotionEventHandler
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private Stopwatch syncroWatch;
         private LeapMotionAdapter adapter;
 
-        public LeapMotionEventHandler(Stopwatch syncroWatch, LeapMotionAdapter adapter)
+        public LeapMotionEventHandler(LeapMotionAdapter adapter)
         {
-            this.syncroWatch = syncroWatch;
             this.adapter = adapter;
         }
 
@@ -105,10 +103,10 @@ namespace VinteR.Adapter.LeapMotion
                 mocapFrame.AddBody(ref modelBody);
             }
 
-            //Logger.Info("Time: {0}", this.syncroWatch.Elapsed.ToString());
+            //Logger.Info("Time: {0}", System.DateTime.Now.ToString());
 
             // Add timestamp to mocapFrame and send to server via adapter
-            mocapFrame.timestamp = this.syncroWatch.Elapsed.ToString();
+            mocapFrame.timestamp = System.DateTime.Now.ToString();
             adapter.OnFrameAvailable(mocapFrame);
         }
 

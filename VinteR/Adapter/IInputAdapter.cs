@@ -11,7 +11,7 @@ namespace VinteR.Adapter
 
         bool Enabled { get; }
 
-        void Run(Stopwatch synchronizationWatch);
+        void Run();
 
         void Stop();
     }

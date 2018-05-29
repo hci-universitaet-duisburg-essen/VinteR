@@ -14,16 +14,16 @@ namespace VinteR.Adapter.Kinect
      */
     class KinectEventHandler
     {
-        List<MocapFrame> frameList = new List<MocapFrame>();
+        static List<MocapFrame> frameList = new List<MocapFrame>();
         JsonSerializer serializer = new JsonSerializer();
-        Stopwatch syncroWatch;
         KinectAdapter adapter;
-        List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
-        List<byte[]> colorPixelList = new List<byte[]>();
+        static List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
+        static List<byte[]> colorPixelList = new List<byte[]>();
+        // Logger
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public KinectEventHandler(Stopwatch syncroWatch, KinectAdapter adapter)
+        public KinectEventHandler(KinectAdapter adapter)
         {
-            this.syncroWatch = syncroWatch;
             this.adapter = adapter;
         }
 
@@ -101,8 +101,7 @@ namespace VinteR.Adapter.Kinect
                     }
 
                     // Attach the timestamp to the motion frame
-                    frame.timestamp = this.syncroWatch.Elapsed.ToString();
-                    Debug.WriteLine(frame.ToString());
+                    frame.timestamp = System.DateTime.Now.ToUniversalTime().ToString(); // just on case the merger sets nothing!
                     frameList.Add(frame);
                     this.adapter.OnFrameAvailable(frame); // publish MocapFrame
                 }

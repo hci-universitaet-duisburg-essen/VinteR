@@ -32,6 +32,12 @@ namespace VinteR.Configuration
 
     public class Kinect : Adapter
     {
+        [JsonProperty("colorStream.enabled")] public bool ColorStreamEnabled { get; set; }
+        [JsonProperty("colorStream.flush")] public bool ColorStreamFlush { get; set; }
+        [JsonProperty("depthStream.enabled")] public bool DepthStreamEnabled { get; set; }
+        [JsonProperty("depthStream.flush")] public bool DepthStreamFlush { get; set; }
+        [JsonProperty("skeletonStream.flush")] public bool SkeletonStreamFlush { get; set; }
+
     }
 
     public class LeapMotion : Adapter
