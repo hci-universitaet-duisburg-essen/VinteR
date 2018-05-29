@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using VinteR.Model;
 using VinteR.Model.Kinect;
 
-
 namespace VinteR.Adapter.Kinect
 {
     /*
@@ -19,7 +18,9 @@ namespace VinteR.Adapter.Kinect
         JsonSerializer serializer = new JsonSerializer();
         Stopwatch syncroWatch;
         KinectAdapter adapter;
-        
+        List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
+        List<byte[]> colorPixelList = new List<byte[]>();
+
         public KinectEventHandler(Stopwatch syncroWatch, KinectAdapter adapter)
         {
             this.syncroWatch = syncroWatch;
@@ -29,10 +30,34 @@ namespace VinteR.Adapter.Kinect
         public void flushFrames(string path)
         {
             // Implement the JSON Serialization of FrameList here! to file
-            Debug.WriteLine(frameList);
+            // Debug.WriteLine(frameList);
             // Since the FrameList changes permanent - freeze for serialize
             List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
             // Serialize 
+            using (StreamWriter sw = new StreamWriter(path))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, serializeList);
+            }
+
+        }
+
+        public void flushDepth(string path)
+        {
+            // Debug.WriteLine(depthList);
+            List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
+            using (StreamWriter sw = new StreamWriter(path))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, serializeList);
+            }
+
+        }
+
+        public void flushColor(string path)
+        {
+            // Debug.WriteLine(colorPixelList);
+            List<byte[]> serializeList = new List<byte[]>(colorPixelList);
             using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
@@ -79,10 +104,39 @@ namespace VinteR.Adapter.Kinect
                     frame.timestamp = this.syncroWatch.Elapsed.ToString();
                     Debug.WriteLine(frame.ToString());
                     frameList.Add(frame);
-                    adapter.OnFrameAvailable(frame); // publish MocapFrame
+                    this.adapter.OnFrameAvailable(frame); // publish MocapFrame
                 }
             }
 
+        }
+
+        public void SensorDepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
+        {
+            DepthImagePixel[] depthPixels = new DepthImagePixel[this.adapter.sensor.DepthStream.FramePixelDataLength];
+
+            using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
+            {
+                if (depthFrame != null)
+                {
+                    depthFrame.CopyDepthImagePixelDataTo(depthPixels);
+                    depthList.Add(depthPixels);
+                    this.adapter.OnDepthFrameAvailable(depthPixels);
+                }
+            }
+        }
+
+        public void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            byte[] colorPixels = colorPixels = new byte[this.adapter.sensor.ColorStream.FramePixelDataLength];
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+                if (colorFrame != null)
+                {
+                    colorFrame.CopyPixelDataTo(colorPixels);
+                    colorPixelList.Add(colorPixels);
+                    this.adapter.OnColorFrameAvailable(colorPixels);
+                }
+            }
         }
 
     }
