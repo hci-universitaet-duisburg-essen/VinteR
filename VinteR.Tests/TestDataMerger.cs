@@ -22,7 +22,7 @@ namespace VinteR.Tests
         [Test]
         public void TestMergeKinectBody()
         {
-            var optiTrackBody = new KinectBody(new List<Joint>(), Body.EBodyType.Skeleton);
+            var optiTrackBody = new KinectBody(new List<Point>(), Body.EBodyType.Skeleton);
             var body = merger.Merge(optiTrackBody);
             Assert.AreEqual(Body.EBodyType.Skeleton, body.BodyType);
         }
