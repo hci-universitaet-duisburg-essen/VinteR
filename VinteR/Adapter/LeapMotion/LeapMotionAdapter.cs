@@ -13,7 +13,7 @@ namespace VinteR.Adapter.LeapMotion
     {
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
-        public bool ShouldRun => _configurationService.GetConfiguration().Adapters.LeapMotion.Enabled;
+        public bool Enabled => _configurationService.GetConfiguration().Adapters.LeapMotion.Enabled;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         

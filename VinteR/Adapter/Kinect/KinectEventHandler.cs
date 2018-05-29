@@ -52,7 +52,7 @@ namespace VinteR.Adapter.Kinect
                     skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
                     skeletonFrame.CopySkeletonDataTo(skeletons); // Copy skeelton data to the array
 
-                    List<VinteR.Model.Joint> jointList = new List<VinteR.Model.Joint>();
+                    List<VinteR.Model.Point> jointList = new List<VinteR.Model.Point>();
                     MocapFrame frame = new MocapFrame("Kinect_Version_1");
 
                     // loop through all skeltons
@@ -60,14 +60,14 @@ namespace VinteR.Adapter.Kinect
                     {
                         foreach (Microsoft.Kinect.Joint joint in skeleton.Joints)
                         {
-                            // Create a Joint
-                            VinteR.Model.Joint currentJointModel = new VinteR.Model.Joint (joint.Position.X, joint.Position.Y, joint.Position.Z);
-                            currentJointModel.Name = joint.JointType.ToString();
-                            currentJointModel.State = joint.TrackingState.ToString();
+                            // Create a Point
+                            VinteR.Model.Point currentPointModel = new VinteR.Model.Point (joint.Position.X, joint.Position.Y, joint.Position.Z);
+                            currentPointModel.Name = joint.JointType.ToString();
+                            currentPointModel.State = joint.TrackingState.ToString();
 
 
-                            // Add the Joint to the List of all captured skeleton points
-                            jointList.Add(currentJointModel);
+                            // Add the Point to the List of all captured skeleton points
+                            jointList.Add(currentPointModel);
                         }
 
                         // Create and append the frame

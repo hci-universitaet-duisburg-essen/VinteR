@@ -15,7 +15,7 @@ namespace VinteR.Adapter.Kinect
         private Stopwatch syncroWatch;
         private readonly IConfigurationService _configurationService;
 
-        public bool ShouldRun => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
+        public bool Enabled => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
 
         public KinectAdapter(IConfigurationService configurationService)
         {

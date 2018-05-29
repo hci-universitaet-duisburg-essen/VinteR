@@ -25,7 +25,7 @@ namespace VinteR
             var kernel = new StandardKernel(new VinterNinjectModule());
 
             var adapters = from adapter in kernel.GetAll<IInputAdapter>()
-                    where adapter.ShouldRun
+                    where adapter.Enabled
                     select adapter;
 
             // Create a common watch as a synchronization mechanism - hope it is threadsafe :D
