@@ -12,7 +12,7 @@ namespace VinteR.Model
     /// where it is located inside the world. It may have a name
     /// to get specific information what this joint represents.
     /// </summary>
-    public class Joint
+    public class Point
     {
         /// <summary>
         /// Optional name of the joint
@@ -20,7 +20,7 @@ namespace VinteR.Model
         public string Name { get; set; }
 
         /*
-         * Allows to get information the validity of the Joint
+         * Allows to get information the validity of the Point
          * The joint can be untracked (no acurate information available)
          * or tracked and there are valid information avaialble or
          * kust inferred (approximated by the position of other Joints)
@@ -32,12 +32,12 @@ namespace VinteR.Model
         /// </summary>
         public Vector3 Position { get; set; }
 
-        public Joint(float x, float y, float z)
+        public Point(float x, float y, float z)
         {
             this.Position = new Vector3(x, y, z);
         }
 
-        public Joint(Vector3 position)
+        public Point(Vector3 position)
         {
             this.Position = position;
         }

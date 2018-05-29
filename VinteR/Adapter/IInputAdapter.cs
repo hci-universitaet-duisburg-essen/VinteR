@@ -9,7 +9,7 @@ namespace VinteR.Adapter
     {
         event MocapFrameAvailableEventHandler FrameAvailable;
 
-        bool ShouldRun { get; }
+        bool Enabled { get; }
 
         void Run(Stopwatch synchronizationWatch);
 

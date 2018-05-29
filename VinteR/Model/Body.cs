@@ -32,7 +32,7 @@ namespace VinteR.Model
         /// Collection of joints that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
-        public IList<Joint> Joints { get; set; }
+        public IList<Point> Joints { get; set; }
 
         /// <summary>
         /// Contains the rotation of this body inside the global

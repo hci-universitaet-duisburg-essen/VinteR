@@ -52,6 +52,7 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>packages\NLog.4.5.4\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -82,7 +83,7 @@
     <Compile Include="Datamerge\LeapMotionMerger.cs" />
     <Compile Include="Datamerge\OptiTrackMerger.cs" />
     <Compile Include="Model\Body.cs" />
-    <Compile Include="Model\Joint.cs" />
+    <Compile Include="Model\Point.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
     <Compile Include="Model\MocapFrame.cs" />
     <Compile Include="Model\OptiTrack\OptiTrackBody.cs" />
