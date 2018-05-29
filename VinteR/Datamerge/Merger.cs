@@ -21,5 +21,22 @@ namespace VinteR.Datamerge
                 BodyMerged(body);
             }
         }
+        public void handleFrame(MocapFrame frame)
+        {
+            // extract the bodies here and process
+            switch(frame.SourceId)
+            {
+                // Make a switch based on the sourceID e.g. Kinect, Leap and pass the data to the corresponding merge
+                /*
+                 * foreach(KinectBody body in frames.Bodies) {
+                 *  //  Merge(body)
+                 * }
+                 */
+
+            // We need the switch case, since we do not get specific bodies from mocapframe
+            // and there is no generic Body Merge function implemented ...
+            }
+            
+        }
     }
 }

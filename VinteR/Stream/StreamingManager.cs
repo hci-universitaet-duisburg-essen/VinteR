@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VinteR.Datamerge;
 using VinteR.Model;
 
-namespace VinteR.StreamingManager
+namespace VinteR.Stream
 {
     // A Stream represents some Workflow of data
     class StreamingManager
