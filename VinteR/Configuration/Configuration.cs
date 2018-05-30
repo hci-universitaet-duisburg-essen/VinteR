@@ -25,9 +25,10 @@ namespace VinteR.Configuration
     public class Adapter
     {
         [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
 
-        [JsonProperty("canHandleGlobalCoordinateSystem")]
-        public bool CanHandleGlobalCoordinateSystem { get; set; }
+        [JsonProperty("isGlobalRoot")]
+        public bool IsGlobalRoot { get; set; }
     }
 
     public class Kinect : Adapter

@@ -9,7 +9,7 @@ namespace VinteR.Model
 {
     /// <summary>
     /// A <code>Body</code> defines a single object that is build
-    /// upon a collection of joints. For various input adapters the
+    /// upon a collection of points. For various input adapters the
     /// body may have a more specific type. In addition a body has
     /// a rotation based on the global coordinate system.
     /// </summary>
@@ -29,10 +29,10 @@ namespace VinteR.Model
         public EBodyType BodyType { get; set; }
 
         /// <summary>
-        /// Collection of joints that may be connected or are
+        /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
-        public IList<Point> Joints { get; set; }
+        public IList<Point> Points { get; set; }
 
         /// <summary>
         /// Contains the rotation of this body inside the global

@@ -9,11 +9,16 @@
                     "default": false,
                     "description": "Tell the application if the adapter is available or not"
                 },
-                "canHandleGlobalCoordinateSystem": {
+                "name": {
+                    "type": "string",
+                    "enum": ["kinect", "leapmotion", "optitrack"]
+                },
+                "isGlobalRoot": {
                     "type": "boolean",
                     "default": false,
-                    "description": "true if the adapter is able to handle position of other adapters inside the global coordinate system"
-                } 
+                    "description":
+                        "true if the adapter is able to handle position of other adapters inside the global coordinate system"
+                }
             }
         },
         "kinect": {

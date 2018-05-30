@@ -29,8 +29,8 @@ namespace VinteR
             var adapters = from adapter in kernel.GetAll<IInputAdapter>()
                     where adapter.Enabled
                     select adapter;
-            var merger = new DataMerger();
-            var processStream = new StreamingManager(new DataMerger());
+            var merger = kernel.Get<DataMerger>();
+            var processStream = new StreamingManager(kernel.Get<DataMerger>());
 
 
             foreach (var adapter in adapters)

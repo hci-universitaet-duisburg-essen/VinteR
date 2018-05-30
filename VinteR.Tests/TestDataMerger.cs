@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Ninject;
 using NUnit.Framework;
 using VinteR.Datamerge;
 using VinteR.Model;
@@ -11,19 +12,26 @@ namespace VinteR.Tests
     [TestFixture]
     public class TestDataMerger
     {
-        private DataMerger merger;
+        private DataMerger _merger;
+        private StandardKernel _ninjectKernel;
+
+        [OneTimeSetUp]
+        public void SetUpTestOnce()
+        {
+            _ninjectKernel = new StandardKernel(new VinterNinjectModule());
+        }
 
         [SetUp]
         public void SetUpTest()
         {
-            this.merger = new DataMerger();
+            this._merger = _ninjectKernel.Get<DataMerger>();
         }
 
         [Test]
         public void TestMergeKinectBody()
         {
             var optiTrackBody = new KinectBody(new List<Point>(), Body.EBodyType.Skeleton);
-            var body = merger.Merge(optiTrackBody);
+            var body = _merger.Merge(optiTrackBody);
             Assert.AreEqual(Body.EBodyType.Skeleton, body.BodyType);
         }
 
@@ -31,7 +39,7 @@ namespace VinteR.Tests
         public void TestMergeLeapMotionBody()
         {
             var hand = new Hand();
-            var body = merger.Merge(hand);
+            var body = _merger.Merge(hand);
             Assert.AreEqual(Body.EBodyType.Hand, body.BodyType);
         }
 
@@ -39,7 +47,7 @@ namespace VinteR.Tests
         public void TestMergeOptiTrackBody()
         {
             var optiTrackBody = new OptiTrackBody("testbody");
-            var body = merger.Merge(optiTrackBody);
+            var body = _merger.Merge(optiTrackBody);
             Assert.AreEqual(Body.EBodyType.MarkerSet, body.BodyType);
         }
     }
