@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Threading;
-using Microsoft.Kinect;
 using Ninject;
-using Ninject.Planning.Bindings;
 using VinteR.Adapter;
-using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Stream;
 
@@ -38,7 +30,7 @@ namespace VinteR
                 adapter.FrameAvailable += (a, f) =>
                 {
                     Logger.Info("{Frame #{0} available from {1}", f.timestamp, a.GetType().Name);
-                    merger.handleFrame(f);
+                    merger.HandleFrame(f);
                 };
                 adapter.ErrorEvent += (a, e) => {
                     Logger.Error("Adapter: {0}, has severe problems: {1}", a.GetType().Name, e.Message); Program.keepRunning = false;
