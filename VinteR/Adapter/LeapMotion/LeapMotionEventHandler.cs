@@ -76,9 +76,14 @@ namespace VinteR.Adapter.LeapMotion
                         modelBone.LocalStartPosition = new System.Numerics.Vector3(bone.PrevJoint.x, bone.PrevJoint.y, bone.PrevJoint.z);
                         modelBone.LocalEndPosition = new System.Numerics.Vector3(bone.NextJoint.x, bone.NextJoint.y, bone.NextJoint.z);
 
+                        fingerBones.Add(modelBone);
+
                         //Logger.Info("Leap Bone: {0}, start: {1}, end: {2}", bone.Type.ToString(), bone.PrevJoint, bone.NextJoint);
                         //Logger.Info("Model Bone: {0}, start: {1}, end: {2}", getFingerBoneType(bone.Type.ToString()), modelBone.LocalStartPosition, modelBone.LocalEndPosition);
                     }
+
+                    modelFinger.Bones = fingerBones;
+                    fingers.Add(modelFinger);
                 }
 
                 // Get the hand's normal vector and direction
@@ -99,11 +104,10 @@ namespace VinteR.Adapter.LeapMotion
                 //Logger.Info("Model Hand side: {0}", modelHand.Side.ToString());
 
                 // Create hand body to add to mocapFrame
+                Logger.Info("Hand Model: " + modelHand.Fingers.Count);
                 VinteR.Model.Body modelBody = modelHand;
                 mocapFrame.AddBody(ref modelBody);
             }
-
-            //Logger.Info("Time: {0}", System.DateTime.Now.ToString());
 
             // Add timestamp to mocapFrame and send to server via adapter
             mocapFrame.timestamp = System.DateTime.Now.ToString();
