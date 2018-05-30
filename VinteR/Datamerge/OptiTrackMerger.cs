@@ -22,7 +22,7 @@ namespace VinteR.Datamerge
                     break;
             }
 
-            OnMergedBodyAvailable(result);
+            FireBodyMerged(result);
             return result;
         }
 

@@ -86,7 +86,6 @@
     <Compile Include="Datamerge\DataMerger.cs" />
     <Compile Include="Datamerge\KinectMerger.cs" />
     <Compile Include="Datamerge\LeapMotionMerger.cs" />
-    <Compile Include="Datamerge\Merger.cs" />
     <Compile Include="Datamerge\OptiTrackMerger.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\Point.cs" />
