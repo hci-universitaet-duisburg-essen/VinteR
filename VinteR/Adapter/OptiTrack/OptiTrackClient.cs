@@ -20,6 +20,7 @@ namespace VinteR.Adapter.OptiTrack
         bool IsConnected();
 
         void Connect();
+        void Disconnect();
     }
 
     public class OptiTrackClient : IOptiTrackClient
@@ -84,6 +85,19 @@ namespace VinteR.Adapter.OptiTrack
             }
         }
 
+        public void Disconnect()
+        {
+            if (_isConnected)
+            {
+                _natNetClient.OnFrameReady -= NatNetClientOnOnFrameReady;
+            }
+            else
+            {
+                throw new ApplicationException("Could not disconnect from optitrack");
+            }
+            _natNetClient.Disconnect();
+        }
+
         private bool FetchServerDescription()
         {
             var description = new NatNetML.ServerDescription();
@@ -140,8 +154,16 @@ namespace VinteR.Adapter.OptiTrack
 
                 FireDataDescriptionChanged();
             }
+            
+            FireOnFrameReady(data);
+        }
 
-            OnFrameReady?.Invoke(data);
+        public virtual void FireOnFrameReady(FrameOfMocapData data)
+        {
+            if (OnFrameReady != null)
+            {
+                OnFrameReady(data);
+            }
         }
 
         private void FetchDataDescriptor()
@@ -197,7 +219,10 @@ namespace VinteR.Adapter.OptiTrack
 
         private void FireDataDescriptionChanged()
         {
-            OnDataDescriptionsChanged?.Invoke();
+            if (OnDataDescriptionsChanged != null)
+            {
+                OnDataDescriptionsChanged();
+            }
         }
 
         public bool IsConnected()
