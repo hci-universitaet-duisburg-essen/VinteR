@@ -39,7 +39,7 @@ namespace VinteR.Adapter.OptiTrack
         public float ExtractLatency(NatNetML.FrameOfMocapData data)
         {
             /* So far without transmission latency
-             client instance is needed, can't really find the right thing in OTClient -> NatNet though*/
+             client instance is needed, can't really find the right thing in OptiTrackClient -> NatNet though*/
             return data.TransmitTimestamp - data.CameraMidExposureTimestamp;
         }
 
