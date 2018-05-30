@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Policy;
 using NatNetML;
 using VinteR.Configuration;
 

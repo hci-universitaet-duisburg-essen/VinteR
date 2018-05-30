@@ -43,7 +43,7 @@ namespace VinteR
                 adapter.ErrorEvent += (a, e) => {
                     Logger.Error("Adapter: {0}, has severe problems: {1}", a.GetType().Name, e.Message); Program.keepRunning = false;
                 };
-                var thread = new Thread(() => adapter.Run());
+                var thread = new Thread(adapter.Run);
                 thread.Start();
                 Logger.Info("Adapter {0,20} started", adapter.GetType().Name);
             }

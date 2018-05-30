@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using Ninject;
 using NUnit.Framework;
 using VinteR.Transform;
 
@@ -17,7 +18,8 @@ namespace VinteR.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            this._transformator = new Transformator();
+            var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
+            this._transformator = ninjectKernel.Get<ITransformator>();
         }
 
         [Test]

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using NatNetML;
 using VinteR.Configuration;
@@ -9,8 +7,10 @@ namespace VinteR.Adapter.OptiTrack
 {
     public class OptiTrackAdapterTracker : IAdapterTracker
     {
-        private static readonly RigidBody EMPTY_RIGID_BODY = new RigidBody();
-        private static readonly RigidBodyData EMPTY_RIGID_BODY_DATA = new RigidBodyData();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private static readonly RigidBody EmptyRigidBody = new RigidBody();
+        private static readonly RigidBodyData EmptyRigidBodyData = new RigidBodyData();
 
         private readonly IOptiTrackClient _client;
         private readonly string _adapterNameKinect;
@@ -33,8 +33,9 @@ namespace VinteR.Adapter.OptiTrack
             this._adapterNameLeapMotion = adapters.LeapMotion.Name;
         }
 
-        public Vector3 Locate(string name)
+        public Vector3? Locate(string name)
         {
+            Logger.Debug("Locating {0}", name);
             if (!_client.IsConnected())
             {
                 _client.Connect();
@@ -49,22 +50,22 @@ namespace VinteR.Adapter.OptiTrack
                 return new Vector3(_leapMotionBodyData.x, _leapMotionBodyData.y, _leapMotionBodyData.z);
             }
 
-            return Vector3.Zero;
+            return null;
         }
 
         private void HandleDataDescriptionsChanged()
         {
             var newKinectBody = _client.RigidBodies
-                .DefaultIfEmpty(EMPTY_RIGID_BODY)
+                .DefaultIfEmpty(EmptyRigidBody)
                 .First(rb => rb.Name.Equals(_adapterNameKinect));
-            _kinect = newKinectBody != EMPTY_RIGID_BODY
+            _kinect = newKinectBody != EmptyRigidBody
                 ? newKinectBody
                 : _kinect;
 
             var newLeapMotionBody = _client.RigidBodies
-                .DefaultIfEmpty(EMPTY_RIGID_BODY)
+                .DefaultIfEmpty(EmptyRigidBody)
                 .First(rb => rb.Name.Equals(_adapterNameLeapMotion));
-            _leapMotion = newLeapMotionBody != EMPTY_RIGID_BODY
+            _leapMotion = newLeapMotionBody != EmptyRigidBody
                 ? newLeapMotionBody
                 : _leapMotion;
         }
@@ -72,18 +73,18 @@ namespace VinteR.Adapter.OptiTrack
         private void HandleFrameReady(NatNetML.FrameOfMocapData mocapData)
         {
             var newKinectBodyData = mocapData.RigidBodies
-                .DefaultIfEmpty(EMPTY_RIGID_BODY_DATA)
+                .DefaultIfEmpty(EmptyRigidBodyData)
                 .First(rb => rb.ID == _kinect?.ID);
-            _kinectBodyData = newKinectBodyData != EMPTY_RIGID_BODY_DATA 
+            _kinectBodyData = newKinectBodyData != EmptyRigidBodyData 
                 ? newKinectBodyData 
                 : _kinectBodyData;
 
             var newLeapMotionBodyData = mocapData.RigidBodies
-                .DefaultIfEmpty(EMPTY_RIGID_BODY_DATA)
+                .DefaultIfEmpty(EmptyRigidBodyData)
                 .First(rb => rb.ID == _leapMotion?.ID);
-            _leapMotionBodyData = newLeapMotionBodyData != EMPTY_RIGID_BODY_DATA
-                ? newKinectBodyData
-                : _kinectBodyData;
+            _leapMotionBodyData = newLeapMotionBodyData != EmptyRigidBodyData
+                ? newLeapMotionBodyData
+                : _leapMotionBodyData;
         }
     }
 }

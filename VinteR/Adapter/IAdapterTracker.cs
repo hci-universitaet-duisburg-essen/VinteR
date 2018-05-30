@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using VinteR.Model;
+﻿using System.Numerics;
 
 namespace VinteR.Adapter
 {
     public interface IAdapterTracker
     {
-        Vector3 Locate(string name);
+        Vector3? Locate(string name);
     }
 }
