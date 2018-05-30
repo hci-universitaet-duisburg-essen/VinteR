@@ -19,7 +19,7 @@ namespace VinteR.Model.Kinect
 
         public KinectBody(IList<Point> list, EBodyType type)
         {
-            this.Joints = list;
+            this.Points = list;
             this.BodyType = type;
         }
     }

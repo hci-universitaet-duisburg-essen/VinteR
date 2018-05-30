@@ -3,6 +3,7 @@
     "adapters": {
       "kinect": {
         "enabled": true,
+        "name": "kinect",
         "colorStream.enabled": true,
         "colorStream.flush": true,
         "depthStream.enabled": true,
@@ -10,12 +11,14 @@
         "skeletonStream.flush":  true
 
       },
-        "leapmotion": {
-            "enabled": true
-        },
+      "leapmotion": {
+            "enabled": true,
+            "name": "leapmotion"
+      },
         "optitrack": {
             "enabled": true,
-            "canHandleGlobalCoordinateSystem": true,
+            "name": "optitrack",
+            "isGlobalRoot": true,
             "server.ip": "127.0.0.1",
             "client.ip": "127.0.0.1",
             "connection.type": "unicast"

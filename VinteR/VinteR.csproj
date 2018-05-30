@@ -72,14 +72,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapter\IAdapterTracker.cs" />
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
+    <Compile Include="Adapter\OptiTrack\OptiTrackAdapterTracker.cs" />
+    <Compile Include="Adapter\OptiTrack\OptiTrackClient.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="Configuration\VinterConfigurationService.cs" />
+    <Compile Include="Datamerge\DataMerger.cs" />
     <Compile Include="Datamerge\KinectMerger.cs" />
     <Compile Include="Datamerge\LeapMotionMerger.cs" />
     <Compile Include="Datamerge\Merger.cs" />
@@ -132,7 +136,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"
+xcopy /yr "$(SolutionDir)\..\lib\x64\NatNetLib.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions />
 </Project>

@@ -29,8 +29,8 @@ namespace VinteR
             var adapters = from adapter in kernel.GetAll<IInputAdapter>()
                     where adapter.Enabled
                     select adapter;
-            var merger = new DataMerger();
-            var processStream = new StreamingManager(new DataMerger());
+            var merger = kernel.Get<DataMerger>();
+            var processStream = new StreamingManager(kernel.Get<DataMerger>());
 
 
             foreach (var adapter in adapters)
@@ -43,7 +43,7 @@ namespace VinteR
                 adapter.ErrorEvent += (a, e) => {
                     Logger.Error("Adapter: {0}, has severe problems: {1}", a.GetType().Name, e.Message); Program.keepRunning = false;
                 };
-                var thread = new Thread(() => adapter.Run());
+                var thread = new Thread(adapter.Run);
                 thread.Start();
                 Logger.Info("Adapter {0,20} started", adapter.GetType().Name);
             }

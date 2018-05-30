@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
 using VinteR.Configuration;
 
 namespace VinteR.Tests
@@ -6,6 +7,8 @@ namespace VinteR.Tests
     [TestFixture]
     public class TestVinterConfigurationService
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         [Test]
         public void TestGetConfiguration()
         {

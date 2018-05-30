@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace VinteR.Configuration
 {
@@ -15,6 +10,7 @@ namespace VinteR.Configuration
         [JsonProperty("adapters")] public Adapters Adapters { get; set; }
     }
 
+    [JsonObject]
     public class Adapters
     {
         [JsonProperty("kinect")] public Kinect Kinect { get; set; }
@@ -25,11 +21,13 @@ namespace VinteR.Configuration
     public class Adapter
     {
         [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
 
-        [JsonProperty("canHandleGlobalCoordinateSystem")]
-        public bool CanHandleGlobalCoordinateSystem { get; set; }
+        [JsonProperty("isGlobalRoot")]
+        public bool IsGlobalRoot { get; set; }
     }
 
+    [JsonObject]
     public class Kinect : Adapter
     {
         [JsonProperty("colorStream.enabled")] public bool ColorStreamEnabled { get; set; }
@@ -40,10 +38,12 @@ namespace VinteR.Configuration
 
     }
 
+    [JsonObject]
     public class LeapMotion : Adapter
     {
     }
 
+    [JsonObject]
     public class OptiTrack : Adapter
     {
         [JsonProperty("server.ip")] public string ServerIp { get; set; }

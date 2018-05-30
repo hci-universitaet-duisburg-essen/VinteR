@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace VinteR.Model
 {
     /// <summary>
-    /// A joint contains the global coordinates in millimeter
+    /// A point contains the global coordinates in millimeter
     /// where it is located inside the world. It may have a name
-    /// to get specific information what this joint represents.
+    /// to get specific information what this üoint represents.
     /// </summary>
     public class Point
     {
         /// <summary>
-        /// Optional name of the joint
+        /// Optional name of the point
         /// </summary>
         public string Name { get; set; }
 
         /*
          * Allows to get information the validity of the Point
-         * The joint can be untracked (no acurate information available)
+         * The point can be untracked (no acurate information available)
          * or tracked and there are valid information avaialble or
-         * kust inferred (approximated by the position of other Joints)
+         * kust inferred (approximated by the position of other Points)
          */
         public string State { get; set; }
 
         /// <summary>
-        /// Global position of this joint.
+        /// Global position of this point.
         /// </summary>
         public Vector3 Position { get; set; }
 
