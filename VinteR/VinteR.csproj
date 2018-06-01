@@ -78,8 +78,10 @@
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
+    <Compile Include="Adapter\OptiTrack\OptiTrackAdapter.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackAdapterTracker.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackClient.cs" />
+    <Compile Include="Adapter\OptiTrack\OptiTrackEventHandler.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\IConfigurationService.cs" />
     <Compile Include="Configuration\VinterConfigurationService.cs" />

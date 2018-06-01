@@ -47,6 +47,11 @@ namespace VinteR.Tests.Adapter.OptiTrack
             });
         }
 
+        public void Disconnect()
+        {
+
+        }
+
         private static RigidBodyData MockRigidBodyData(int id, int x = 0, int y = 0, int z = 0)
         {
             return new RigidBodyData() {ID = id, x = x, y = y, z = z};

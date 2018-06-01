@@ -57,14 +57,14 @@ namespace VinteR.Adapter.OptiTrack
         {
             var newKinectBody = _client.RigidBodies
                 .DefaultIfEmpty(EmptyRigidBody)
-                .First(rb => rb.Name.Equals(_adapterNameKinect));
+                .FirstOrDefault(rb => rb.Name.Equals(_adapterNameKinect));
             _kinect = newKinectBody != EmptyRigidBody
                 ? newKinectBody
                 : _kinect;
 
             var newLeapMotionBody = _client.RigidBodies
                 .DefaultIfEmpty(EmptyRigidBody)
-                .First(rb => rb.Name.Equals(_adapterNameLeapMotion));
+                .FirstOrDefault(rb => rb.Name.Equals(_adapterNameLeapMotion));
             _leapMotion = newLeapMotionBody != EmptyRigidBody
                 ? newLeapMotionBody
                 : _leapMotion;
@@ -74,14 +74,14 @@ namespace VinteR.Adapter.OptiTrack
         {
             var newKinectBodyData = mocapData.RigidBodies
                 .DefaultIfEmpty(EmptyRigidBodyData)
-                .First(rb => rb.ID == _kinect?.ID);
-            _kinectBodyData = newKinectBodyData != EmptyRigidBodyData 
-                ? newKinectBodyData 
+                .FirstOrDefault(rb => rb.ID == _kinect?.ID);
+            _kinectBodyData = newKinectBodyData != EmptyRigidBodyData
+                ? newKinectBodyData
                 : _kinectBodyData;
 
             var newLeapMotionBodyData = mocapData.RigidBodies
                 .DefaultIfEmpty(EmptyRigidBodyData)
-                .First(rb => rb.ID == _leapMotion?.ID);
+                .FirstOrDefault(rb => rb.ID == _leapMotion?.ID);
             _leapMotionBodyData = newLeapMotionBodyData != EmptyRigidBodyData
                 ? newLeapMotionBodyData
                 : _leapMotionBodyData;

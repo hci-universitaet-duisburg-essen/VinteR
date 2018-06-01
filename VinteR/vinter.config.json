@@ -21,7 +21,7 @@
             "isGlobalRoot": true,
             "server.ip": "127.0.0.1",
             "client.ip": "127.0.0.1",
-            "connection.type": "unicast"
+            "connection.type": "multicast"
         }
     }
 }
