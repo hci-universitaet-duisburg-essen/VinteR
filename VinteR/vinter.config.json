@@ -2,7 +2,7 @@
     "home.dir": "C:\\VinteRData",
     "adapters": {
       "kinect": {
-        "enabled": false,
+        "enabled": true,
         "name": "kinect",
         "colorStream.enabled": true,
         "colorStream.flush": true,
@@ -12,7 +12,7 @@
 
       },
       "leapmotion": {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion"
       },
         "optitrack": {
