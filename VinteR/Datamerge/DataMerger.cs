@@ -47,20 +47,34 @@ namespace VinteR.Datamerge
             }
         }
 
+        /**
+         * Handle incoming frames and merge bodies
+         */
         public void HandleFrame(MocapFrame frame)
         {
-            // extract the bodies here and process
+            // Extract the bodies here and process
+            // We need the switch case, since we do not get specific bodies from mocapframe
+            // and there is no generic Body Merge function implemented ...
             switch (frame.SourceId)
             {
-                // Make a switch based on the sourceID e.g. Kinect, Leap and pass the data to the corresponding merge
-                /*
-                 * foreach(KinectBody body in frames.Bodies) {
-                 *  //  Merge(body)
-                 * }
-                 */
+                // TODO: add other cases for other input adapters
+                case ("Leap_Motion"):
+                    Body leftHand, rightHand;
 
-                // We need the switch case, since we do not get specific bodies from mocapframe
-                // and there is no generic Body Merge function implemented ...
+                    foreach (Model.LeapMotion.Hand hand in frame.Bodies)
+                    {
+                        if (hand.Side == ESideType.Left)
+                        {
+                            leftHand = Merge(hand);
+                        }
+                        else
+                        {
+                            rightHand = Merge(hand);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
