@@ -31,6 +31,7 @@ namespace VinteR.Adapter.OptiTrack
             handledFrame.timestamp = System.DateTime.Now.ToString(); // Adding timestamp to MocapFrame
 
             adapter.OnFrameAvailable(handledFrame);
+            handledFrame.Bodies.Clear();
         }
 
         /*
@@ -57,6 +58,7 @@ namespace VinteR.Adapter.OptiTrack
                     VinteR.Model.OptiTrack.RigidBody rb = new RigidBody(rbData.ID.ToString()); // Create RB
                     rb.Position = new Vector3(rbData.x, rbData.y, rbData.z); // Position
                     rb.LocalRotation = new Quaternion(rbData.qx, rbData.qy, rbData.qz, rbData.qw); // Orientation
+                    rb.Points = new List<Point>() { new Point(rb.Position) };
                     handledFrame.Bodies.Add(rb); // Add to MocapFrame list of bodies
                 }
             }
@@ -76,8 +78,24 @@ namespace VinteR.Adapter.OptiTrack
                     skl.RigidBodies.Add(bone); // Add bone to skeleton
 
                 }
-
                 handledFrame.Bodies.Add(skl);
+            }
+
+            for (int j = 0; j < data.nMarkerSets - 1; j++)
+            {
+                NatNetML.MarkerSetData msData = data.MarkerSets[j]; // Received rigid body descriptions
+                VinteR.Model.OptiTrack.MarkerSet ms = new MarkerSet(msData.MarkerSetName);
+                for (int k = 0; k < msData.nMarkers; k++)
+                {
+                    NatNetML.Marker markerData = msData.Markers[k];
+
+                    VinteR.Model.Point marker = new Point(markerData.x, markerData.y, markerData.z);
+                    marker.Name = markerData.ID.ToString();
+                    ms.Markers.Add(marker);
+                    Logger.Debug("Marker in Set -- Name: {0} || Position: {1}, {2}, {3}", ms.OptiTrackId, marker.Position.X, marker.Position.Y, marker.Position.Z);
+                }
+                Logger.Debug("MarkerSet vorhanden");
+                handledFrame.Bodies.Add(ms);
             }
         }
     }

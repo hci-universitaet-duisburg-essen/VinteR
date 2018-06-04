@@ -32,12 +32,14 @@ namespace VinteR.Adapter.OptiTrack
 
         public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
         public IEnumerable<Skeleton> Skeletons => _skeletons;
+        public IEnumerable<MarkerSet> MarkerSets => _markerSets;
 
         private NatNetML.NatNetClientML _natNetClient;
         private bool _isConnected;
 
         private readonly List<RigidBody> _rigidBodies = new List<RigidBody>();
         private readonly List<Skeleton> _skeletons = new List<Skeleton>();
+        private readonly List<MarkerSet> _markerSets = new List<MarkerSet>();
         private List<NatNetML.DataDescriptor> _dataDescriptor = new List<NatNetML.DataDescriptor>();
 
         private readonly IConfigurationService _configurationService;
@@ -137,6 +139,7 @@ namespace VinteR.Adapter.OptiTrack
                 Data description is re-obtained in the main function so that contents
                 in the frame handler is kept minimal. */
             if ((data.bTrackingModelsChanged
+                 || data.nMarkerSets != _markerSets.Count
                  || data.nRigidBodies != _rigidBodies.Count
                  || data.nSkeletons != _skeletons.Count))
             {
@@ -145,6 +148,7 @@ namespace VinteR.Adapter.OptiTrack
 
                 /*  Clear out existing lists */
                 _dataDescriptor.Clear();
+                _markerSets.Clear();
                 _rigidBodies.Clear();
                 _skeletons.Clear();
 
@@ -194,6 +198,13 @@ namespace VinteR.Adapter.OptiTrack
                 // Parse Data Descriptions for each data sets and save them in the delcared lists and hashtables for later uses.
                 switch (dataSetType)
                 {
+                    case ((int) NatNetML.DataDescriptorType.eMarkerSetData):
+                        var ms = (NatNetML.MarkerSet) description[i];
+                        Logger.Info("\tMarkerset ({0})", ms.Name);
+
+                        // Saving Rigid Body Descriptions
+                        _markerSets.Add(ms);
+                        break;
                     case ((int) NatNetML.DataDescriptorType.eRigidbodyData):
                         var rb = (NatNetML.RigidBody) description[i];
                         Logger.Info("\tRigidBody ({0})", rb.Name);
