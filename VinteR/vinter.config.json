@@ -2,7 +2,7 @@
     "home.dir": "C:\\VinteRData",
     "adapters": {
       "kinect": {
-        "enabled": false,
+        "enabled": true,
         "name": "kinect",
         "colorStream.enabled": true,
         "colorStream.flush": true,
@@ -12,15 +12,15 @@
 
       },
       "leapmotion": {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion"
       },
         "optitrack": {
             "enabled": true,
             "name": "optitrack",
             "isGlobalRoot": true,
-            "server.ip": "10.23.112.35",
-            "client.ip": "10.23.112.12",
+            "server.ip": "127.0.0.1",
+            "client.ip": "127.0.0.1",
             "connection.type": "multicast"
         }
     }
