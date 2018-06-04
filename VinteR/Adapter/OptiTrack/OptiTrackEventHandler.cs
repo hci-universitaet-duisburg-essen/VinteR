@@ -31,6 +31,7 @@ namespace VinteR.Adapter.OptiTrack
             handledFrame.timestamp = System.DateTime.Now.ToString(); // Adding timestamp to MocapFrame
 
             adapter.OnFrameAvailable(handledFrame);
+            handledFrame.Bodies.Clear();
         }
 
         /*
