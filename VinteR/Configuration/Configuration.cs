@@ -28,11 +28,15 @@ namespace VinteR.Configuration
         public IDictionary<string, JToken> AdditionalSettings => _additionalSettings;
 
         // kinect props
+        public string DataDir { get; set; }
         public bool ColorStreamEnabled { get; set; }
         public bool ColorStreamFlush { get; set; }
         public bool DepthStreamEnabled { get; set; }
         public bool DepthStreamFlush { get; set; }
         public bool SkeletonStreamFlush { get; set; }
+        public string ColorStreamFlushFile { get; set; }
+        public string DepthStreamFlushFile { get; set; }
+        public string SkeletonStreamFlushFile { get; set; }
 
         // optitrack props
         public string ServerIp { get; set; }
@@ -59,6 +63,14 @@ namespace VinteR.Configuration
             DepthStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
             setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush", null);
             SkeletonStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            setting = _additionalSettings.GetValueOrDefault("data.dir", "KinectData");
+            DataDir = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("colorStream.flush.filename", "ColorStreamData");
+            ColorStreamFlushFile = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("depthStream.flush.filename", "DepthStreamData");
+            DepthStreamFlushFile = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush.filename", "SkeletonStreamData");
+            SkeletonStreamFlushFile = (string) setting;
 
             setting = _additionalSettings.GetValueOrDefault("server.ip", null);
             ServerIp = setting != null ? (string)setting : null;

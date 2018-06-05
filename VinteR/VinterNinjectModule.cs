@@ -5,6 +5,7 @@ using VinteR.Adapter.LeapMotion;
 using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
 using VinteR.Datamerge;
+using VinteR.MainApplication;
 using VinteR.Transform;
 
 namespace VinteR
@@ -14,6 +15,7 @@ namespace VinteR
 
         public override void Load()
         {
+            Bind<IMainApplication>().To<MainApplication.MainApplication>();
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
 
             Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(LeapMotionAdapter.AdapterTypeName);

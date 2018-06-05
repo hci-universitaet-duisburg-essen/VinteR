@@ -76,6 +76,7 @@
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
+    <Compile Include="Adapter\Kinect\KinectOutputHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackAdapter.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Datamerge\KinectMerger.cs" />
     <Compile Include="Datamerge\LeapMotionMerger.cs" />
     <Compile Include="Datamerge\OptiTrackMerger.cs" />
+    <Compile Include="MainApplication\IMainApplication.cs" />
+    <Compile Include="MainApplication\MainApplication.cs" />
     <Compile Include="Model\Body.cs" />
     <Compile Include="Model\OptiTrack\MarkerSet.cs" />
     <Compile Include="Model\Point.cs" />

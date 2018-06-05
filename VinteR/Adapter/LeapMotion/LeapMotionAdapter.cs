@@ -16,11 +16,12 @@ namespace VinteR.Adapter.LeapMotion
 
         // Error Handling
         public event ErrorEventHandler ErrorEvent;
- 
-        public bool Enabled => Config.Enabled;
-        public string Name { get; set; }
-        public Configuration.Adapter Config { get; set; }
 
+        public bool Enabled => Config.Enabled;
+
+        public string Name { get; set; }
+        public Configuration.Adapter Config { get; set; }       
+        
         /**
          * Destructor
          */
