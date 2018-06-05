@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using VinteR.Adapter.OptiTrack;
 using NatNetML;
+using Ninject.Infrastructure.Language;
 
 namespace VinteR.Tests.Adapter.OptiTrack
 {
@@ -9,11 +12,11 @@ namespace VinteR.Tests.Adapter.OptiTrack
         public event OptiTrackFrameReadyEventHandler OnFrameReady;
         public event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
-        public IEnumerable<MarkerSet> MarkerSets { get; }
-        public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
+        public IEnumerable<MarkerSet> MarkerSets => _markerSets;
+        public IEnumerable<RigidBody> RigidBodies { get; }
         public IEnumerable<Skeleton> Skeletons { get; }
 
-        private IList<RigidBody> _rigidBodies;
+        private IList<MarkerSet> _markerSets;
 
         private bool _isConnected;
 
@@ -27,10 +30,10 @@ namespace VinteR.Tests.Adapter.OptiTrack
             _isConnected = true;
 
             // create mock objects for all input adaters
-            _rigidBodies = new List<RigidBody>()
+            _markerSets = new List<MarkerSet>()
             {
-                new RigidBody() {Name = "kinect", ID = 1},
-                new RigidBody() {Name = "leapmotion", ID = 2}
+                new MarkerSet() {Name = "kinect"},
+                new MarkerSet() {Name = "leapmotion"}
             };
             // call event handler that descriptions have changed
             OnDataDescriptionsChanged?.Invoke();
@@ -38,24 +41,51 @@ namespace VinteR.Tests.Adapter.OptiTrack
             // call frame available event handler
             OnFrameReady?.Invoke(new FrameOfMocapData()
             {
-                RigidBodies = new RigidBodyData[]
+                MarkerSets = new MarkerSetData[]
                 {
                     // kinect
-                    MockRigidBodyData(1, 1, 1, 1),
+                    MockMarkerSetData("kinect", new Vector3[]
+                    { 
+                        Vector3.Zero,
+                        new Vector3(3, 0, 3),
+                        new Vector3(0, 0, 3)
+                    }),
                     // leap motion
-                    MockRigidBodyData(2, 2, 2, 2)
-                }
+                    MockMarkerSetData("leapmotion", new Vector3[]
+                    {
+                        Vector3.Zero,
+                        new Vector3(6, 6, 3),
+                        new Vector3(6, 0, 3)
+                    })
+                },
+                nMarkerSets = 2
             });
         }
 
         public void Disconnect()
         {
-
         }
 
-        private static RigidBodyData MockRigidBodyData(int id, int x = 0, int y = 0, int z = 0)
+        private static MarkerSetData MockMarkerSetData(string name, IReadOnlyList<Vector3> points)
         {
-            return new RigidBodyData() {ID = id, x = x, y = y, z = z};
+            var result = new MarkerSetData()
+            {
+                MarkerSetName = name,
+                nMarkers = points.Count()
+            };
+            var markers = new Marker[points.Count];
+            for (var i = 0; i < markers.Length; i++)
+            {
+                var vector3 = points[i];
+                markers[i] = MockMarker(vector3.X, vector3.Y, vector3.Z);
+            }
+            result.Markers = markers;
+            return result;
+        }
+
+        private static Marker MockMarker(float x = 0, float y = 0, float z = 0)
+        {
+            return new Marker() {x = x, y = y, z = z};
         }
     }
 }

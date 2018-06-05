@@ -21,7 +21,7 @@ namespace VinteR.Tests
         public void TestLocateKinect()
         {
             var position = _adapterTracker.Locate("kinect");
-            var expected = new Vector3(1, 1, 1);
+            var expected = new Vector3(1, 0, 2);
             Assert.AreEqual(expected, position);
         }
 
@@ -29,7 +29,7 @@ namespace VinteR.Tests
         public void TestLocateLeapMotion()
         {
             var position = _adapterTracker.Locate("leapmotion");
-            var expected = new Vector3(2, 2, 2);
+            var expected = new Vector3(4, 2, 2);
             Assert.AreEqual(expected, position);
         }
 
@@ -37,7 +37,7 @@ namespace VinteR.Tests
         public void TestLocateNotFound()
         {
             var position = _adapterTracker.Locate("unknown");
-            Assert.IsNull(position);
+            Assert.AreEqual(Vector3.Zero, position);
         }
     }
 }

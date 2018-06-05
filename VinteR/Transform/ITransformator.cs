@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace VinteR.Transform
 {
@@ -47,5 +48,12 @@ namespace VinteR.Transform
         /// <param name="localOriginRotation">Rotation of the root of the local coordinate system</param>
         /// <returns>The computed world rotation</returns>
         Vector3 GetGlobalPosition(Vector3 localOrigin, Vector3 localPosition, Quaternion localObjectRotation, Quaternion localOriginRotation);
+
+        /// <summary>
+        /// Returns the centroid of all given points
+        /// </summary>
+        /// <param name="points">All points that are relevant for the calculation</param>
+        /// <returns>A <code>Vector3</code> instance</returns>
+        Vector3 GetCentroid(IEnumerable<Vector3> points);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using NatNetML;
 using VinteR.Configuration;
+using VinteR.Transform;
 
 namespace VinteR.Adapter.OptiTrack
 {
@@ -12,15 +13,14 @@ namespace VinteR.Adapter.OptiTrack
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly RigidBody EmptyRigidBody = new RigidBody();
-        private static readonly RigidBodyData EmptyRigidBodyData = new RigidBodyData();
-
         private readonly IOptiTrackClient _client;
 
         private readonly IList<Configuration.Adapter> _adapters;
         private readonly IConfigurationService _configService;
+        private readonly IDictionary<MarkerSet, MarkerSetData> _markerSets = new Dictionary<MarkerSet, MarkerSetData>();
+        private readonly ITransformator transformator;
 
-        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
+        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService, ITransformator transformator)
         {
             this._client = client;
             this._client.OnFrameReady += HandleFrameReady;
@@ -28,6 +28,8 @@ namespace VinteR.Adapter.OptiTrack
 
             this._adapters = configurationService.GetConfiguration().Adapters;
             this._configService = configurationService;
+
+            this.transformator = transformator;
         }
 
         public Vector3? Locate(string name)
@@ -35,37 +37,62 @@ namespace VinteR.Adapter.OptiTrack
             Logger.Debug("Locating {0}", name);
             if (!_client.IsConnected())
             {
-                var adapter = _configService.GetConfiguration().Adapters
+                var config = _configService.GetConfiguration().Adapters
                     .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName) && a.IsGlobalRoot)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
-                if (adapter == null)
+                if (config == null)
                     throw new ApplicationException("No optitrack config with global root given");
-                _client.Connect(adapter.ClientIp, adapter.ServerIp, adapter.ConnectionType);
+                _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
             }
 
-            var firstOrDefault = _adapters
-                .Where(a => a.Name.Equals(name))
+            /*
+             * All adapters are tracked as rigid bodies. Try to locate the adapter
+             * that has the given name specified inside motive.
+             */
+            var markerSetData = _markerSets.Where(p => p.Key.Name.Equals(name))
+                .Select(p => p.Value)
                 .DefaultIfEmpty(null)
                 .FirstOrDefault();
-            if (firstOrDefault != null)
-                return getPosition(firstOrDefault.Name);
-
-            return null;
+            return markerSetData != null
+                ? transformator.GetCentroid(ToVector3(markerSetData))
+                : Vector3.Zero;
         }
 
-        private Vector3 getPosition(string name)
+        private static IEnumerable<Vector3> ToVector3(MarkerSetData markerSet)
         {
-            return Vector3.Zero;
+            var vectors = new Vector3[markerSet.nMarkers];
+            for (var i = 0; i < markerSet.nMarkers; i++)
+            {
+                var marker = markerSet.Markers[i];
+                vectors[i] = new Vector3(marker.x, marker.y, marker.z);
+            }
+
+            return vectors;
         }
 
         private void HandleDataDescriptionsChanged()
         {
-
+            _markerSets.Clear();
+            foreach (var markerSet in _client.MarkerSets)
+            {
+                _markerSets.Add(markerSet, null);
+            }
         }
 
         private void HandleFrameReady(NatNetML.FrameOfMocapData mocapData)
         {
+            // update last position of rigid bodies
+            for (var i = 0; i < mocapData.nMarkerSets; i++)
+            {
+                var markerSetData = mocapData.MarkerSets[i];
+                var markerSet = _markerSets.Where(p => p.Key.Name.Equals(markerSetData.MarkerSetName))
+                    .Select(p => p.Key)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
+                if (markerSet != null)
+                    _markerSets[markerSet] = markerSetData;
+            }
         }
     }
 }
