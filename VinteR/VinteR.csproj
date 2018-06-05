@@ -141,5 +141,9 @@
     <PostBuildEvent>xcopy /yr "$(SolutionDir)\..\lib\x64\LeapC.dll" "$(TargetDir)"
 xcopy /yr "$(SolutionDir)\..\lib\x64\NatNetLib.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
-  <ProjectExtensions />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties vinter_1config_1json__JSONSchema="vinter.config.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

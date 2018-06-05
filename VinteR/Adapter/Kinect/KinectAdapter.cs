@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Microsoft.Kinect;
 using VinteR.Configuration;
 
@@ -8,18 +11,31 @@ namespace VinteR.Adapter.Kinect
 {
     class KinectAdapter : IInputAdapter
     {
+        public static readonly string AdapterTypeName = "kinect";
+
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Contains all unique kinect ids that are already in use by this application.
+        /// Two kinect sensors can be connected to one device. Therefore used sensors
+        /// have to be saved. As the adapter might run in a seperate thread the lock is
+        /// used to make the set of used sensors thread safe.
+        /// </summary>
+        private static readonly ISet<string> UsedSensors = new HashSet<string>();
+        private static readonly object UsedSensorsLock = new object();
+        
         // MocapFrame Event Handling
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
         // ColorFrame Event Handling
         public delegate void KinectColorEventHandler(KinectAdapter adapter, byte[] colorPixels);
+
         public event KinectColorEventHandler ColorFramAvailable;
 
         // DepthFrame Event Handling
         public delegate void KinectDepthEventHandler(KinectAdapter adapter, DepthImagePixel[] depthImage);
+
         public event KinectDepthEventHandler DepthFramAvailable;
 
         // Error Handling
@@ -27,10 +43,20 @@ namespace VinteR.Adapter.Kinect
 
         public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
- 
+
         private readonly IConfigurationService _configurationService;
 
-        public bool Enabled => _configurationService.GetConfiguration().Adapters.Kinect.Enabled;
+        public bool Enabled => _config.Enabled;
+
+        public string Name { get; set; }
+
+        private Configuration.Kinect _config;
+
+        public Configuration.Adapter Config
+        {
+            get => _config;
+            set => _config = value as Configuration.Kinect ?? throw new ApplicationException("Accepting only kinect configuration");
+        }
 
         public KinectAdapter(IConfigurationService configurationService)
         {
@@ -41,17 +67,22 @@ namespace VinteR.Adapter.Kinect
 
         public void Run()
         {
-
-            // Look through all sensors and start the first connected one.
-            // This requires that a Kinect is connected at the time of app startup.
-            // To make your app robust against plug/unplug, 
-            // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
-            foreach (var potentialSensor in KinectSensor.KinectSensors)
+            lock (UsedSensorsLock)
             {
-                if (potentialSensor.Status == KinectStatus.Connected)
+                // Look through all sensors and start the first connected one.
+                // This requires that a Kinect is connected at the time of app startup.
+                // To make your app robust against plug/unplug, 
+                // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
+                foreach (var potentialSensor in KinectSensor.KinectSensors)
                 {
-                    this.sensor = potentialSensor;
-                    break;
+
+                    if (potentialSensor.Status == KinectStatus.Connected
+                         && !UsedSensors.Contains(potentialSensor.UniqueKinectId))
+                    {
+                        this.sensor = potentialSensor;
+                        UsedSensors.Add(potentialSensor.UniqueKinectId);
+                        break;
+                    }
                 }
             }
 
@@ -62,13 +93,13 @@ namespace VinteR.Adapter.Kinect
                 this.sensor.SkeletonFrameReady += this.kinectHandler.SensorSkeletonFrameReady;
 
                 // Enable Color Stream
-                if (_configurationService.GetConfiguration().Adapters.Kinect.ColorStreamEnabled)
+                if (_config.ColorStreamEnabled)
                 {
                     this.sensor.ColorStream.Enable();
                     this.sensor.ColorFrameReady += this.kinectHandler.SensorColorFrameReady;
                 }
 
-                if (_configurationService.GetConfiguration().Adapters.Kinect.DepthStreamEnabled)
+                if (_config.DepthStreamEnabled)
                 {
                     this.sensor.DepthStream.Enable();
                     this.sensor.DepthFrameReady += this.kinectHandler.SensorDepthFrameReady;
@@ -97,19 +128,19 @@ namespace VinteR.Adapter.Kinect
 
         public void Stop()
         {
-            if (_configurationService.GetConfiguration().Adapters.Kinect.SkeletonStreamFlush)
+            if (_config.SkeletonStreamFlush)
             {
                 var SkeletonLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
                 flushMocapData(SkeletonLogFile);
             }
 
-            if (_configurationService.GetConfiguration().Adapters.Kinect.ColorStreamEnabled && _configurationService.GetConfiguration().Adapters.Kinect.ColorStreamFlush)
+            if (_config.ColorStreamEnabled && _config.ColorStreamFlush)
             {
                 var colorStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "colorStream.json");
                 flushColorData(colorStreamLogFile);
             }
 
-            if (_configurationService.GetConfiguration().Adapters.Kinect.DepthStreamEnabled && _configurationService.GetConfiguration().Adapters.Kinect.DepthStreamFlush)
+            if (_config.DepthStreamEnabled && _config.DepthStreamFlush)
             {
                 var depthStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "depthStream.json");
                 flushColorData(depthStreamLogFile);

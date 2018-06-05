@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace VinteR.Configuration
 {
@@ -10,18 +12,17 @@ namespace VinteR.Configuration
         [JsonProperty("adapters")] public Adapters Adapters { get; set; }
     }
 
-    [JsonObject]
+    [JsonArray]
     public class Adapters
     {
-        [JsonProperty("kinect")] public Kinect Kinect { get; set; }
-        [JsonProperty("leapmotion")] public LeapMotion LeapMotion { get; set; }
-        [JsonProperty("optitrack")] public OptiTrack OptiTrack { get; set; }
+        public IList<Adapter> Items { get; set; }
     }
 
     public class Adapter
     {
         [JsonProperty("enabled")] public bool Enabled { get; set; }
         [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("adaptertype")] public string AdapterType { get; set; }
 
         [JsonProperty("isGlobalRoot")]
         public bool IsGlobalRoot { get; set; }

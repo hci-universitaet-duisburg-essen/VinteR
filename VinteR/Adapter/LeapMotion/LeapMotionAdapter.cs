@@ -11,27 +11,21 @@ namespace VinteR.Adapter.LeapMotion
 {
     class LeapMotionAdapter : IInputAdapter
     {
-        public event MocapFrameAvailableEventHandler FrameAvailable;
+        public static readonly string AdapterTypeName = "leapmotion";
 
-        public bool Enabled => _configurationService.GetConfiguration().Adapters.LeapMotion.Enabled;
+        public event MocapFrameAvailableEventHandler FrameAvailable;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         
         private Controller controller;
         private LeapMotionEventHandler listener;
-        private readonly IConfigurationService _configurationService;
 
         // Error Handling
         public event ErrorEventHandler ErrorEvent;
-
-
-        /**
-         * Init Leap Motion Listener and add subscriber methods for controller events
-         */
-        public LeapMotionAdapter(IConfigurationService configurationService)
-        {
-            this._configurationService = configurationService;
-        }
+ 
+        public bool Enabled => Config.Enabled;
+        public string Name { get; set; }
+        public Configuration.Adapter Config { get; set; }
 
         /**
          * Destructor

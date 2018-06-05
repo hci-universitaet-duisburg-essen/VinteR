@@ -19,7 +19,7 @@ namespace VinteR.Adapter.OptiTrack
 
         bool IsConnected();
 
-        void Connect();
+        void Connect(string clientIp, string serverIp, string connectionType);
         void Disconnect();
     }
 
@@ -42,20 +42,15 @@ namespace VinteR.Adapter.OptiTrack
         private readonly List<MarkerSet> _markerSets = new List<MarkerSet>();
         private List<NatNetML.DataDescriptor> _dataDescriptor = new List<NatNetML.DataDescriptor>();
 
-        private readonly IConfigurationService _configurationService;
-
-        public OptiTrackClient(IConfigurationService configurationService)
+        public OptiTrackClient()
         {
             this._natNetClient = new NatNetClientML();
-            this._configurationService = configurationService;
         }
 
-        public void Connect()
+        public void Connect(string clientIp, string serverIp, string connectionType)
         {
             /*  [NatNet] Instantiate the client object  */
             _natNetClient = new NatNetML.NatNetClientML();
-
-            var optiTrackConfig = _configurationService.GetConfiguration().Adapters.OptiTrack;
 
             /*  [NatNet] Checking verions of the NatNet SDK library */
             var natNetVersion = _natNetClient.NatNetVersion();
@@ -64,15 +59,15 @@ namespace VinteR.Adapter.OptiTrack
 
             /*  [NatNet] Connecting to the Server    */
             Logger.Info("\nConnecting...\n\tLocal IP address: {0}\n\tServer IP Address: {1}\n\n",
-                optiTrackConfig.ClientIp, optiTrackConfig.ServerIp);
+                clientIp, serverIp);
 
             var connectParams = new NatNetClientML.ConnectParams
             {
-                ConnectionType = optiTrackConfig.ConnectionType == "unicast"
+                ConnectionType = connectionType == "unicast"
                     ? ConnectionType.Unicast
                     : ConnectionType.Multicast,
-                ServerAddress = optiTrackConfig.ServerIp,
-                LocalAddress = optiTrackConfig.ClientIp
+                ServerAddress = serverIp,
+                LocalAddress = clientIp
             };
             _natNetClient.Connect(connectParams);
 

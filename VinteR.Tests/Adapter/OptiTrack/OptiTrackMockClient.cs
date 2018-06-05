@@ -21,7 +21,7 @@ namespace VinteR.Tests.Adapter.OptiTrack
             return _isConnected;
         }
 
-        public void Connect()
+        public void Connect(string clientIp, string serverIp, string connectionType)
         {
             _isConnected = true;
 
