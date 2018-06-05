@@ -76,6 +76,7 @@
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectEventHandler.cs" />
+    <Compile Include="Adapter\Kinect\KinectOutputHandler.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionAdapter.cs" />
     <Compile Include="Adapter\LeapMotion\LeapMotionEventHandler.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackAdapter.cs" />

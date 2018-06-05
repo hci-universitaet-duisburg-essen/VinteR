@@ -14,56 +14,17 @@ namespace VinteR.Adapter.Kinect
      */
     class KinectEventHandler
     {
-        static List<MocapFrame> frameList = new List<MocapFrame>();
+        public static List<MocapFrame> frameList = new List<MocapFrame>();
         JsonSerializer serializer = new JsonSerializer();
         KinectAdapter adapter;
-        static List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
-        static List<byte[]> colorPixelList = new List<byte[]>();
+        public static List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
+        public static List<byte[]> colorPixelList = new List<byte[]>();
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public KinectEventHandler(KinectAdapter adapter)
         {
             this.adapter = adapter;
-        }
-
-        public void flushFrames(string path)
-        {
-            // Implement the JSON Serialization of FrameList here! to file
-            // Debug.WriteLine(frameList);
-            // Since the FrameList changes permanent - freeze for serialize
-            List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
-            // Serialize 
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, serializeList);
-            }
-
-        }
-
-        public void flushDepth(string path)
-        {
-            // Debug.WriteLine(depthList);
-            List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, serializeList);
-            }
-
-        }
-
-        public void flushColor(string path)
-        {
-            // Debug.WriteLine(colorPixelList);
-            List<byte[]> serializeList = new List<byte[]>(colorPixelList);
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, serializeList);
-            }
-
         }
 
         public void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
