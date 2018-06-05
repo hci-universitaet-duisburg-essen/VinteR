@@ -1,27 +1,29 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
-    "adapters": {
-      "kinect": {
-        "enabled": true,
-        "name": "kinect",
-        "colorStream.enabled": true,
-        "colorStream.flush": true,
-        "depthStream.enabled": true,
-        "depthStream.flush": true,
-        "skeletonStream.flush":  true
-
-      },
-      "leapmotion": {
+    "adapters": [
+        {
             "enabled": true,
-            "name": "leapmotion"
-      },
-        "optitrack": {
+            "name": "kinect",
+            "adaptertype": "kinect",
+            "colorStream.enabled": true,
+            "colorStream.flush": true,
+            "depthStream.enabled": true,
+            "depthStream.flush": true,
+            "skeletonStream.flush": true
+        },
+        {
+            "enabled": true,
+            "name": "leapmotion",
+            "adaptertype": "leapmotion"
+        },
+        {
             "enabled": true,
             "name": "optitrack",
+            "adaptertype": "optitrack",
             "isGlobalRoot": true,
             "server.ip": "127.0.0.1",
             "client.ip": "127.0.0.1",
             "connection.type": "multicast"
         }
-    }
+    ]
 }

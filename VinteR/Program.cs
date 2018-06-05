@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Ninject;
 using VinteR.Adapter;
+using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Stream;
 
@@ -17,10 +20,17 @@ namespace VinteR
         {
             // create and load dependency injection kernel
             var kernel = new StandardKernel(new VinterNinjectModule());
+            var configService = kernel.Get<IConfigurationService>();
+            var adapters = new List<IInputAdapter>();
 
-            var adapters = from adapter in kernel.GetAll<IInputAdapter>()
-                    where adapter.Enabled
-                    select adapter;
+            foreach (var adapterItem in configService.GetConfiguration().Adapters)
+            {
+                var inputAdapter = kernel.Get<IInputAdapter>(adapterItem.AdapterType);
+                inputAdapter.Config = adapterItem;
+                if (adapterItem.Enabled)
+                    adapters.Add(inputAdapter);
+            }
+
             var merger = kernel.Get<DataMerger>();
             var processStream = new StreamingManager(kernel.Get<DataMerger>());
 

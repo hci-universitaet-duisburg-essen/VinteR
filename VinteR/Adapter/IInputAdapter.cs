@@ -14,6 +14,9 @@ namespace VinteR.Adapter
 
         bool Enabled { get; }
 
+        string Name { get; set; }
+        Configuration.Adapter Config { get; set; }
+
         void Run();
 
         void Stop();

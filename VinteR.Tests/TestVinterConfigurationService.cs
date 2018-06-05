@@ -17,6 +17,7 @@ namespace VinteR.Tests
 
             Assert.IsNotNull(configuration);
             Assert.AreEqual("C:\\VinteRData", configuration.HomeDir);
+            Assert.IsNotEmpty(configuration.Adapters);
         }
     }
 }
