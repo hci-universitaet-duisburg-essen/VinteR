@@ -2,6 +2,7 @@
 using Ninject;
 using NUnit.Framework;
 using VinteR.Adapter;
+using VinteR.Adapter.OptiTrack;
 
 namespace VinteR.Tests
 {
@@ -14,6 +15,8 @@ namespace VinteR.Tests
         public void SetUpTestOnce()
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
+            ninjectKernel.Rebind<IAdapterTracker>().To<OptiTrackAdapterTracker>();
+
             _adapterTracker = ninjectKernel.Get<IAdapterTracker>();
         }
 

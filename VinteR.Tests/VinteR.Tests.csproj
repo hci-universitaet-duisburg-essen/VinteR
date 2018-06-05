@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapter\OptiTrack\OptiTrackMockAdapterTracker.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackMockClient.cs" />
     <Compile Include="TestAdapterTracker.cs" />
     <Compile Include="TestDataMerger.cs" />

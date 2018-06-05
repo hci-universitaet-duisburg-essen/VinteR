@@ -45,7 +45,7 @@ namespace VinteR.Adapter.LeapMotion
             //Logger.Info("Frame id: {0}, hands: {1}", frame.Id, frame.Hands.Count);
 
             // Create Mocap Frame to send to server later
-            VinteR.Model.MocapFrame mocapFrame = new VinteR.Model.MocapFrame("Leap_Motion");
+            VinteR.Model.MocapFrame mocapFrame = new VinteR.Model.MocapFrame(adapter.Config.Name, adapter.Config.AdapterType);
 
             foreach (Leap.Hand hand in frame.Hands)
             {
@@ -109,8 +109,6 @@ namespace VinteR.Adapter.LeapMotion
                 mocapFrame.AddBody(ref modelBody);
             }
 
-            // Add timestamp to mocapFrame and send to server via adapter
-            mocapFrame.timestamp = System.DateTime.Now.ToString();
             adapter.OnFrameAvailable(mocapFrame);
         }
 

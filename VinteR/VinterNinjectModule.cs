@@ -15,13 +15,18 @@ namespace VinteR
         public override void Load()
         {
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
+
             Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(LeapMotionAdapter.AdapterTypeName);
             Bind<IInputAdapter>().To<KinectAdapter>().Named(KinectAdapter.AdapterTypeName);
             Bind<IInputAdapter>().To<OptiTrackAdapter>().Named(OptiTrackAdapter.AdapterTypeName);
+
             Bind<ITransformator>().To<Transformator>();
             Bind<IAdapterTracker>().To<OptiTrackAdapterTracker>();
             Bind<IOptiTrackClient>().To<OptiTrackClient>().InSingletonScope();
-            Bind<DataMerger>().To<DataMerger>();
+
+            Bind<IDataMerger>().To<LeapMotionMerger>().Named(LeapMotionAdapter.AdapterTypeName);
+            Bind<IDataMerger>().To<KinectMerger>().Named(KinectAdapter.AdapterTypeName);
+            Bind<IDataMerger>().To<OptiTrackMerger>().Named(OptiTrackAdapter.AdapterTypeName);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace VinteR.Tests
         {
             base.Load();
             Rebind<IOptiTrackClient>().To<OptiTrackMockClient>();
+            Rebind<IAdapterTracker>().To<OptiTrackMockAdapterTracker>();
         }
     }
 }
