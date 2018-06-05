@@ -5,19 +5,23 @@
             "enabled": true,
             "name": "kinect",
             "adaptertype": "kinect",
-            "colorStream.enabled": true,
-            "colorStream.flush": true,
+            "data.dir": "KinectData",
+            "colorStream.enabled": false,
+            "colorStream.flush": false,
+            "colorStream.flush.filename": "colorStreamData.json",
             "depthStream.enabled": true,
             "depthStream.flush": true,
-            "skeletonStream.flush": true
+            "depthStream.flush.filename": "DepthStreamData.json",
+            "skeletonStream.flush": true,
+            "skeletonStream.flush.filename":  "skeletonStreamData.json"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "isGlobalRoot": true,

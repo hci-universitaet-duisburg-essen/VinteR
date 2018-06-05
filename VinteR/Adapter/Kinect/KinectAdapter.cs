@@ -44,7 +44,8 @@ namespace VinteR.Adapter.Kinect
 
         public KinectSensor sensor;
         private KinectEventHandler kinectHandler;
-
+        private KinectOutputHandler kinectOutputHandler;
+ 
         private readonly IConfigurationService _configurationService;
 
         public bool Enabled => _config.Enabled;
@@ -66,10 +67,15 @@ namespace VinteR.Adapter.Kinect
             this._configurationService = configurationService;
             // Create the Kinect Handler
             this.kinectHandler = new KinectEventHandler(this);
+            
+            
         }
 
         public void Run()
         {
+            // Define the OutputHandling here, _config injected after constructor call
+            this.kinectOutputHandler = new KinectOutputHandler(this._configurationService, this._config);
+
             lock (UsedSensorsLock)
             {
                 // Look through all sensors and start the first connected one.
@@ -130,65 +136,59 @@ namespace VinteR.Adapter.Kinect
         {
             if (_config.SkeletonStreamFlush)
             {
-                var SkeletonLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
-                    "frames.json");
-                flushMocapData(SkeletonLogFile);
+                
+                flushMocapData();
             }
 
             if (_config.ColorStreamEnabled && _config.ColorStreamFlush)
             {
-                var colorStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
-                    "colorStream.json");
-                flushColorData(colorStreamLogFile);
+                flushColorData();
             }
 
             if (_config.DepthStreamEnabled && _config.DepthStreamFlush)
             {
-                var depthStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
-                    "depthStream.json");
-                flushColorData(depthStreamLogFile);
+                flushDepthData();
             }
         }
 
-        /*
-        * Write all Data out using the File Based Writers
-        */
-        public void flushMocapData(string path)
+       /*
+       * Write all Data out using the File Based Writers
+       */
+        public void flushMocapData()
         {
-            if (this.kinectHandler != null)
+            if (this.kinectOutputHandler != null)
             {
                 // Write all Frames to the given JSON File
-                this.kinectHandler.flushFrames(path);
-            }
-            else
+                this.kinectOutputHandler.flushFrames(KinectEventHandler.frameList);
+            }  else
             {
-                Logger.Debug("Could not Write Skeleton Data! this.kinectHandler is null");
+                Logger.Debug("Could not Write Skeleton Data!");
             }
         }
 
-        public void flushDepthData(string path)
+        public void flushDepthData()
         {
-            if (this.kinectHandler != null)
+            if (this.kinectOutputHandler != null)
             {
                 // Write all Depth information to the given JSON File
-                this.kinectHandler.flushDepth(path);
+                this.kinectOutputHandler.flushDepth(KinectEventHandler.depthList);
             }
             else
             {
-                Logger.Debug("Could not Write Depth Data! this.kinectHandler is null");
+                Logger.Debug("Could not Write Depth Data!");
             }
         }
 
-        public void flushColorData(string path)
+        public void flushColorData()
         {
-            if (this.kinectHandler != null)
+            if (this.kinectOutputHandler != null)
             {
                 // Write all Color bytes to the given JSON File
-                this.kinectHandler.flushColor(path);
-            }
-            else
+                this.kinectOutputHandler.flushColor(KinectEventHandler.colorPixelList);
+
+            } else
             {
-                Logger.Debug("Could not Write Color Data! this.kinectHandler is null");
+                Logger.Debug("Could not Write Color Data!");
             }
         }
 
