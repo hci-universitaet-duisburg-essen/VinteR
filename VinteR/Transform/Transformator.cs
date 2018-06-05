@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
 namespace VinteR.Transform
 {
@@ -34,5 +36,17 @@ namespace VinteR.Transform
             return result;
         }
 
+        public Vector3 GetCentroid(IEnumerable<Vector3> points)
+        {
+            var centroid = Vector3.Zero;
+            var enumerable = points as Vector3[] ?? points.ToArray();
+            if (!enumerable.Any())
+            {
+                return centroid;
+            }
+
+            centroid = enumerable.Aggregate(centroid, (current, point) => current + point);
+            return centroid / enumerable.Count();
+        }
     }
 }

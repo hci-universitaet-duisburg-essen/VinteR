@@ -1,5 +1,6 @@
 ﻿using NatNetML;
 using System;
+using System.Linq;
 using VinteR.Configuration;
 using VinteR.Model;
 
@@ -7,31 +8,55 @@ namespace VinteR.Adapter.OptiTrack
 {
     public class OptiTrackAdapter : IInputAdapter
     {
-        private IConfigurationService _configurationService;
+        public const string AdapterTypeName = "optitrack";
+
         private IOptiTrackClient _otClient;
-        private OptiTrackEventHandler listener;
+        private OptiTrackEventHandler _listener;
 
         public event MocapFrameAvailableEventHandler FrameAvailable;
         public event ErrorEventHandler ErrorEvent;
 
-        public bool Enabled => _configurationService.GetConfiguration().Adapters.OptiTrack.Enabled;
+        public bool Enabled => Config.Enabled;
 
-        public OptiTrackAdapter(IConfigurationService configurationService, IOptiTrackClient otClient)
+        public string Name { get; set; }
+
+        private Configuration.Adapter _config;
+
+        public Configuration.Adapter Config
         {
-            this._configurationService = configurationService;
+            get => _config;
+            set
+            {
+                if (value.AdapterType.Equals(AdapterTypeName))
+                    _config = value;
+                else
+                    OnError(new ApplicationException("Accepting only opti track configuration"));
+            }
+        }
+
+        public OptiTrackAdapter(IOptiTrackClient otClient)
+        {
             this._otClient = otClient;
         }
 
         public void Run()
         {
-            listener = new OptiTrackEventHandler(this);
-            _otClient.Connect();
-            _otClient.OnFrameReady += listener.ClientFrameReady;
+            _listener = new OptiTrackEventHandler(this);
+            try
+            {
+                _otClient.Connect(_config.ClientIp, _config.ServerIp, _config.ConnectionType);
+                _otClient.OnFrameReady += _listener.ClientFrameReady;
+            }
+            catch (ApplicationException e)
+            {
+                OnError(e);
+            }
         }
 
         public void Stop()
         {
-            _otClient.Disconnect();
+            if (_otClient.IsConnected())
+                _otClient.Disconnect();
         }
 
         public virtual void OnFrameAvailable(MocapFrame frame)

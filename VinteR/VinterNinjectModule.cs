@@ -17,9 +17,9 @@ namespace VinteR
         {
             Bind<IMainApplication>().To<MainApplicaiton>();
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
-            Bind<IInputAdapter>().To<LeapMotionAdapter>();
-            Bind<IInputAdapter>().To<KinectAdapter>();
-            Bind<IInputAdapter>().To<OptiTrackAdapter>();
+            Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(LeapMotionAdapter.AdapterTypeName);
+            Bind<IInputAdapter>().To<KinectAdapter>().Named(KinectAdapter.AdapterTypeName);
+            Bind<IInputAdapter>().To<OptiTrackAdapter>().Named(OptiTrackAdapter.AdapterTypeName);
             Bind<ITransformator>().To<Transformator>();
             Bind<IAdapterTracker>().To<OptiTrackAdapterTracker>();
             Bind<IOptiTrackClient>().To<OptiTrackClient>().InSingletonScope();

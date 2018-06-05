@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using NatNetML;
 using VinteR.Configuration;
+using VinteR.Transform;
 
 namespace VinteR.Adapter.OptiTrack
 {
@@ -9,28 +13,23 @@ namespace VinteR.Adapter.OptiTrack
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly RigidBody EmptyRigidBody = new RigidBody();
-        private static readonly RigidBodyData EmptyRigidBodyData = new RigidBodyData();
-
         private readonly IOptiTrackClient _client;
-        private readonly string _adapterNameKinect;
-        private readonly string _adapterNameLeapMotion;
 
-        private RigidBody _kinect;
-        private RigidBodyData _kinectBodyData;
+        private readonly IList<Configuration.Adapter> _adapters;
+        private readonly IConfigurationService _configService;
+        private readonly IDictionary<MarkerSet, MarkerSetData> _markerSets = new Dictionary<MarkerSet, MarkerSetData>();
+        private readonly ITransformator transformator;
 
-        private RigidBody _leapMotion;
-        private RigidBodyData _leapMotionBodyData;
-
-        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
+        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService, ITransformator transformator)
         {
             this._client = client;
             this._client.OnFrameReady += HandleFrameReady;
             this._client.OnDataDescriptionsChanged += HandleDataDescriptionsChanged;
 
-            var adapters = configurationService.GetConfiguration().Adapters;
-            this._adapterNameKinect = adapters.Kinect.Name;
-            this._adapterNameLeapMotion = adapters.LeapMotion.Name;
+            this._adapters = configurationService.GetConfiguration().Adapters;
+            this._configService = configurationService;
+
+            this.transformator = transformator;
         }
 
         public Vector3? Locate(string name)
@@ -38,53 +37,62 @@ namespace VinteR.Adapter.OptiTrack
             Logger.Debug("Locating {0}", name);
             if (!_client.IsConnected())
             {
-                _client.Connect();
+                var config = _configService.GetConfiguration().Adapters
+                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName) && a.IsGlobalRoot)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
+                if (config == null)
+                    throw new ApplicationException("No optitrack config with global root given");
+                _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
             }
 
-            if (name.Equals(_adapterNameKinect) && _kinectBodyData != null)
+            /*
+             * All adapters are tracked as rigid bodies. Try to locate the adapter
+             * that has the given name specified inside motive.
+             */
+            var markerSetData = _markerSets.Where(p => p.Key.Name.Equals(name))
+                .Select(p => p.Value)
+                .DefaultIfEmpty(null)
+                .FirstOrDefault();
+            return markerSetData != null
+                ? transformator.GetCentroid(ToVector3(markerSetData))
+                : Vector3.Zero;
+        }
+
+        private static IEnumerable<Vector3> ToVector3(MarkerSetData markerSet)
+        {
+            var vectors = new Vector3[markerSet.nMarkers];
+            for (var i = 0; i < markerSet.nMarkers; i++)
             {
-                return new Vector3(_kinectBodyData.x, _kinectBodyData.y, _kinectBodyData.z);
-            }
-            else if (name.Equals(_adapterNameLeapMotion) && _leapMotionBodyData != null)
-            {
-                return new Vector3(_leapMotionBodyData.x, _leapMotionBodyData.y, _leapMotionBodyData.z);
+                var marker = markerSet.Markers[i];
+                vectors[i] = new Vector3(marker.x, marker.y, marker.z);
             }
 
-            return null;
+            return vectors;
         }
 
         private void HandleDataDescriptionsChanged()
         {
-            var newKinectBody = _client.RigidBodies
-                .DefaultIfEmpty(EmptyRigidBody)
-                .FirstOrDefault(rb => rb.Name.Equals(_adapterNameKinect));
-            _kinect = newKinectBody != EmptyRigidBody
-                ? newKinectBody
-                : _kinect;
-
-            var newLeapMotionBody = _client.RigidBodies
-                .DefaultIfEmpty(EmptyRigidBody)
-                .FirstOrDefault(rb => rb.Name.Equals(_adapterNameLeapMotion));
-            _leapMotion = newLeapMotionBody != EmptyRigidBody
-                ? newLeapMotionBody
-                : _leapMotion;
+            _markerSets.Clear();
+            foreach (var markerSet in _client.MarkerSets)
+            {
+                _markerSets.Add(markerSet, null);
+            }
         }
 
         private void HandleFrameReady(NatNetML.FrameOfMocapData mocapData)
         {
-            var newKinectBodyData = mocapData.RigidBodies
-                .DefaultIfEmpty(EmptyRigidBodyData)
-                .FirstOrDefault(rb => rb.ID == _kinect?.ID);
-            _kinectBodyData = newKinectBodyData != EmptyRigidBodyData
-                ? newKinectBodyData
-                : _kinectBodyData;
-
-            var newLeapMotionBodyData = mocapData.RigidBodies
-                .DefaultIfEmpty(EmptyRigidBodyData)
-                .FirstOrDefault(rb => rb.ID == _leapMotion?.ID);
-            _leapMotionBodyData = newLeapMotionBodyData != EmptyRigidBodyData
-                ? newLeapMotionBodyData
-                : _leapMotionBodyData;
+            // update last position of rigid bodies
+            for (var i = 0; i < mocapData.nMarkerSets; i++)
+            {
+                var markerSetData = mocapData.MarkerSets[i];
+                var markerSet = _markerSets.Where(p => p.Key.Name.Equals(markerSetData.MarkerSetName))
+                    .Select(p => p.Key)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
+                if (markerSet != null)
+                    _markerSets[markerSet] = markerSetData;
+            }
         }
     }
 }

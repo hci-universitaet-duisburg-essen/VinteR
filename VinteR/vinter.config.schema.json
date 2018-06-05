@@ -1,75 +1,98 @@
 ﻿{
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
     "definitions": {
-        "adapter": {
+        "enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Tell the application if the adapter is available or not"
+        },
+        "name": {
+            "type": "string",
+            "description": "Used to identify the object"
+        },
+        "isGlobalRoot": {
+            "type": "boolean",
+            "default": false,
+            "description": "true if the adapter is able to handle position of other adapters inside the global coordinate system"
+        },
+
+        "leapmotion": {
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Tell the application if the adapter is available or not"
-                },
-                "name": {
+                "enabled": { "$ref": "#/definitions/enabled" },
+                "name": { "$ref": "#/definitions/name" },
+                "adaptertype": {
                     "type": "string",
-                    "enum": ["kinect", "leapmotion", "optitrack"]
-                },
-                "isGlobalRoot": {
-                    "type": "boolean",
-                    "default": false,
-                    "description":
-                        "true if the adapter is able to handle position of other adapters inside the global coordinate system"
+                    "enum": [ "leapmotion" ]
                 }
-            }
+            },
+            "required": [ "enabled", "name" ]
         },
         "kinect": {
-            "allOf": [
-                { "$ref": "#/definitions/adapter" }
-            ]
-        },
-        "leapmotion": {
-            "allOf": [
-                { "$ref": "#/definitions/adapter" }
-            ]
-        },
-        "optitrack": {
-            "allOf": [
-                { "$ref": "#/definitions/adapter" },
-                {
-                    "properties": {
-                        "server.ip": {
-                            "type": "string",
-                            "default": "127.0.0.1",
-                            "description": "Server ip address to connect to optitrack"
-                        },
-                        "client.ip": {
-                            "type": "string",
-                            "default": "127.0.0.1",
-                            "description": "Client ip that this client uses to communicate with optitrack"
-                        },
-                        "connection.type": {
-                            "type": "string",
-                            "default": "unicast",
-                            "enum": ["multicast", "unicast"]
-                        }
-                    }
-                }
-            ]
-        }
-    },
-
-    "type": "object",
-
-    "properties": {
-        "home.dir": {
-            "type": "string",
-            "description": "Base directory where files etc. are stored"
-        },
-        "adapters": {
             "type": "object",
             "properties": {
-                "kinect": { "$ref": "#/definitions/kinect" },
-                "leapmotion": { "$ref": "#/definitions/leapmotion" },
-                "optitrack": { "$ref": "#/definitions/optitrack" }
+                "enabled": { "$ref": "#/definitions/enabled" },
+                "name": { "$ref": "#/definitions/name" },
+                "adaptertype": {
+                    "type": "string",
+                    "enum": [ "kinect" ]
+                },
+                "colorStream.enabled": { "type": "boolean" },
+                "colorStream.flush": { "type": "boolean" },
+                "depthStream.enabled": { "type": "boolean" },
+                "depthStream.flush": { "type": "boolean" },
+                "skeletonStream.flush": { "type": "boolean" }
+            },
+            "required": [ "enabled", "name" ]
+        },
+        "optitrack": {
+            "type": "object",
+            "properties": {
+                "enabled": { "$ref": "#/definitions/enabled" },
+                "name": { "$ref": "#/definitions/name" },
+                "adaptertype": {
+                    "type": "string",
+                    "enum": [ "optitrack" ]
+                },
+                "server.ip": {
+                    "type": "string",
+                    "default": "127.0.0.1",
+                    "description": "Server ip address to connect to optitrack"
+                },
+                "client.ip": {
+                    "type": "string",
+                    "default": "127.0.0.1",
+                    "description": "Client ip that this client uses to communicate with optitrack"
+                },
+                "connection.type": {
+                    "type": "string",
+                    "default": "unicast",
+                    "enum": [ "multicast", "unicast" ]
+                }
+            },
+            "required": [ "enabled", "name" ]
+        }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "home.dir": {
+            "$id": "/properties/home.dir",
+            "type": "string",
+            "title": "The Home.dir Schema ",
+            "default": "",
+            "examples": [
+                "C:\\VinteRData"
+            ]
+        },
+        "adapters": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    { "$ref": "#/definitions/leapmotion" },
+                    { "$ref": "#/definitions/kinect" },
+                    { "$ref": "#/definitions/optitrack" }
+                ]
             }
         }
     }
