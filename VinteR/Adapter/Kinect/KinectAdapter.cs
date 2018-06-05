@@ -11,7 +11,7 @@ namespace VinteR.Adapter.Kinect
 {
     class KinectAdapter : IInputAdapter
     {
-        public static readonly string AdapterTypeName = "kinect";
+        public const string AdapterTypeName = "kinect";
 
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -23,8 +23,9 @@ namespace VinteR.Adapter.Kinect
         /// used to make the set of used sensors thread safe.
         /// </summary>
         private static readonly ISet<string> UsedSensors = new HashSet<string>();
+
         private static readonly object UsedSensorsLock = new object();
-        
+
         // MocapFrame Event Handling
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
@@ -50,12 +51,14 @@ namespace VinteR.Adapter.Kinect
 
         public string Name { get; set; }
 
-        private Configuration.Kinect _config;
+        private Configuration.Adapter _config;
 
         public Configuration.Adapter Config
         {
             get => _config;
-            set => _config = value as Configuration.Kinect ?? throw new ApplicationException("Accepting only kinect configuration");
+            set => _config = value.AdapterType.Equals(AdapterTypeName)
+                ? value
+                : throw new ApplicationException("Accepting only kinect configuration");
         }
 
         public KinectAdapter(IConfigurationService configurationService)
@@ -75,9 +78,8 @@ namespace VinteR.Adapter.Kinect
                 // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
                 foreach (var potentialSensor in KinectSensor.KinectSensors)
                 {
-
                     if (potentialSensor.Status == KinectStatus.Connected
-                         && !UsedSensors.Contains(potentialSensor.UniqueKinectId))
+                        && !UsedSensors.Contains(potentialSensor.UniqueKinectId))
                     {
                         this.sensor = potentialSensor;
                         UsedSensors.Add(potentialSensor.UniqueKinectId);
@@ -111,7 +113,6 @@ namespace VinteR.Adapter.Kinect
                 try
                 {
                     this.sensor.Start();
-
                 }
                 catch (IOException)
                 {
@@ -121,42 +122,45 @@ namespace VinteR.Adapter.Kinect
 
             if (null == this.sensor)
             {
-                OnError( new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!") );
+                OnError(new Exception("The Kinect is not ready! Please check the cables etc. and restart the system!"));
             }
-
         }
 
         public void Stop()
         {
             if (_config.SkeletonStreamFlush)
             {
-                var SkeletonLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "frames.json");
+                var SkeletonLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
+                    "frames.json");
                 flushMocapData(SkeletonLogFile);
             }
 
             if (_config.ColorStreamEnabled && _config.ColorStreamFlush)
             {
-                var colorStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "colorStream.json");
+                var colorStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
+                    "colorStream.json");
                 flushColorData(colorStreamLogFile);
             }
 
             if (_config.DepthStreamEnabled && _config.DepthStreamFlush)
             {
-                var depthStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect", "depthStream.json");
+                var depthStreamLogFile = Path.Combine(_configurationService.GetConfiguration().HomeDir, "Kinect",
+                    "depthStream.json");
                 flushColorData(depthStreamLogFile);
             }
         }
 
-       /*
-       * Write all Data out using the File Based Writers
-       */
+        /*
+        * Write all Data out using the File Based Writers
+        */
         public void flushMocapData(string path)
         {
             if (this.kinectHandler != null)
             {
                 // Write all Frames to the given JSON File
                 this.kinectHandler.flushFrames(path);
-            }  else
+            }
+            else
             {
                 Logger.Debug("Could not Write Skeleton Data! this.kinectHandler is null");
             }
@@ -173,7 +177,6 @@ namespace VinteR.Adapter.Kinect
             {
                 Logger.Debug("Could not Write Depth Data! this.kinectHandler is null");
             }
-            
         }
 
         public void flushColorData(string path)
@@ -182,12 +185,11 @@ namespace VinteR.Adapter.Kinect
             {
                 // Write all Color bytes to the given JSON File
                 this.kinectHandler.flushColor(path);
-
-            } else
+            }
+            else
             {
                 Logger.Debug("Could not Write Color Data! this.kinectHandler is null");
             }
-                
         }
 
         public virtual void OnFrameAvailable(Model.MocapFrame frame)

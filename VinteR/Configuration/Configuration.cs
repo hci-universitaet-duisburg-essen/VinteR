@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VinteR.Configuration
 {
@@ -9,13 +13,7 @@ namespace VinteR.Configuration
     {
         [JsonProperty("home.dir")] public string HomeDir { get; set; }
 
-        [JsonProperty("adapters")] public Adapters Adapters { get; set; }
-    }
-
-    [JsonArray]
-    public class Adapters
-    {
-        public IList<Adapter> Items { get; set; }
+        [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
     }
 
     public class Adapter
@@ -23,34 +21,60 @@ namespace VinteR.Configuration
         [JsonProperty("enabled")] public bool Enabled { get; set; }
         [JsonProperty("name")] public string Name { get; set; }
         [JsonProperty("adaptertype")] public string AdapterType { get; set; }
+        [JsonExtensionData] private readonly IDictionary<string, JToken> _additionalSettings;
 
-        [JsonProperty("isGlobalRoot")]
-        public bool IsGlobalRoot { get; set; }
+        [JsonProperty("isGlobalRoot")] public bool IsGlobalRoot { get; set; }
+
+        public IDictionary<string, JToken> AdditionalSettings => _additionalSettings;
+
+        // kinect props
+        public bool ColorStreamEnabled { get; set; }
+        public bool ColorStreamFlush { get; set; }
+        public bool DepthStreamEnabled { get; set; }
+        public bool DepthStreamFlush { get; set; }
+        public bool SkeletonStreamFlush { get; set; }
+
+        // optitrack props
+        public string ServerIp { get; set; }
+        public string ClientIp { get; set; }
+        public string ConnectionType { get; set; }
+
+        public Adapter()
+        {
+            _additionalSettings = new Dictionary<string, JToken>();
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            var setting = _additionalSettings.GetValueOrDefault("colorStream.enabled", null);
+            ColorStreamEnabled = setting != null && bool.TrueString.Equals((string) setting);
+            setting = _additionalSettings.GetValueOrDefault("colorStream.enabled", null);
+            ColorStreamEnabled = setting != null && bool.TrueString.Equals((string)setting);
+            setting = _additionalSettings.GetValueOrDefault("colorStream.flush", null);
+            ColorStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            setting = _additionalSettings.GetValueOrDefault("depthStream.enabled", null);
+            DepthStreamEnabled = setting != null && bool.TrueString.Equals((string)setting);
+            setting = _additionalSettings.GetValueOrDefault("depthStream.flush", null);
+            DepthStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush", null);
+            SkeletonStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+
+            setting = _additionalSettings.GetValueOrDefault("server.ip", null);
+            ServerIp = setting != null ? (string)setting : null;
+            setting = _additionalSettings.GetValueOrDefault("client.ip", null);
+            ClientIp = setting != null ? (string)setting : null;
+            setting = _additionalSettings.GetValueOrDefault("connection.type", null);
+            ConnectionType = setting != null ? (string)setting : null;
+        }
+
     }
 
-    [JsonObject]
-    public class Kinect : Adapter
+    public static class DictionaryExtension
     {
-        [JsonProperty("colorStream.enabled")] public bool ColorStreamEnabled { get; set; }
-        [JsonProperty("colorStream.flush")] public bool ColorStreamFlush { get; set; }
-        [JsonProperty("depthStream.enabled")] public bool DepthStreamEnabled { get; set; }
-        [JsonProperty("depthStream.flush")] public bool DepthStreamFlush { get; set; }
-        [JsonProperty("skeletonStream.flush")] public bool SkeletonStreamFlush { get; set; }
-
-    }
-
-    [JsonObject]
-    public class LeapMotion : Adapter
-    {
-    }
-
-    [JsonObject]
-    public class OptiTrack : Adapter
-    {
-        [JsonProperty("server.ip")] public string ServerIp { get; set; }
-
-        [JsonProperty("client.ip")] public string ClientIp { get; set; }
-
-        [JsonProperty("connection.type")] public string ConnectionType { get; set; }
+        public static TV GetValueOrDefault<TK, TV>(this IDictionary<TK, TV> @this, TK key, TV @default)
+        {
+            return @this.ContainsKey(key) ? @this[key] : @default;
+        }
     }
 }

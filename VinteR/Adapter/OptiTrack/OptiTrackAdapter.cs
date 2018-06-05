@@ -8,7 +8,7 @@ namespace VinteR.Adapter.OptiTrack
 {
     public class OptiTrackAdapter : IInputAdapter
     {
-        public static readonly string AdapterTypeName = "optitrack";
+        public const string AdapterTypeName = "optitrack";
 
         private IOptiTrackClient _otClient;
         private OptiTrackEventHandler _listener;
@@ -20,12 +20,18 @@ namespace VinteR.Adapter.OptiTrack
 
         public string Name { get; set; }
 
-        private Configuration.OptiTrack _config;
+        private Configuration.Adapter _config;
 
         public Configuration.Adapter Config
         {
             get => _config;
-            set => _config = value as Configuration.OptiTrack ?? throw new ApplicationException("Accepting only opti track configuration");
+            set
+            {
+                if (value.AdapterType.Equals(AdapterTypeName))
+                    _config = value;
+                else
+                    OnError(new ApplicationException("Accepting only opti track configuration"));
+            }
         }
 
         public OptiTrackAdapter(IOptiTrackClient otClient)
@@ -36,13 +42,21 @@ namespace VinteR.Adapter.OptiTrack
         public void Run()
         {
             _listener = new OptiTrackEventHandler(this);
-            _otClient.Connect(_config.ClientIp, _config.ServerIp, _config.ConnectionType);
-            _otClient.OnFrameReady += _listener.ClientFrameReady;
+            try
+            {
+                _otClient.Connect(_config.ClientIp, _config.ServerIp, _config.ConnectionType);
+                _otClient.OnFrameReady += _listener.ClientFrameReady;
+            }
+            catch (ApplicationException e)
+            {
+                OnError(e);
+            }
         }
 
         public void Stop()
         {
-            _otClient.Disconnect();
+            if (_otClient.IsConnected())
+                _otClient.Disconnect();
         }
 
         public virtual void OnFrameAvailable(MocapFrame frame)

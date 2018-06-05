@@ -11,7 +11,7 @@ namespace VinteR.Adapter.LeapMotion
 {
     class LeapMotionAdapter : IInputAdapter
     {
-        public static readonly string AdapterTypeName = "leapmotion";
+        public const string AdapterTypeName = "leapmotion";
 
         public event MocapFrameAvailableEventHandler FrameAvailable;
 

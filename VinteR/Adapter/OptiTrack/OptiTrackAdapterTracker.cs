@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using NatNetML;
@@ -15,7 +17,7 @@ namespace VinteR.Adapter.OptiTrack
 
         private readonly IOptiTrackClient _client;
 
-        private Adapters _adapters;
+        private readonly IList<Configuration.Adapter> _adapters;
         private readonly IConfigurationService _configService;
 
         public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
@@ -33,18 +35,16 @@ namespace VinteR.Adapter.OptiTrack
             Logger.Debug("Locating {0}", name);
             if (!_client.IsConnected())
             {
-                if (!(_configService.GetConfiguration().Adapters
-                    .Items
-                    .Where(i => i is Configuration.OptiTrack track && track.IsGlobalRoot)
+                var adapter = _configService.GetConfiguration().Adapters
+                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName) && a.IsGlobalRoot)
                     .DefaultIfEmpty(null)
-                    .FirstOrDefault() is Configuration.OptiTrack adapter))
-                {
+                    .FirstOrDefault();
+                if (adapter == null)
                     throw new ApplicationException("No optitrack config with global root given");
-                }
                 _client.Connect(adapter.ClientIp, adapter.ServerIp, adapter.ConnectionType);
             }
 
-            var firstOrDefault = _adapters.Items
+            var firstOrDefault = _adapters
                 .Where(a => a.Name.Equals(name))
                 .DefaultIfEmpty(null)
                 .FirstOrDefault();

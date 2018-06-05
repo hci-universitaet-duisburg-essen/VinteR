@@ -14,6 +14,7 @@ namespace VinteR.Adapter.OptiTrack
         event OptiTrackFrameReadyEventHandler OnFrameReady;
         event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
+        IEnumerable<MarkerSet> MarkerSets { get; }
         IEnumerable<RigidBody> RigidBodies { get; }
         IEnumerable<Skeleton> Skeletons { get; }
 

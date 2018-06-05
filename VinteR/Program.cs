@@ -23,13 +23,12 @@ namespace VinteR
             var configService = kernel.Get<IConfigurationService>();
             var adapters = new List<IInputAdapter>();
 
-            foreach (var adapterItem in configService.GetConfiguration()
-                .Adapters
-                .Items)
+            foreach (var adapterItem in configService.GetConfiguration().Adapters)
             {
                 var inputAdapter = kernel.Get<IInputAdapter>(adapterItem.AdapterType);
                 inputAdapter.Config = adapterItem;
-                adapters.Add(inputAdapter);
+                if (adapterItem.Enabled)
+                    adapters.Add(inputAdapter);
             }
 
             var merger = kernel.Get<DataMerger>();
