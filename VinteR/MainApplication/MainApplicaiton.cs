@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ninject;
 using VinteR.Adapter;
+using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Stream;
 
@@ -25,10 +26,17 @@ namespace VinteR.MainApplication
          */
         public void Start(StandardKernel kernel)
         {
+            var configService = kernel.Get<IConfigurationService>();
+            var adapters = new List<IInputAdapter>();
 
-            var adapters = from adapter in kernel.GetAll<IInputAdapter>()
-                where adapter.Enabled
-                select adapter;
+            foreach (var adapterItem in configService.GetConfiguration().Adapters)
+            {
+                var inputAdapter = kernel.Get<IInputAdapter>(adapterItem.AdapterType);
+                inputAdapter.Config = adapterItem;
+                if (adapterItem.Enabled)
+                    adapters.Add(inputAdapter);
+            }
+
             var merger = kernel.Get<DataMerger>();
             var processStream = new StreamingManager(kernel.Get<DataMerger>());
 
