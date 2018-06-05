@@ -14,13 +14,20 @@ namespace VinteR.Model
     public class MocapFrame
     {
 
-        // String for Timestamp (multiple Frames represent a Time Series)
-        public string timestamp;
+        /// <summary>
+        /// Time in milliseconds since application start
+        /// </summary>
+        public long ElapsedMillis { get; set; }
 
         /// <summary>
         /// Name of the input adapter that sends the frame
         /// </summary>
         public string SourceId { get; set; }
+
+        /// <summary>
+        /// Contains the type of the adapter that sends the frame
+        /// </summary>
+        public string AdapterType { get; set; }
 
         /// <summary>
         /// There might be a gesture recognized through validation
@@ -51,10 +58,11 @@ namespace VinteR.Model
             }
         }
 
-        public MocapFrame(string sourceId)
+        public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
             this.SourceId = sourceId;
+            this.AdapterType = adapter;
         }
 
         public void AddBody(ref Body body)

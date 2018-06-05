@@ -9,6 +9,7 @@ namespace VinteR.MainApplication
 {
     public interface IMainApplication
     {
+        bool IsAvailable { get; set; }
         void Start(StandardKernel kernel);
         void Stop();
     }

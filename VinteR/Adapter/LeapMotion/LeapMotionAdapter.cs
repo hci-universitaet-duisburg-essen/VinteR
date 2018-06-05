@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Leap;
-using System.Diagnostics;
-using VinteR.Configuration;
 
 namespace VinteR.Adapter.LeapMotion
 {
-    class LeapMotionAdapter : IInputAdapter
+    public class LeapMotionAdapter : IInputAdapter
     {
         public const string AdapterTypeName = "leapmotion";
 

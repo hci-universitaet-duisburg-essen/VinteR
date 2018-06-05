@@ -9,7 +9,7 @@ using VinteR.Configuration;
 
 namespace VinteR.Adapter.Kinect
 {
-    class KinectAdapter : IInputAdapter
+    public class KinectAdapter : IInputAdapter
     {
         public const string AdapterTypeName = "kinect";
 

@@ -1,11 +1,30 @@
 ﻿using System.Linq;
+using NLog;
 using VinteR.Model;
 using VinteR.Model.OptiTrack;
 
 namespace VinteR.Datamerge
 {
-    public partial class DataMerger
+    public class OptiTrackMerger : IDataMerger
     {
+        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public MocapFrame HandleFrame(MocapFrame frame)
+        {
+            foreach (var body in frame.Bodies)
+            {
+                if (body is OptiTrackBody optiTrackBody)
+                {
+                    Merge(optiTrackBody);
+                }
+                else
+                {
+                    Logger.Warn("Could not frame for {0,15} by type {1}", frame.SourceId, frame.AdapterType);
+                }
+            }
+            return frame;
+        }
+
         public Body Merge(OptiTrackBody body)
         {
             Body result;
@@ -22,7 +41,6 @@ namespace VinteR.Datamerge
                     break;
             }
 
-            FireBodyMerged(result);
             return result;
         }
 

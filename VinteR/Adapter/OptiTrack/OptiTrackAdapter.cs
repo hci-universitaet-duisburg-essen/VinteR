@@ -1,7 +1,4 @@
-﻿using NatNetML;
-using System;
-using System.Linq;
-using VinteR.Configuration;
+﻿using System;
 using VinteR.Model;
 
 namespace VinteR.Adapter.OptiTrack

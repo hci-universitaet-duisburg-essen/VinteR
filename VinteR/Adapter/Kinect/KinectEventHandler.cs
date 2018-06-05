@@ -39,7 +39,7 @@ namespace VinteR.Adapter.Kinect
                     skeletonFrame.CopySkeletonDataTo(skeletons); // Copy skeelton data to the array
 
                     List<VinteR.Model.Point> jointList = new List<VinteR.Model.Point>();
-                    MocapFrame frame = new MocapFrame("Kinect_Version_1");
+                    MocapFrame frame = new MocapFrame(adapter.Config.Name, adapter.Config.AdapterType);
 
                     // loop through all skeltons
                     foreach (Skeleton skeleton in skeletons)
@@ -61,8 +61,6 @@ namespace VinteR.Adapter.Kinect
                         frame.AddBody(ref body);
                     }
 
-                    // Attach the timestamp to the motion frame
-                    frame.timestamp = System.DateTime.Now.ToUniversalTime().ToString(); // just on case the merger sets nothing!
                     frameList.Add(frame);
                     this.adapter.OnFrameAvailable(frame); // publish MocapFrame
                 }

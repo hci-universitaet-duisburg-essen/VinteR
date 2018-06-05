@@ -2,7 +2,7 @@
     "home.dir": "C:\\VinteRData",
     "adapters": [
         {
-            "enabled": true,
+            "enabled": false,
             "name": "kinect",
             "adaptertype": "kinect",
             "data.dir": "KinectData",
@@ -13,15 +13,15 @@
             "depthStream.flush": true,
             "depthStream.flush.filename": "DepthStreamData.json",
             "skeletonStream.flush": true,
-            "skeletonStream.flush.filename":  "skeletonStreamData.json"
+            "skeletonStream.flush.filename": "skeletonStreamData.json"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "isGlobalRoot": true,

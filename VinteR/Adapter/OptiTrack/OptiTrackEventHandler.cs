@@ -15,7 +15,6 @@ namespace VinteR.Adapter.OptiTrack
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private OptiTrackAdapter adapter;
-        private VinteR.Model.MocapFrame handledFrame = new MocapFrame("OptiTrack"); // One object that gets updated with every Frame received
 
         public OptiTrackEventHandler(OptiTrackAdapter adapter)
         {
@@ -26,9 +25,13 @@ namespace VinteR.Adapter.OptiTrack
         public void ClientFrameReady(NatNetML.FrameOfMocapData data)
         {
             /* Write values into the handledFrame object */
-            ExtractBodies(data);
-            handledFrame.Latency = ExtractLatency(data);
-            handledFrame.timestamp = System.DateTime.Now.ToString(); // Adding timestamp to MocapFrame
+            var handledFrame =
+                new MocapFrame(adapter.Config.Name, adapter.Config.AdapterType)
+                {
+                    Latency = ExtractLatency(data)
+                };
+            ExtractBodies(data, handledFrame);
+            // Adding ElapsedMillis to MocapFrame
 
             adapter.OnFrameAvailable(handledFrame);
             handledFrame.Bodies.Clear();
@@ -47,7 +50,7 @@ namespace VinteR.Adapter.OptiTrack
         /*
          Method that is extracting Rigidbodies and Skeletons from FrameOfMocapData 
          */
-        public void ExtractBodies(NatNetML.FrameOfMocapData data)
+        public void ExtractBodies(NatNetML.FrameOfMocapData data, MocapFrame handledFrame)
         {
             for (int j = 0; j < data.nRigidBodies; j++)
             {
