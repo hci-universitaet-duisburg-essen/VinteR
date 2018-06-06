@@ -13,8 +13,8 @@ namespace VinteR.Datamerge
     public class LeapMotionMerger : IDataMerger
     {
         private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private IAdapterTracker _adapterTracker;
-        private ITransformator _transformator;
+        private readonly IAdapterTracker _adapterTracker;
+        private readonly ITransformator _transformator;
 
         public LeapMotionMerger(IAdapterTracker adapterTracker, ITransformator transformator)
         {
@@ -61,7 +61,6 @@ namespace VinteR.Datamerge
                             //Logger.Info("Finger Bone: " + bone.ToString());
                             if (bone.Type == EFingerBoneType.Metacarpal) // first bone in hand, needs start and end point added
                             {
-                                //TODO rotation of the leap motion is missing
                                 var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition, bone.LocalStartPosition,
                                     hand.LocalRotation);
                                 points.Add(new Point(boneGlobalStartPosition));

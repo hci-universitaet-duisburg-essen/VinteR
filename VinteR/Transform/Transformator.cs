@@ -13,7 +13,20 @@ namespace VinteR.Transform
             return Vector3.Add(coordinateSystemPosition, localPosition);
         }
 
-        public Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Vector3 localPosition, Quaternion localObjectRotation)
+        public Vector3 GetGlobalPosition(Position coordinateSystemPosition, Vector3 localPosition)
+        {
+            /* Object is not rotated inside the local coordinate system,
+             * but the coordinate system is rotated in the world
+             * 1. Get the global position without respect to rotation
+             * 2. Rotate the coordinate system
+             */
+            var result = Vector3.Add(coordinateSystemPosition.Location, localPosition);
+            result = Vector3.Transform(result, coordinateSystemPosition.Rotation);
+            return result;
+        }
+
+        public Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Vector3 localPosition,
+            Quaternion localObjectRotation)
         {
             /*
              * 1. rotate the local position without respect to the global coordinate
@@ -25,7 +38,8 @@ namespace VinteR.Transform
             return result;
         }
 
-        public Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Quaternion coordinateSystemRotation, Vector3 localPosition, Quaternion localObjectRotation)
+        public Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Quaternion coordinateSystemRotation,
+            Vector3 localPosition, Quaternion localObjectRotation)
         {
             /*
              * 1. Get the global position with already performed local rotation
@@ -36,7 +50,8 @@ namespace VinteR.Transform
             return result;
         }
 
-        public Vector3 GetGlobalPosition(Position coordinateSystemPosition, Vector3 localPosition, Quaternion localObjectRotation)
+        public Vector3 GetGlobalPosition(Position coordinateSystemPosition, Vector3 localPosition,
+            Quaternion localObjectRotation)
         {
             return GetGlobalPosition(coordinateSystemPosition.Location, coordinateSystemPosition.Rotation,
                 localPosition, localObjectRotation);
