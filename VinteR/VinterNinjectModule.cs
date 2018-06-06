@@ -6,6 +6,8 @@ using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.MainApplication;
+using VinteR.OutputAdapter;
+using VinteR.OutputManager;
 using VinteR.Tracking;
 using VinteR.Transform;
 
@@ -30,6 +32,9 @@ namespace VinteR
             Bind<IDataMerger>().To<LeapMotionMerger>().Named(LeapMotionAdapter.AdapterTypeName);
             Bind<IDataMerger>().To<KinectMerger>().Named(KinectAdapter.AdapterTypeName);
             Bind<IDataMerger>().To<OptiTrackMerger>().Named(OptiTrackAdapter.AdapterTypeName);
+
+            Bind<IOutputManager>().To<OutputManager.OutputManager>();
+            Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
         }
     }
 }

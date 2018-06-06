@@ -73,6 +73,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
+    <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
+    <Compile Include="OutputAdapter\IOutputAdapter.cs" />
+    <Compile Include="OutputManager\IOutputManager.cs" />
+    <Compile Include="OutputManager\OutputManager.cs" />
     <Compile Include="Tracking\IAdapterTracker.cs" />
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
