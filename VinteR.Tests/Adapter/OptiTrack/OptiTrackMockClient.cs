@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VinteR.Adapter.OptiTrack;
@@ -44,6 +45,7 @@ namespace VinteR.Tests.Adapter.OptiTrack
             // call event handler that descriptions have changed
             OnDataDescriptionsChanged?.Invoke();
 
+            var leapMotionRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, 30f.ToRadians());
             // call frame available event handler
             OnFrameReady?.Invoke(new FrameOfMocapData()
             {
@@ -64,7 +66,17 @@ namespace VinteR.Tests.Adapter.OptiTrack
                 RigidBodies = new RigidBodyData[]
                 {
                     new RigidBodyData() {ID = 1, x = 1, y = 0, z = 2, qx = 0, qy = 0, qz = 0, qw = 1},
-                    new RigidBodyData() {ID = 2, x = 4, y = 2, z = 2, qx = 0, qy = 0, qz = 0, qw = 1}
+                    new RigidBodyData()
+                    {
+                        ID = 2,
+                        x = 4,
+                        y = 2,
+                        z = 2,
+                        qx = leapMotionRotation.X,
+                        qy = leapMotionRotation.Y,
+                        qz = leapMotionRotation.Z,
+                        qw = leapMotionRotation.W
+                    }
                 },
                 nRigidBodies = 2
             });

@@ -15,7 +15,8 @@ namespace VinteR.Datamerge
             {
                 if (body is OptiTrackBody optiTrackBody)
                 {
-                    Merge(optiTrackBody);
+                    var mergedBody = Merge(optiTrackBody);
+                    body.Load(mergedBody);
                 }
                 else
                 {
