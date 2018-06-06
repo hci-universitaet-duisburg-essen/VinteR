@@ -6,6 +6,7 @@ using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.MainApplication;
+using VinteR.Tracking;
 using VinteR.Transform;
 
 namespace VinteR

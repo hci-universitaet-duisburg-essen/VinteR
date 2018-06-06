@@ -69,7 +69,7 @@ namespace VinteR.Tests
 
             var localRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(-90));
             var localOriginRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(-90));
-            var actual = _transformator.GetGlobalPosition(localOrigin, localPosition, localRotation, localOriginRotation);
+            var actual = _transformator.GetGlobalPosition(localOrigin, localOriginRotation, localPosition, localRotation);
             actual = Round(actual);
             Assert.AreEqual(expected, actual);
         }

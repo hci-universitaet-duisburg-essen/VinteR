@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using NatNetML;
+using VinteR.Adapter;
+using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
 using VinteR.Transform;
 
-namespace VinteR.Adapter.OptiTrack
+namespace VinteR.Tracking
 {
     public class OptiTrackAdapterTracker : IAdapterTracker
     {
@@ -15,24 +16,19 @@ namespace VinteR.Adapter.OptiTrack
 
         private readonly IOptiTrackClient _client;
 
-        private readonly IList<Configuration.Adapter> _adapters;
         private readonly IConfigurationService _configService;
-        private readonly IDictionary<MarkerSet, MarkerSetData> _markerSets = new Dictionary<MarkerSet, MarkerSetData>();
-        private readonly ITransformator transformator;
+        private readonly IDictionary<RigidBody, RigidBodyData> _rigidBodies = new Dictionary<RigidBody, RigidBodyData>();
 
-        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService, ITransformator transformator)
+        public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
         {
             this._client = client;
             this._client.OnFrameReady += HandleFrameReady;
             this._client.OnDataDescriptionsChanged += HandleDataDescriptionsChanged;
 
-            this._adapters = configurationService.GetConfiguration().Adapters;
             this._configService = configurationService;
-
-            this.transformator = transformator;
         }
 
-        public Vector3? Locate(string name)
+        public Position Locate(string name)
         {
             Logger.Debug("Locating {0}", name);
             if (!_client.IsConnected())
@@ -50,48 +46,44 @@ namespace VinteR.Adapter.OptiTrack
              * All adapters are tracked as rigid bodies. Try to locate the adapter
              * that has the given name specified inside motive.
              */
-            var markerSetData = _markerSets.Where(p => p.Key.Name.Equals(name))
+            var rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
                 .Select(p => p.Value)
                 .DefaultIfEmpty(null)
                 .FirstOrDefault();
-            return markerSetData != null
-                ? transformator.GetCentroid(ToVector3(markerSetData))
-                : Vector3.Zero;
-        }
-
-        private static IEnumerable<Vector3> ToVector3(MarkerSetData markerSet)
-        {
-            var vectors = new Vector3[markerSet.nMarkers];
-            for (var i = 0; i < markerSet.nMarkers; i++)
+            var result = Position.Zero;
+            if (rigidBodyData != null)
             {
-                var marker = markerSet.Markers[i];
-                vectors[i] = new Vector3(marker.x, marker.y, marker.z);
+                result = new Position()
+                {
+                    Location = new Vector3(rigidBodyData.x, rigidBodyData.y, rigidBodyData.z),
+                    Rotation = new Quaternion(rigidBodyData.qx, rigidBodyData.qy, rigidBodyData.qz, rigidBodyData.qw)
+                };
             }
 
-            return vectors;
+            return result;
         }
 
         private void HandleDataDescriptionsChanged()
         {
-            _markerSets.Clear();
-            foreach (var markerSet in _client.MarkerSets)
+            _rigidBodies.Clear();
+            foreach (var rigidBody in _client.RigidBodies)
             {
-                _markerSets.Add(markerSet, null);
+                _rigidBodies.Add(rigidBody, null);
             }
         }
 
         private void HandleFrameReady(NatNetML.FrameOfMocapData mocapData)
         {
             // update last position of rigid bodies
-            for (var i = 0; i < mocapData.nMarkerSets; i++)
+            for (var i = 0; i < mocapData.nRigidBodies; i++)
             {
-                var markerSetData = mocapData.MarkerSets[i];
-                var markerSet = _markerSets.Where(p => p.Key.Name.Equals(markerSetData.MarkerSetName))
+                var rigidBodyData = mocapData.RigidBodies[i];
+                var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
                     .Select(p => p.Key)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
-                if (markerSet != null)
-                    _markerSets[markerSet] = markerSetData;
+                if (rigidBody != null)
+                    _rigidBodies[rigidBody] = rigidBodyData;
             }
         }
     }
