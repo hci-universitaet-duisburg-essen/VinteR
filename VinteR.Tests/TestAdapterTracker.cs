@@ -2,7 +2,7 @@
 using Ninject;
 using NUnit.Framework;
 using VinteR.Adapter;
-using VinteR.Adapter.OptiTrack;
+using VinteR.Tracking;
 
 namespace VinteR.Tests
 {
@@ -24,7 +24,11 @@ namespace VinteR.Tests
         public void TestLocateKinect()
         {
             var position = _adapterTracker.Locate("kinect");
-            var expected = new Vector3(1, 0, 2);
+            var expected = new Position()
+            {
+                Location = new Vector3(1, 0, 2),
+                Rotation = Quaternion.Identity
+            };
             Assert.AreEqual(expected, position);
         }
 
@@ -32,7 +36,11 @@ namespace VinteR.Tests
         public void TestLocateLeapMotion()
         {
             var position = _adapterTracker.Locate("leapmotion");
-            var expected = new Vector3(4, 2, 2);
+            var expected = new Position()
+            {
+                Location = new Vector3(4, 2, 2),
+                Rotation = Quaternion.Identity
+            };
             Assert.AreEqual(expected, position);
         }
 
@@ -40,7 +48,7 @@ namespace VinteR.Tests
         public void TestLocateNotFound()
         {
             var position = _adapterTracker.Locate("unknown");
-            Assert.AreEqual(Vector3.Zero, position);
+            Assert.AreEqual(Position.Zero, position);
         }
     }
 }

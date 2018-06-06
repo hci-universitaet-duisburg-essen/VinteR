@@ -1,6 +1,6 @@
-﻿using VinteR.Adapter;
-using VinteR.Adapter.OptiTrack;
+﻿using VinteR.Adapter.OptiTrack;
 using VinteR.Tests.Adapter.OptiTrack;
+using VinteR.Tracking;
 
 namespace VinteR.Tests
 {

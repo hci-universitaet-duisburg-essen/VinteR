@@ -13,10 +13,11 @@ namespace VinteR.Tests.Adapter.OptiTrack
         public event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
         public IEnumerable<MarkerSet> MarkerSets => _markerSets;
-        public IEnumerable<RigidBody> RigidBodies { get; }
+        public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
         public IEnumerable<Skeleton> Skeletons { get; }
 
         private IList<MarkerSet> _markerSets;
+        private IList<RigidBody> _rigidBodies;
 
         private bool _isConnected;
 
@@ -35,6 +36,11 @@ namespace VinteR.Tests.Adapter.OptiTrack
                 new MarkerSet() {Name = "kinect"},
                 new MarkerSet() {Name = "leapmotion"}
             };
+            _rigidBodies = new List<RigidBody>()
+            {
+                new RigidBody() {Name = "kinect", ID = 1},
+                new RigidBody() {Name = "leapmotion", ID = 2}
+            };
             // call event handler that descriptions have changed
             OnDataDescriptionsChanged?.Invoke();
 
@@ -45,20 +51,22 @@ namespace VinteR.Tests.Adapter.OptiTrack
                 {
                     // kinect
                     MockMarkerSetData("kinect", new Vector3[]
-                    { 
-                        Vector3.Zero,
-                        new Vector3(3, 0, 3),
-                        new Vector3(0, 0, 3)
+                    {
+                        Vector3.Zero, new Vector3(3, 0, 3), new Vector3(0, 0, 3)
                     }),
                     // leap motion
                     MockMarkerSetData("leapmotion", new Vector3[]
                     {
-                        Vector3.Zero,
-                        new Vector3(6, 6, 3),
-                        new Vector3(6, 0, 3)
+                        Vector3.Zero, new Vector3(6, 6, 3), new Vector3(6, 0, 3)
                     })
                 },
-                nMarkerSets = 2
+                nMarkerSets = 2,
+                RigidBodies = new RigidBodyData[]
+                {
+                    new RigidBodyData() {ID = 1, x = 1, y = 0, z = 2, qx = 0, qy = 0, qz = 0, qw = 1},
+                    new RigidBodyData() {ID = 2, x = 4, y = 2, z = 2, qx = 0, qy = 0, qz = 0, qw = 1}
+                },
+                nRigidBodies = 2
             });
         }
 
@@ -79,6 +87,7 @@ namespace VinteR.Tests.Adapter.OptiTrack
                 var vector3 = points[i];
                 markers[i] = MockMarker(vector3.X, vector3.Y, vector3.Z);
             }
+
             result.Markers = markers;
             return result;
         }

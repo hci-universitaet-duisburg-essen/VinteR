@@ -5,6 +5,7 @@ using NLog;
 using VinteR.Adapter;
 using VinteR.Model;
 using VinteR.Model.LeapMotion;
+using VinteR.Tracking;
 using VinteR.Transform;
 
 namespace VinteR.Datamerge
@@ -45,7 +46,7 @@ namespace VinteR.Datamerge
         {
             var result = new Body { BodyType = Body.EBodyType.Hand };
             IList<Point> points = new List<Point>();
-            Vector3? leapMotionPosition = _adapterTracker.Locate(sourceId);
+            var leapMotionPosition = _adapterTracker.Locate(sourceId);
 
             // Convert all joints to points (each position only once!)
             if (hand.Fingers != null)
@@ -61,14 +62,14 @@ namespace VinteR.Datamerge
                             if (bone.Type == EFingerBoneType.Metacarpal) // first bone in hand, needs start and end point added
                             {
                                 //TODO rotation of the leap motion is missing
-                                var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition ?? Vector3.Zero, bone.LocalStartPosition,
+                                var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition, bone.LocalStartPosition,
                                     hand.LocalRotation);
                                 points.Add(new Point(boneGlobalStartPosition));
                                 //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalStartPosition.ToString());
 
                                 if (finger.Type != EFingerType.Thumb) // thumb has zero length metacarpal bone, so do not add end point as well
                                 {
-                                    var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition ?? Vector3.Zero, 
+                                    var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
                                         bone.LocalEndPosition,
                                         hand.LocalRotation);
                                     points.Add(new Point(boneGlobalEndPosition));
@@ -77,7 +78,7 @@ namespace VinteR.Datamerge
                             }
                             else // add all other bone end points
                             {
-                                var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition ?? Vector3.Zero,
+                                var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
                                     bone.LocalEndPosition,
                                     hand.LocalRotation);
                                 points.Add(new Point(boneGlobalEndPosition));
