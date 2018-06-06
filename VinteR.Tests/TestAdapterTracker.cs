@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Ninject;
 using NUnit.Framework;
 using VinteR.Adapter;
@@ -39,7 +40,7 @@ namespace VinteR.Tests
             var expected = new Position()
             {
                 Location = new Vector3(4, 2, 2),
-                Rotation = Quaternion.Identity
+                Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, 30f.ToRadians())
             };
             Assert.AreEqual(expected, position);
         }

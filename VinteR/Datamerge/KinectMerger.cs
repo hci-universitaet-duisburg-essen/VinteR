@@ -29,7 +29,8 @@ namespace VinteR.Datamerge
             {
                 if (body is KinectBody kinectBody)
                 {
-                    Merge(kinectBody, frame.SourceId);
+                    var mergedBody = Merge(kinectBody, frame.SourceId);
+                    body.Load(mergedBody);
                 }
                 else
                 {

@@ -28,7 +28,8 @@ namespace VinteR.Datamerge
             {
                 if (body is Hand hand)
                 {
-                    Merge(hand, frame.SourceId);
+                    var mergedHand = Merge(hand, frame.SourceId);
+                    body.Load(mergedHand);
                 }
                 else
                 {
@@ -47,6 +48,7 @@ namespace VinteR.Datamerge
             var result = new Body { BodyType = Body.EBodyType.Hand };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
+            Logger.Debug(leapMotionPosition);
 
             // Convert all joints to points (each position only once!)
             if (hand.Fingers != null)

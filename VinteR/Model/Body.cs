@@ -39,5 +39,17 @@ namespace VinteR.Model
         /// coordinate system.
         /// </summary>
         public Quaternion Rotation { get; set; }
+
+        /// <summary>
+        /// Loads all values from properties of given source object
+        /// into this body.
+        /// </summary>
+        /// <param name="source"></param>
+        public void Load(Body source)
+        {
+            this.BodyType = source.BodyType;
+            this.Points = source.Points;
+            this.Rotation = source.Rotation;
+        }
     }
 }
