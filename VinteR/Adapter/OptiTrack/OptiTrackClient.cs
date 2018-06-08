@@ -18,6 +18,8 @@ namespace VinteR.Adapter.OptiTrack
         IEnumerable<RigidBody> RigidBodies { get; }
         IEnumerable<Skeleton> Skeletons { get; }
 
+        float TranslationUnitMultiplier { get; }
+
         bool IsConnected();
 
         void Connect(string clientIp, string serverIp, string connectionType);
@@ -33,10 +35,12 @@ namespace VinteR.Adapter.OptiTrack
 
         public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
         public IEnumerable<Skeleton> Skeletons => _skeletons;
+        public float TranslationUnitMultiplier => _translationUnitMultiplier;
         public IEnumerable<MarkerSet> MarkerSets => _markerSets;
 
         private NatNetML.NatNetClientML _natNetClient;
         private bool _isConnected;
+        private float _translationUnitMultiplier;
 
         private readonly List<RigidBody> _rigidBodies = new List<RigidBody>();
         private readonly List<Skeleton> _skeletons = new List<Skeleton>();
@@ -46,6 +50,7 @@ namespace VinteR.Adapter.OptiTrack
         public OptiTrackClient()
         {
             this._natNetClient = new NatNetClientML();
+            this._translationUnitMultiplier = 1.0f;
         }
 
         public void Connect(string clientIp, string serverIp, string connectionType)
@@ -104,6 +109,10 @@ namespace VinteR.Adapter.OptiTrack
             if (errorCode == 0)
             {
                 Logger.Info("Success: Connected to the optitrack server\n");
+                // Tracking Tools and Motive report in meters - lets convert to millimeters
+                if (description.HostApp.Contains("TrackingTools") || description.HostApp.Contains("Motive"))
+                    _translationUnitMultiplier = 1000.0f;
+
                 PrintServerDescription(description);
                 FireDataDescriptionChanged();
                 return true;
