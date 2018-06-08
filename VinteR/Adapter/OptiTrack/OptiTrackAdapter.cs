@@ -42,6 +42,7 @@ namespace VinteR.Adapter.OptiTrack
             try
             {
                 _otClient.Connect(_config.ClientIp, _config.ServerIp, _config.ConnectionType);
+                _listener.TranslationUnitMultiplier = _otClient.TranslationUnitMultiplier;
                 _otClient.OnFrameReady += _listener.ClientFrameReady;
             }
             catch (ApplicationException e)

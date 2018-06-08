@@ -24,7 +24,7 @@ namespace VinteR
             Bind<IInputAdapter>().To<OptiTrackAdapter>().Named(OptiTrackAdapter.AdapterTypeName);
 
             Bind<ITransformator>().To<Transformator>();
-            Bind<IAdapterTracker>().To<OptiTrackAdapterTracker>();
+            Bind<IAdapterTracker>().To<OptiTrackAdapterTracker>().InSingletonScope();
             Bind<IOptiTrackClient>().To<OptiTrackClient>().InSingletonScope();
 
             Bind<IDataMerger>().To<LeapMotionMerger>().Named(LeapMotionAdapter.AdapterTypeName);

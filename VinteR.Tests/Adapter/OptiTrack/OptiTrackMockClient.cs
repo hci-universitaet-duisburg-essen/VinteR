@@ -16,6 +16,7 @@ namespace VinteR.Tests.Adapter.OptiTrack
         public IEnumerable<MarkerSet> MarkerSets => _markerSets;
         public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
         public IEnumerable<Skeleton> Skeletons { get; }
+        public float TranslationUnitMultiplier => 1f;
 
         private IList<MarkerSet> _markerSets;
         private IList<RigidBody> _rigidBodies;

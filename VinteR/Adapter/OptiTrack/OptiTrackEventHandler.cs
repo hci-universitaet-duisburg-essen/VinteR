@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using VinteR.Model;
 using VinteR.Model.OptiTrack;
@@ -20,6 +15,8 @@ namespace VinteR.Adapter.OptiTrack
         {
             this.adapter = adapter;
         }
+
+        public float TranslationUnitMultiplier { get; set; }
 
         //Method to handle frame events
         public void ClientFrameReady(NatNetML.FrameOfMocapData data)
@@ -59,7 +56,7 @@ namespace VinteR.Adapter.OptiTrack
                 if (rbData.Tracked == true)
                 {
                     VinteR.Model.OptiTrack.RigidBody rb = new RigidBody(rbData.ID.ToString()); // Create RB
-                    rb.Position = new Vector3(rbData.x, rbData.y, rbData.z); // Position
+                    rb.Position = new Vector3(rbData.x, rbData.y, rbData.z) * TranslationUnitMultiplier; // Position
                     rb.LocalRotation = new Quaternion(rbData.qx, rbData.qy, rbData.qz, rbData.qw); // Orientation
                     rb.Points = new List<Point>() { new Point(rb.Position) };
                     handledFrame.Bodies.Add(rb); // Add to MocapFrame list of bodies
@@ -77,7 +74,7 @@ namespace VinteR.Adapter.OptiTrack
                     NatNetML.RigidBodyData boneData = sklData.RigidBodies[k];
 
                     VinteR.Model.OptiTrack.RigidBody bone = new RigidBody(boneData.ID.ToString()); // Create RB
-                    bone.Position = new Vector3(boneData.x, boneData.y, boneData.z); // Position
+                    bone.Position = new Vector3(boneData.x, boneData.y, boneData.z) * TranslationUnitMultiplier; // Position
                     skl.RigidBodies.Add(bone); // Add bone to skeleton
 
                 }
@@ -92,12 +89,12 @@ namespace VinteR.Adapter.OptiTrack
                 {
                     NatNetML.Marker markerData = msData.Markers[k];
 
-                    VinteR.Model.Point marker = new Point(markerData.x, markerData.y, markerData.z);
+                    VinteR.Model.Point marker = new Point(new Vector3(markerData.x, markerData.y, markerData.z) * TranslationUnitMultiplier);
                     marker.Name = markerData.ID.ToString();
                     ms.Markers.Add(marker);
-                    Logger.Debug("Marker in Set -- Name: {0} || Position: {1}, {2}, {3}", ms.OptiTrackId, marker.Position.X, marker.Position.Y, marker.Position.Z);
+//                    Logger.Debug("Marker in Set -- Name: {0} || Position: {1}, {2}, {3}", ms.OptiTrackId, marker.Position.X, marker.Position.Y, marker.Position.Z);
                 }
-                Logger.Debug("MarkerSet vorhanden");
+//                Logger.Debug("MarkerSet vorhanden");
                 handledFrame.Bodies.Add(ms);
             }
         }

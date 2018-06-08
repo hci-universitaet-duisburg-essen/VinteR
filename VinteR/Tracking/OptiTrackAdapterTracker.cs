@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using NatNetML;
-using VinteR.Adapter;
 using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
-using VinteR.Transform;
 
 namespace VinteR.Tracking
 {
@@ -14,10 +12,14 @@ namespace VinteR.Tracking
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private static readonly object RigidBodiesLock = new object();
+
         private readonly IOptiTrackClient _client;
 
         private readonly IConfigurationService _configService;
-        private readonly IDictionary<RigidBody, RigidBodyData> _rigidBodies = new Dictionary<RigidBody, RigidBodyData>();
+
+        private readonly IDictionary<RigidBody, RigidBodyData>
+            _rigidBodies = new Dictionary<RigidBody, RigidBodyData>();
 
         public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
         {
@@ -43,19 +45,35 @@ namespace VinteR.Tracking
             }
 
             /*
+             * Load rigid bodies if necessary. It is not sufficient to load rigid bodies only on the event
+             * handler because it may not be executed.
+             */
+            lock (RigidBodiesLock)
+            {
+                if (_rigidBodies.Count == 0)
+                    LoadRigidBodies();
+            }
+
+            /*
              * All adapters are tracked as rigid bodies. Try to locate the adapter
              * that has the given name specified inside motive.
              */
-            var rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
-                .Select(p => p.Value)
-                .DefaultIfEmpty(null)
-                .FirstOrDefault();
+            RigidBodyData rigidBodyData;
+            lock (RigidBodiesLock)
+            {
+                rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
+                    .Select(p => p.Value)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
+            }
+
             var result = Position.Zero;
             if (rigidBodyData != null)
             {
                 result = new Position()
                 {
-                    Location = new Vector3(rigidBodyData.x, rigidBodyData.y, rigidBodyData.z),
+                    Location = new Vector3(rigidBodyData.x, rigidBodyData.y, rigidBodyData.z) *
+                               _client.TranslationUnitMultiplier,
                     Rotation = new Quaternion(rigidBodyData.qx, rigidBodyData.qy, rigidBodyData.qz, rigidBodyData.qw)
                 };
             }
@@ -65,10 +83,21 @@ namespace VinteR.Tracking
 
         private void HandleDataDescriptionsChanged()
         {
-            _rigidBodies.Clear();
-            foreach (var rigidBody in _client.RigidBodies)
+            lock (RigidBodiesLock)
             {
-                _rigidBodies.Add(rigidBody, null);
+                _rigidBodies.Clear();
+                LoadRigidBodies();
+            }
+        }
+
+        private void LoadRigidBodies()
+        {
+            lock (RigidBodiesLock)
+            {
+                foreach (var rigidBody in _client.RigidBodies)
+                {
+                    _rigidBodies.Add(rigidBody, null);
+                }
             }
         }
 
@@ -78,12 +107,18 @@ namespace VinteR.Tracking
             for (var i = 0; i < mocapData.nRigidBodies; i++)
             {
                 var rigidBodyData = mocapData.RigidBodies[i];
-                var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
-                    .Select(p => p.Key)
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault();
-                if (rigidBody != null)
+
+                lock (RigidBodiesLock)
+                {
+                    var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
+                        .Select(p => p.Key)
+                        .DefaultIfEmpty(null)
+                        .FirstOrDefault();
+
+                    if (rigidBody == null) continue;
+
                     _rigidBodies[rigidBody] = rigidBodyData;
+                }
             }
         }
     }
