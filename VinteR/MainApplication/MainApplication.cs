@@ -7,6 +7,8 @@ using VinteR.Adapter;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Model;
+using VinteR.OutputAdapter;
+using VinteR.OutputManager;
 
 namespace VinteR.MainApplication
 {
@@ -25,6 +27,8 @@ namespace VinteR.MainApplication
         private IList<IInputAdapter> _adapters;
         private StandardKernel _kernel;
 
+        private IEnumerable<IOutputAdapter> _outputAdapters;
+
         /*
          * kernel must be an attribute to this class. I tired to reach it by using
          * Bind<IMainApplication>().To<MainApplication>().WithPropertyValue("kernel", kernel);
@@ -38,6 +42,28 @@ namespace VinteR.MainApplication
             this._kernel = kernel;
             this._adapters = new List<IInputAdapter>();
             var configService = kernel.Get<IConfigurationService>();
+
+
+            // Get current output adapter.
+            this._outputAdapters = kernel.GetAll<IOutputAdapter>();
+
+            //Get output manager
+            var outputManager = kernel.Get<IOutputManager>();
+
+            //assign event handler
+            foreach (IOutputAdapter outputAdapter in _outputAdapters)
+            {
+                outputManager.OutputNotification += outputAdapter.OnDataReceived;
+
+
+            }
+            /*
+             * outputManager.ReadyToOutput(new MocapFrame("1","abc")); waiting called by datamerger.
+             * Not sure which is the output or result of datamerger.
+             * merger.HandleFrame(frame)?
+             */
+
+
 
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
