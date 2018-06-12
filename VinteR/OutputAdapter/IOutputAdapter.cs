@@ -12,5 +12,8 @@ namespace VinteR.OutputAdapter
 
         // receive the notification from Output manager.
         void OnDataReceived(MocapFrame mocapFrame);
+        void SetHomeDir(string homeDir);
+
+        void Start();
     }
 }
