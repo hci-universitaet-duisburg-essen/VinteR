@@ -7,6 +7,7 @@ using VinteR.Adapter;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Model;
+using VinteR.Model.OptiTrack;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 
@@ -29,6 +30,7 @@ namespace VinteR.MainApplication
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
 
+        private OutputManager.IOutputManager _outputManager;
         /*
          * kernel must be an attribute to this class. I tired to reach it by using
          * Bind<IMainApplication>().To<MainApplication>().WithPropertyValue("kernel", kernel);
@@ -48,12 +50,15 @@ namespace VinteR.MainApplication
             this._outputAdapters = kernel.GetAll<IOutputAdapter>();
 
             //Get output manager
-            var outputManager = kernel.Get<IOutputManager>();
+            this._outputManager = kernel.Get<IOutputManager>();
 
             //assign event handler
             foreach (IOutputAdapter outputAdapter in _outputAdapters)
             {
-                outputManager.OutputNotification += outputAdapter.OnDataReceived;
+                
+                outputAdapter.SetHomeDir(configService.GetConfiguration().HomeDir);
+                _outputManager.OutputNotification += outputAdapter.OnDataReceived;
+                new Thread(outputAdapter.Start).Start();
 
 
             }
@@ -62,8 +67,7 @@ namespace VinteR.MainApplication
              * Not sure which is the output or result of datamerger.
              * merger.HandleFrame(frame)?
              */
-
-
+          
 
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
@@ -105,6 +109,7 @@ namespace VinteR.MainApplication
             }
 
             Logger.Info("VinteR server started");
+            
         }
 
         public void Stop()
@@ -136,7 +141,11 @@ namespace VinteR.MainApplication
              */
             var merger = _kernel.Get<IDataMerger>(source.Config.AdapterType);
             Logger.Debug("{Frame #{0} available from {1}", frame.ElapsedMillis, source.Config.AdapterType);
-            merger.HandleFrame(frame);
+            //merger.HandleFrame(frame);
+
+            //get the output from datamerger to output manager
+            _outputManager.ReadyToOutput(merger.HandleFrame(frame));
+
         }
 
         private void HandleErrorEvent(IInputAdapter source, Exception e)
