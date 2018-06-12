@@ -48,7 +48,7 @@ namespace VinteR.Datamerge
             var result = new Body { BodyType = Body.EBodyType.Hand };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
-            Logger.Debug(leapMotionPosition);
+//            Logger.Debug("Leap motion position: {0}", leapMotionPosition);
 
             // Convert all joints to points (each position only once!)
             if (hand.Fingers != null)
@@ -63,10 +63,10 @@ namespace VinteR.Datamerge
                             //Logger.Info("Finger Bone: " + bone.ToString());
                             if (bone.Type == EFingerBoneType.Metacarpal) // first bone in hand, needs start and end point added
                             {
-                                var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition, bone.LocalStartPosition,
-                                    hand.LocalRotation);
+                                var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition, bone.LocalStartPosition);
                                 points.Add(new Point(boneGlobalStartPosition));
-                                //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalStartPosition.ToString());
+//                                Logger.Debug(finger.Type.ToString() + " point: " + bone.LocalStartPosition.ToString());
+//                                Logger.Debug(finger.Type.ToString() + " point: " + boneGlobalStartPosition);
 
                                 if (finger.Type != EFingerType.Thumb) // thumb has zero length metacarpal bone, so do not add end point as well
                                 {

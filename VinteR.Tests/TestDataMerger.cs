@@ -65,7 +65,7 @@ namespace VinteR.Tests
             position = position.Round();
 
             Assert.AreEqual(Body.EBodyType.Hand, frame.Bodies[0].BodyType);
-            Assert.AreEqual(new Vector3(-1, 0, 0), position);
+            Assert.AreEqual(new Vector3(0, 1, 0), position);
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -12,14 +13,12 @@ namespace VinteR.Tracking
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly object RigidBodiesLock = new object();
-
         private readonly IOptiTrackClient _client;
 
         private readonly IConfigurationService _configService;
 
-        private readonly IDictionary<RigidBody, RigidBodyData>
-            _rigidBodies = new Dictionary<RigidBody, RigidBodyData>();
+        private readonly ConcurrentDictionary<RigidBody, RigidBodyData>
+            _rigidBodies = new ConcurrentDictionary<RigidBody, RigidBodyData>();
 
         public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
         {
@@ -48,24 +47,17 @@ namespace VinteR.Tracking
              * Load rigid bodies if necessary. It is not sufficient to load rigid bodies only on the event
              * handler because it may not be executed.
              */
-            lock (RigidBodiesLock)
-            {
-                if (_rigidBodies.Count == 0)
-                    LoadRigidBodies();
-            }
+            if (_rigidBodies.Count == 0)
+                LoadRigidBodies();
 
             /*
              * All adapters are tracked as rigid bodies. Try to locate the adapter
              * that has the given name specified inside motive.
              */
-            RigidBodyData rigidBodyData;
-            lock (RigidBodiesLock)
-            {
-                rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
-                    .Select(p => p.Value)
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault();
-            }
+            var rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
+                .Select(p => p.Value)
+                .DefaultIfEmpty(null)
+                .FirstOrDefault();
 
             var result = Position.Zero;
             if (rigidBodyData != null)
@@ -83,21 +75,15 @@ namespace VinteR.Tracking
 
         private void HandleDataDescriptionsChanged()
         {
-            lock (RigidBodiesLock)
-            {
-                _rigidBodies.Clear();
-                LoadRigidBodies();
-            }
+            _rigidBodies.Clear();
+            LoadRigidBodies();
         }
 
         private void LoadRigidBodies()
         {
-            lock (RigidBodiesLock)
+            foreach (var rigidBody in _client.RigidBodies)
             {
-                foreach (var rigidBody in _client.RigidBodies)
-                {
-                    _rigidBodies.Add(rigidBody, null);
-                }
+                _rigidBodies.TryAdd(rigidBody, new RigidBodyData());
             }
         }
 
@@ -108,17 +94,14 @@ namespace VinteR.Tracking
             {
                 var rigidBodyData = mocapData.RigidBodies[i];
 
-                lock (RigidBodiesLock)
-                {
-                    var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
-                        .Select(p => p.Key)
-                        .DefaultIfEmpty(null)
-                        .FirstOrDefault();
+                var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
+                    .Select(p => p.Key)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
 
-                    if (rigidBody == null) continue;
+                if (rigidBody == null) continue;
 
-                    _rigidBodies[rigidBody] = rigidBodyData;
-                }
+                _rigidBodies[rigidBody] = rigidBodyData;
             }
         }
     }
