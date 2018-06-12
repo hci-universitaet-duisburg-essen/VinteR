@@ -43,12 +43,23 @@ namespace VinteR.Datamerge
         public Body Merge(KinectBody body, string sourceId)
         {
             var result = new Body { BodyType = Body.EBodyType.Skeleton};
+            // Logger.Debug("Kinect Hand");
+            //  if (result.Points[11])
+            // Logger.Debug("Location X {0}", result.Points[11].Position.X); // Hand Right
+            // Logger.Debug("Location Y {0}", result.Points[10].Position.Y); // Wrist Right
+            // Logger.Debug("Location Z {0}", result.Points[10].Position.Z); // Wrist Right
+
             var kinectPosition = _adapterTracker.Locate(sourceId);
+
+            Logger.Debug("OptiTrack KinectPos X: {0}", kinectPosition.Location.X );
+            Logger.Debug("OptiTrack KinectPos Y: {0}", kinectPosition.Location.Y );
+            Logger.Debug("OptiTrack KinectPos Z: {0}", kinectPosition.Location.Z );
+
             result.Points = body.Points
                 .Select(point => _transformator.GetGlobalPosition(kinectPosition, point.Position))
                 .Select(globalPosition => new Point(globalPosition))
                 .ToList();
-
+            Logger.Debug("Result After Transform {0}", result);
             return result;
         }
     }

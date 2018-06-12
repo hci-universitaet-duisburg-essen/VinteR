@@ -14,11 +14,10 @@ namespace VinteR.Adapter.Kinect
      */
     class KinectEventHandler
     {
-        public static List<MocapFrame> frameList = new List<MocapFrame>();
+        
         JsonSerializer serializer = new JsonSerializer();
         KinectAdapter adapter;
-        public static List<DepthImagePixel[]> depthList = new List<DepthImagePixel[]>();
-        public static List<byte[]> colorPixelList = new List<byte[]>();
+        
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -61,8 +60,8 @@ namespace VinteR.Adapter.Kinect
                         frame.AddBody(ref body);
                     }
 
-                    frameList.Add(frame);
                     this.adapter.OnFrameAvailable(frame); // publish MocapFrame
+                    
                 }
             }
 
@@ -77,7 +76,6 @@ namespace VinteR.Adapter.Kinect
                 if (depthFrame != null)
                 {
                     depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-                    depthList.Add(depthPixels);
                     this.adapter.OnDepthFrameAvailable(depthPixels);
                 }
             }
@@ -91,7 +89,6 @@ namespace VinteR.Adapter.Kinect
                 if (colorFrame != null)
                 {
                     colorFrame.CopyPixelDataTo(colorPixels);
-                    colorPixelList.Add(colorPixels);
                     this.adapter.OnColorFrameAvailable(colorPixels);
                 }
             }

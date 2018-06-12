@@ -34,9 +34,9 @@ namespace VinteR.Configuration
         public bool DepthStreamEnabled { get; set; }
         public bool DepthStreamFlush { get; set; }
         public bool SkeletonStreamFlush { get; set; }
-        public string ColorStreamFlushFile { get; set; }
-        public string DepthStreamFlushFile { get; set; }
-        public string SkeletonStreamFlushFile { get; set; }
+        public string ColorStreamFlushDir { get; set; }
+        public string DepthStreamFlushDir { get; set; }
+        public string SkeletonStreamFlushDir { get; set; }
 
         // optitrack props
         public string ServerIp { get; set; }
@@ -65,12 +65,12 @@ namespace VinteR.Configuration
             SkeletonStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
             setting = _additionalSettings.GetValueOrDefault("data.dir", "KinectData");
             DataDir = (string) setting;
-            setting = _additionalSettings.GetValueOrDefault("colorStream.flush.filename", "ColorStreamData");
-            ColorStreamFlushFile = (string) setting;
-            setting = _additionalSettings.GetValueOrDefault("depthStream.flush.filename", "DepthStreamData");
-            DepthStreamFlushFile = (string) setting;
-            setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush.filename", "SkeletonStreamData");
-            SkeletonStreamFlushFile = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("colorStream.flush.dirname", "ColorStreamData");
+            ColorStreamFlushDir = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("depthStream.flush.dirname", "DepthStreamData");
+            DepthStreamFlushDir = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush.dirname", "SkeletonStreamData");
+            SkeletonStreamFlushDir = (string) setting;
 
             setting = _additionalSettings.GetValueOrDefault("server.ip", null);
             ServerIp = setting != null ? (string)setting : null;
