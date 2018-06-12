@@ -37,6 +37,10 @@ namespace VinteR.Configuration
         public string ColorStreamFlushDir { get; set; }
         public string DepthStreamFlushDir { get; set; }
         public string SkeletonStreamFlushDir { get; set; }
+        public int ColorStreamFlushSize { get; set; }
+        public int DepthStreamFlushSize { get; set; }
+        public int SkeletonStreamFlushSize { get; set; }
+        public bool SkeletonTrackingStateFilter { get; set; }
 
         // optitrack props
         public string ServerIp { get; set; }
@@ -71,6 +75,15 @@ namespace VinteR.Configuration
             DepthStreamFlushDir = (string) setting;
             setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush.dirname", "SkeletonStreamData");
             SkeletonStreamFlushDir = (string) setting;
+            setting = _additionalSettings.GetValueOrDefault("skeletonStream.flushSize", 200);
+            SkeletonStreamFlushSize = (int) setting;
+            setting = _additionalSettings.GetValueOrDefault("colorStream.flushSize", 60);
+            ColorStreamFlushSize = (int) setting;
+            setting = _additionalSettings.GetValueOrDefault("depthStream.flushSize", 30);
+            DepthStreamFlushSize = (int)setting;
+            // 
+            setting = _additionalSettings.GetValueOrDefault("skeleton.TrackingFilter.enabled", false);
+            SkeletonTrackingStateFilter = setting != null && bool.TrueString.Equals((string)setting);
 
             setting = _additionalSettings.GetValueOrDefault("server.ip", null);
             ServerIp = setting != null ? (string)setting : null;

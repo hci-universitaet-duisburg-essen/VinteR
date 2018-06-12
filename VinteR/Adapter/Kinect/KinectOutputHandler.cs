@@ -53,7 +53,10 @@ namespace VinteR.Adapter.Kinect
 
             // Subscribe Frame Available Event
             this.adapter.FrameAvailable += flushFrames;
-            
+            // Subscribe to DepthAvailable Event
+            this.adapter.DepthFramAvailable += flushDepth;
+            // Subscribe to ColorAvailable Event
+            this.adapter.ColorFramAvailable += flushColor;
             
             // Check if the DataDirectory exists
             if (!(Directory.Exists(this.DataDir)))
@@ -100,7 +103,7 @@ namespace VinteR.Adapter.Kinect
             {
                 this.frameList.Add(frame);
 
-                if (this.frameList.Count > 200 )
+                if (this.frameList.Count > this._config.SkeletonStreamFlushSize)
                 {
                     // freeze to serialize
                     List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
@@ -120,35 +123,48 @@ namespace VinteR.Adapter.Kinect
             }
         }
 
-        public void flushDepth(List<DepthImagePixel[]> depthList)
+        public void flushDepth(KinectAdapter adapter, DepthImagePixel[] depthImage)
         {
             if (this._config.DepthStreamFlush)
             {
-                // Debug.WriteLine(depthList);
-                List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
-                string flushPath = this.DepthStreamPath + "\\" + this.depthFlushCount.ToString() + ".json";
-                using (StreamWriter sw = new StreamWriter(flushPath))
-                using (JsonWriter writer = new JsonTextWriter(sw))
+                this.depthList.Add(depthImage);
+                if (this.depthList.Count >= this._config.DepthStreamFlushSize)
                 {
-                    serializer.Serialize(writer, serializeList);
+                    // freeze to serialize
+                    List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
+                    string flushPath = this.DepthStreamPath + "\\" + this.depthFlushCount.ToString() + ".json";
+                    using (StreamWriter sw = new StreamWriter(flushPath))
+                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    {
+                        serializer.Serialize(writer, serializeList);
+                    }
+                    this.depthFlushCount += 1;
+                    // Clear the List
+                    this.depthList.Clear();
                 }
-                this.depthFlushCount += 1;
+               
             }
 
         }
 
-        public void flushColor(List<byte[]> colorPixelList)
+        public void flushColor(KinectAdapter adapter, byte[] colorPixels)
         {
             if (this._config.ColorStreamFlush)
             {
-                List<byte[]> serializeList = new List<byte[]>(colorPixelList);
-                string flushPath = this.ColorStreamPath + "\\" + this.colorFlushCount.ToString() + ".json";
-                using (StreamWriter sw = new StreamWriter(flushPath))
-                using (JsonWriter writer = new JsonTextWriter(sw))
+                this.colorPixelList.Add(colorPixels);
+                if (this.colorPixelList.Count > this._config.ColorStreamFlushSize)
                 {
-                    serializer.Serialize(writer, serializeList);
+                    List<byte[]> serializeList = new List<byte[]>(colorPixelList);
+                    string flushPath = this.ColorStreamPath + "\\" + this.colorFlushCount.ToString() + ".json";
+                    using (StreamWriter sw = new StreamWriter(flushPath))
+                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    {
+                        serializer.Serialize(writer, serializeList);
+                    }
+                    this.colorFlushCount += 1;
+                    // Clear List
+                    this.colorPixelList.Clear();
                 }
-                this.colorFlushCount += 1;
 
             }
 

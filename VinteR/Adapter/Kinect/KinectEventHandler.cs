@@ -17,12 +17,14 @@ namespace VinteR.Adapter.Kinect
         
         JsonSerializer serializer = new JsonSerializer();
         KinectAdapter adapter;
-        
+        private Configuration.Adapter _config;
+
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public KinectEventHandler(KinectAdapter adapter)
+        public KinectEventHandler(KinectAdapter adapter, Configuration.Adapter _config)
         {
+            this._config = _config;
             this.adapter = adapter;
         }
 
@@ -43,8 +45,17 @@ namespace VinteR.Adapter.Kinect
                     // loop through all skeltons
                     foreach (Skeleton skeleton in skeletons)
                     {
+                        if (this._config.SkeletonTrackingStateFilter)
+                        {
+                            if (!(skeleton.TrackingState == SkeletonTrackingState.Tracked)) // if the skeleton is not tracked skip
+                            {
+                                continue;
+                            }
+                        }
+                       
                         foreach (Microsoft.Kinect.Joint joint in skeleton.Joints)
                         {
+
                             // Create a Point
                             VinteR.Model.Point currentPointModel = new VinteR.Model.Point (joint.Position.X, joint.Position.Y, joint.Position.Z);
                             currentPointModel.Name = joint.JointType.ToString();
@@ -54,6 +65,7 @@ namespace VinteR.Adapter.Kinect
                             // Add the Point to the List of all captured skeleton points
                             jointList.Add(currentPointModel);
                         }
+                        
 
                         // Create and append the frame
                         Body body = new KinectBody(jointList, Body.EBodyType.Skeleton);

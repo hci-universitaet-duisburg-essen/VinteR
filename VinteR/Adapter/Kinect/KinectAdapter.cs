@@ -65,13 +65,16 @@ namespace VinteR.Adapter.Kinect
         public KinectAdapter(IConfigurationService configurationService)
         {
             this._configurationService = configurationService;
-            // Create the Kinect Handler
-            this.kinectHandler = new KinectEventHandler(this);
+            
 
         }
 
         public void Run()
         {
+
+            // Create the Kinect Handler
+            this.kinectHandler = new KinectEventHandler(this, this._config);
+
             // Define the OutputHandling here, _config injected after constructor call
             this.kinectOutputHandler = new KinectOutputHandler(this._configurationService, this._config, this);
 
