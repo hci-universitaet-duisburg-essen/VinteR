@@ -85,6 +85,22 @@
                 "C:\\VinteRData"
             ]
         },
+        "port":  { "type": "integer"} ,
+        "udp.receivers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ip": {
+                        "type": "string",
+                        "default": "127.0.0.1"
+                    },
+                    "port": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "adapters": {
             "type": "array",
             "items": {

@@ -36,6 +36,9 @@
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
     <Reference Include="LeapCSharp.NET4.5">
       <HintPath>..\lib\x64\LeapCSharp.NET4.5.dll</HintPath>
     </Reference>
@@ -76,11 +79,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
+    <Compile Include="Model\Gen\Model.cs" />
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
     <Compile Include="OutputAdapter\FileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
+    <Compile Include="OutputAdapter\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />
     <Compile Include="OutputManager\OutputManager.cs" />
+    <Compile Include="QuaternionExtensions.cs" />
     <Compile Include="Tracking\IAdapterTracker.cs" />
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />
@@ -123,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="model.proto" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

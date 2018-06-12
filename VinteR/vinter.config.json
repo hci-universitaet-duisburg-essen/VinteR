@@ -1,5 +1,12 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
+    "port":  5060, 
+    "udp.receivers":  [
+        {
+            "ip": "127.0.0.1",
+            "port": 5080
+        }
+    ], 
     "adapters": [
         {
             "enabled": false,
