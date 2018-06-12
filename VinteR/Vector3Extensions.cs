@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using VinteR.Model.Gen;
 
 namespace VinteR
 {
@@ -14,6 +15,16 @@ namespace VinteR
                 Z = (float) Math.Round(vector.Z, decimals)
             };
             return v;
+        }
+
+        public static VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3 ToProto(this Vector3 point)
+        {
+            return new MocapFrame.Types.Body.Types.Point.Types.Vector3()
+            {
+                X = point.X,
+                Y = point.Y,
+                Z = point.Z
+            };
         }
     }
 }

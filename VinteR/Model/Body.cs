@@ -51,5 +51,24 @@ namespace VinteR.Model
             this.Points = source.Points;
             this.Rotation = source.Rotation;
         }
+
+        public Gen.MocapFrame.Types.Body.Types.EBodyType GetBodyTypeProto()
+        {
+            switch (BodyType)
+            {
+                case EBodyType.Hand:
+                    return Gen.MocapFrame.Types.Body.Types.EBodyType.Hand;
+                case EBodyType.MarkerSet:
+                    return Gen.MocapFrame.Types.Body.Types.EBodyType.MarkerSet;
+                case EBodyType.Marker:
+                    return Gen.MocapFrame.Types.Body.Types.EBodyType.Marker;
+                case EBodyType.RigidBody:
+                    return Gen.MocapFrame.Types.Body.Types.EBodyType.RigidBody;
+                case EBodyType.Skeleton:
+                    return Gen.MocapFrame.Types.Body.Types.EBodyType.Skeleton;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }
