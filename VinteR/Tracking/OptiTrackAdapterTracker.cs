@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using NatNetML;
@@ -13,9 +12,13 @@ namespace VinteR.Tracking
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private const int MaxConnectRetries = 60;
+
         private readonly IOptiTrackClient _client;
 
         private readonly IConfigurationService _configService;
+
+        private int _connectRetries;
 
         private readonly ConcurrentDictionary<RigidBody, RigidBodyData>
             _rigidBodies = new ConcurrentDictionary<RigidBody, RigidBodyData>();
@@ -35,12 +38,23 @@ namespace VinteR.Tracking
             if (!_client.IsConnected())
             {
                 var config = _configService.GetConfiguration().Adapters
-                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName) && a.IsGlobalRoot)
+                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName))
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
                 if (config == null)
                     throw new ApplicationException("No optitrack config with global root given");
-                _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
+
+                try
+                {
+                    _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
+                    _connectRetries = 0;
+                }
+                catch (ApplicationException)
+                {
+                    _connectRetries++;
+                    if (_connectRetries >= MaxConnectRetries)
+                        Logger.Error("Could not connect to optitrack {0} after {1} retries", config.ServerIp, _connectRetries);
+                }
             }
 
             /*
