@@ -25,20 +25,35 @@ namespace VinteR.Model
             Hand
         }
 
-        // The Body Type of the Body object
         public EBodyType BodyType { get; set; }
+
+        private IList<Point> _points;
 
         /// <summary>
         /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
-        public IList<Point> Points { get; set; }
+        public IList<Point> Points
+        {
+            get => _points;
+            set
+            {
+                if (value == null) _points.Clear();
+                else _points = value;
+            }
+        }
 
         /// <summary>
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
         public Quaternion Rotation { get; set; }
+
+        // The Body Type of the Body object
+        public Body()
+        {
+            this._points = new List<Point>();
+        }
 
         /// <summary>
         /// Loads all values from properties of given source object

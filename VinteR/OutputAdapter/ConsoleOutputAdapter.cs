@@ -15,17 +15,12 @@ namespace VinteR.OutputAdapter
     class ConsoleOutputAdapter : IOutputAdapter
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private string _homeDir;
+
         public void OnDataReceived(MocapFrame mocapFrame)
         {
             
            // Logger.Info(mocapFrame.ToString);
 
-        }
-
-        public void SetHomeDir(string homeDir)
-        {
-            this._homeDir = homeDir;
         }
 
         public void Start()

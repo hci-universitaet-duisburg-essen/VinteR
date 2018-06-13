@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VinteR.Model;
+﻿using VinteR.Model;
 
 namespace VinteR.OutputAdapter
 {
@@ -12,7 +7,6 @@ namespace VinteR.OutputAdapter
 
         // receive the notification from Output manager.
         void OnDataReceived(MocapFrame mocapFrame);
-        void SetHomeDir(string homeDir);
 
         void Start();
     }

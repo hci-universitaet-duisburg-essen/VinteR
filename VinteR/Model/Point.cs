@@ -12,7 +12,7 @@ namespace VinteR.Model
         /// <summary>
         /// Optional name of the point
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /*
          * Allows to get information the validity of the Point
@@ -20,7 +20,7 @@ namespace VinteR.Model
          * or tracked and there are valid information avaialble or
          * kust inferred (approximated by the position of other Points)
          */
-        public string State { get; set; }
+        public string State { get; set; } = "";
 
         /// <summary>
         /// Global position of this point.
