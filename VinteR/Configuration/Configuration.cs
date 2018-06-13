@@ -32,8 +32,6 @@ namespace VinteR.Configuration
         [JsonProperty("adaptertype")] public string AdapterType { get; set; }
         [JsonExtensionData] private readonly IDictionary<string, JToken> _additionalSettings;
 
-        [JsonProperty("isGlobalRoot")] public bool IsGlobalRoot { get; set; }
-
         public IDictionary<string, JToken> AdditionalSettings => _additionalSettings;
 
         // kinect props
