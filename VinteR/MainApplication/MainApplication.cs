@@ -7,7 +7,6 @@ using VinteR.Adapter;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Model;
-using VinteR.Model.OptiTrack;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 
@@ -25,7 +24,7 @@ namespace VinteR.MainApplication
         /// </summary>
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
-        private IList<IInputAdapter> _adapters;
+        private IList<IInputAdapter> _inputAdapters;
         private StandardKernel _kernel;
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
@@ -42,7 +41,7 @@ namespace VinteR.MainApplication
         {
             this.IsAvailable = true;
             this._kernel = kernel;
-            this._adapters = new List<IInputAdapter>();
+            this._inputAdapters = new List<IInputAdapter>();
             var configService = kernel.Get<IConfigurationService>();
 
 
@@ -53,14 +52,10 @@ namespace VinteR.MainApplication
             this._outputManager = kernel.Get<IOutputManager>();
 
             //assign event handler
-            foreach (IOutputAdapter outputAdapter in _outputAdapters)
+            foreach (var outputAdapter in _outputAdapters)
             {
-                
-                outputAdapter.SetHomeDir(configService.GetConfiguration().HomeDir);
                 _outputManager.OutputNotification += outputAdapter.OnDataReceived;
                 new Thread(outputAdapter.Start).Start();
-
-
             }
             /*
              * outputManager.ReadyToOutput(new MocapFrame("1","abc")); waiting called by datamerger.
@@ -84,7 +79,7 @@ namespace VinteR.MainApplication
                 inputAdapter.Config = adapterItem;
 
                 // add the adapter to the list that will be run
-                _adapters.Add(inputAdapter);
+                _inputAdapters.Add(inputAdapter);
             }
 
             lock (StopwatchLock)
@@ -92,7 +87,7 @@ namespace VinteR.MainApplication
                 _applicationWatch.Start();
             }
 
-            foreach (var adapter in _adapters)
+            foreach (var adapter in _inputAdapters)
             {
                 // Add delegate to frame available event
                 adapter.FrameAvailable += HandleFrameAvailable;
@@ -115,10 +110,14 @@ namespace VinteR.MainApplication
         public void Stop()
         {
             Logger.Info("Stopping started adapters");
-            foreach (var adapter in _adapters)
+            foreach (var adapter in _inputAdapters)
             {
                 adapter.FrameAvailable -= HandleFrameAvailable;
                 adapter.Stop();
+            }
+            foreach (var outputAdapter in _outputAdapters)
+            {
+                _outputManager.OutputNotification -= outputAdapter.OnDataReceived;
             }
 
             IsAvailable = false;

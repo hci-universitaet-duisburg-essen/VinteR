@@ -46,10 +46,6 @@ namespace VinteR.OutputAdapter
             }
         }
 
-        public void SetHomeDir(string homeDir)
-        {
-        }
-
         public void Start()
         {
             _udpServer = new UdpClient(Port);

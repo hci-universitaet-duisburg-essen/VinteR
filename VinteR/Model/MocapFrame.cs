@@ -34,7 +34,7 @@ namespace VinteR.Model
         /// of previous frames. If the gesture is completely recorgnized
         /// this field contains the name of the gesture.
         /// </summary>
-        public string Gesture { get; set; }
+        public string Gesture { get; set; } = "";
 
         /// <summary>
         /// Contains the time when all tracking data is processed and
