@@ -47,17 +47,6 @@ namespace VinteR.Datamerge
         {
             var result = new Body { BodyType = Body.EBodyType.Skeleton};
             
-            // Logging Output to identify Hand Point
-            foreach (Point point in body.Points )
-            {
-                // Logger.Debug("Kinect Body: Point: {0}, State: {1}", point.Name, point.State);
-                if (point.Name == "HandRight" )
-                {
-                    Logger.Debug("HandRight, X: {0}, Y: {1}, Z: {2} ", point.Position.X, point.Position.Y, point.Position.Z);
-
-                }
-            }
-            
 
             var kinectPosition = _adapterTracker.Locate(sourceId);
 
