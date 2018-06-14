@@ -8,12 +8,13 @@ namespace VinteR.Adapter.OptiTrack
 {
     public class OptiTrackEventHandler
     {
+        private const string PointIdDivider = "_";
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private OptiTrackAdapter adapter;
+        private readonly OptiTrackAdapter _adapter;
 
         public OptiTrackEventHandler(OptiTrackAdapter adapter)
         {
-            this.adapter = adapter;
+            this._adapter = adapter;
         }
 
         public float TranslationUnitMultiplier { get; set; }
@@ -23,14 +24,14 @@ namespace VinteR.Adapter.OptiTrack
         {
             /* Write values into the handledFrame object */
             var handledFrame =
-                new MocapFrame(adapter.Config.Name, adapter.Config.AdapterType)
+                new MocapFrame(_adapter.Config.Name, _adapter.Config.AdapterType)
                 {
                     Latency = ExtractLatency(data)
                 };
-            ExtractBodies(data, handledFrame);
+            ExtractMarkerSets(data, handledFrame);
             // Adding ElapsedMillis to MocapFrame
 
-            adapter.OnFrameAvailable(handledFrame);
+            _adapter.OnFrameAvailable(handledFrame);
             handledFrame.Bodies.Clear();
         }
 
@@ -47,54 +48,23 @@ namespace VinteR.Adapter.OptiTrack
         /*
          Method that is extracting Rigidbodies and Skeletons from FrameOfMocapData 
          */
-        public void ExtractBodies(NatNetML.FrameOfMocapData data, MocapFrame handledFrame)
+        public void ExtractMarkerSets(NatNetML.FrameOfMocapData data, MocapFrame handledFrame)
         {
-            for (int j = 0; j < data.nRigidBodies; j++)
+            for (var i = 0; i < data.nMarkerSets - 1; i++)
             {
-                NatNetML.RigidBodyData rbData = data.RigidBodies[j]; // Received rigid body descriptions
-
-                if (rbData.Tracked == true)
+                var msData = data.MarkerSets[i]; // Received rigid body descriptions
+                var ms = new MarkerSet(msData.MarkerSetName);
+                for (var j = 0; j < msData.nMarkers; j++)
                 {
-                    VinteR.Model.OptiTrack.RigidBody rb = new RigidBody(rbData.ID.ToString()); // Create RB
-                    rb.Position = new Vector3(rbData.x, rbData.y, rbData.z) * TranslationUnitMultiplier; // Position
-                    rb.LocalRotation = new Quaternion(rbData.qx, rbData.qy, rbData.qz, rbData.qw); // Orientation
-                    rb.Points = new List<Point>() { new Point(rb.Position) };
-                    handledFrame.Bodies.Add(rb); // Add to MocapFrame list of bodies
-                }
-            }
-
-            for (int j = 0; j < data.nSkeletons; j++)
-            {
-                NatNetML.SkeletonData sklData = data.Skeletons[j];  // Received skeleton frame data
-                VinteR.Model.OptiTrack.Skeleton skl = new Skeleton(sklData.ID.ToString());
-
-                /*  Now, for each of the skeleton segments  */
-                for (int k = 0; k < sklData.nRigidBodies; k++)
-                {
-                    NatNetML.RigidBodyData boneData = sklData.RigidBodies[k];
-
-                    VinteR.Model.OptiTrack.RigidBody bone = new RigidBody(boneData.ID.ToString()); // Create RB
-                    bone.Position = new Vector3(boneData.x, boneData.y, boneData.z) * TranslationUnitMultiplier; // Position
-                    skl.RigidBodies.Add(bone); // Add bone to skeleton
-
-                }
-                handledFrame.Bodies.Add(skl);
-            }
-
-            for (int j = 0; j < data.nMarkerSets - 1; j++)
-            {
-                NatNetML.MarkerSetData msData = data.MarkerSets[j]; // Received rigid body descriptions
-                VinteR.Model.OptiTrack.MarkerSet ms = new MarkerSet(msData.MarkerSetName);
-                for (int k = 0; k < msData.nMarkers; k++)
-                {
-                    NatNetML.Marker markerData = msData.Markers[k];
-
-                    VinteR.Model.Point marker = new Point(new Vector3(markerData.x, markerData.y, markerData.z) * TranslationUnitMultiplier);
-                    marker.Name = markerData.ID.ToString();
+                    var markerData = msData.Markers[j];
+                    var markerId = markerData.ID == -1 ? j : markerData.ID;
+                    var marker = new Point(new Vector3(markerData.x, markerData.y, markerData.z) * TranslationUnitMultiplier)
+                    {
+                        Name = string.Join(PointIdDivider, msData.MarkerSetName, markerId)
+                    };
                     ms.Markers.Add(marker);
 //                    Logger.Debug("Marker in Set -- Name: {0} || Position: {1}, {2}, {3}", ms.OptiTrackId, marker.Position.X, marker.Position.Y, marker.Position.Z);
                 }
-//                Logger.Debug("MarkerSet vorhanden");
                 handledFrame.Bodies.Add(ms);
             }
         }

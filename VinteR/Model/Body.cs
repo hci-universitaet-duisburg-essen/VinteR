@@ -26,6 +26,11 @@ namespace VinteR.Model
         }
 
         public EBodyType BodyType { get; set; }
+ 
+        /// <summary>
+        /// Contains the side of a body if one exists, for example "left" hand
+        /// </summary>
+        public ESideType Side { get; set; } = ESideType.NoSide;
 
         private IList<Point> _points;
 
@@ -81,6 +86,21 @@ namespace VinteR.Model
                     return Gen.MocapFrame.Types.Body.Types.EBodyType.RigidBody;
                 case EBodyType.Skeleton:
                     return Gen.MocapFrame.Types.Body.Types.EBodyType.Skeleton;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public Gen.MocapFrame.Types.Body.Types.ESideType GetSideTypeProto()
+        {
+            switch (Side)
+            {
+                case ESideType.Left:
+                    return Gen.MocapFrame.Types.Body.Types.ESideType.Left;
+                case ESideType.Right:
+                    return Gen.MocapFrame.Types.Body.Types.ESideType.Right;
+                case ESideType.NoSide:
+                    return Gen.MocapFrame.Types.Body.Types.ESideType.NoSide;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
