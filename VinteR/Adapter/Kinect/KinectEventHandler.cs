@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Numerics;
 using Microsoft.Kinect;
 using Newtonsoft.Json;
 using VinteR.Model;
@@ -14,7 +15,7 @@ namespace VinteR.Adapter.Kinect
      */
     class KinectEventHandler
     {
-        
+        private static readonly float MillimetersMultiplier = 1000f;
         JsonSerializer serializer = new JsonSerializer();
         KinectAdapter adapter;
         private Configuration.Adapter _config;
@@ -57,7 +58,8 @@ namespace VinteR.Adapter.Kinect
                         {
 
                             // Create a Point
-                            VinteR.Model.Point currentPointModel = new VinteR.Model.Point (joint.Position.X, joint.Position.Y, joint.Position.Z);
+                            Vector3 position = new Vector3(joint.Position.X, joint.Position.Y, joint.Position.Z) * MillimetersMultiplier;
+                            VinteR.Model.Point currentPointModel = new VinteR.Model.Point (position);
                             currentPointModel.Name = joint.JointType.ToString();
                             currentPointModel.State = joint.TrackingState.ToString();
 
