@@ -3,6 +3,7 @@
     public enum ESideType
     {
         Left,
-        Right
+        Right,
+        NoSide
     }
 }

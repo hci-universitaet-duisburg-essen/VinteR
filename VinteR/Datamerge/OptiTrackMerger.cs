@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Numerics;
 using NLog;
 using VinteR.Model;
 using VinteR.Model.OptiTrack;
@@ -37,6 +38,9 @@ namespace VinteR.Datamerge
                 case Skeleton _:
                     result = MergeSkeleton(body as Skeleton);
                     break;
+                case MarkerSet _:
+                    result = MergeMarkerSet(body as MarkerSet);
+                    break;
                 default:
                     result = MergeDefault(body);
                     break;
@@ -66,6 +70,21 @@ namespace VinteR.Datamerge
                 Points = points,
                 Rotation = skeleton.Rotation
             };
+            return body;
+        }
+
+        private static Body MergeMarkerSet(MarkerSet markerSet)
+        {
+            var points = markerSet.Markers;
+
+            var body = new Body
+            {
+                BodyType = Body.EBodyType.MarkerSet,
+                Points = points,
+                Rotation = Quaternion.Identity
+            };
+            if (body.Points?.Count == 1)
+                body.BodyType = Body.EBodyType.Marker;
             return body;
         }
 

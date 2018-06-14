@@ -94,7 +94,8 @@ namespace VinteR.Model
                 var protoBody = new Gen.MocapFrame.Types.Body()
                 {
                     BodyType = body.GetBodyTypeProto(),
-                    Rotation = body.Rotation.ToProto()
+                    Rotation = body.Rotation.ToProto(),
+                    SideType = body.GetSideTypeProto()
                 };
                 foreach (var point in body.Points)
                 {

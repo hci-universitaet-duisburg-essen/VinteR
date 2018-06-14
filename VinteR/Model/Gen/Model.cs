@@ -24,24 +24,26 @@ namespace VinteR.Model.Gen {
     static ModelReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgttb2RlbC5wcm90byKqBAoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
+            "Cgttb2RlbC5wcm90byKGBQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
             "GAEgASgDEhAKCFNvdXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJ",
             "Eg8KB0dlc3R1cmUYBCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMY",
-            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHkamQMKBEJvZHkSLAoIQm9keVR5cGUY",
-            "ASABKA4yGi5Nb2NhcEZyYW1lLkJvZHkuRUJvZHlUeXBlEiYKBlBvaW50cxgC",
-            "IAMoCzIWLk1vY2FwRnJhbWUuQm9keS5Qb2ludBItCghSb3RhdGlvbhgDIAEo",
-            "CzIbLk1vY2FwRnJhbWUuQm9keS5RdWF0ZXJuaW9uGoIBCgVQb2ludBIMCgRO",
-            "YW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEjAKCFBvc2l0aW9uGAMgASgLMh4u",
-            "TW9jYXBGcmFtZS5Cb2R5LlBvaW50LlZlY3RvcjMaKgoHVmVjdG9yMxIJCgFY",
-            "GAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAho4CgpRdWF0ZXJuaW9uEgkK",
-            "AVgYASABKAISCQoBWRgCIAEoAhIJCgFaGAMgASgCEgkKAVcYBCABKAIiTQoJ",
-            "RUJvZHlUeXBlEgoKBk1hcmtlchAAEg0KCU1hcmtlclNldBABEg0KCVJpZ2lk",
-            "Qm9keRACEgwKCFNrZWxldG9uEAMSCAoESGFuZBAEQhOqAhBWaW50ZVIuTW9k",
-            "ZWwuR2VuYgZwcm90bzM="));
+            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHka9QMKBEJvZHkSLAoIQm9keVR5cGUY",
+            "ASABKA4yGi5Nb2NhcEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBl",
+            "GAIgASgOMhouTW9jYXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMY",
+            "AyADKAsyFi5Nb2NhcEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCAB",
+            "KAsyGy5Nb2NhcEZyYW1lLkJvZHkuUXVhdGVybmlvbhqCAQoFUG9pbnQSDAoE",
+            "TmFtZRgBIAEoCRINCgVTdGF0ZRgCIAEoCRIwCghQb3NpdGlvbhgDIAEoCzIe",
+            "Lk1vY2FwRnJhbWUuQm9keS5Qb2ludC5WZWN0b3IzGioKB1ZlY3RvcjMSCQoB",
+            "WBgBIAEoAhIJCgFZGAIgASgCEgkKAVoYAyABKAIaOAoKUXVhdGVybmlvbhIJ",
+            "CgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQgASgCIk0K",
+            "CUVCb2R5VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARINCglSaWdp",
+            "ZEJvZHkQAhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lkZVR5cGUS",
+            "CAoETGVmdBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAJCE6oCEFZpbnRlUi5N",
+            "b2RlbC5HZW5iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "Points", "Rotation" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser, new[]{ "Name", "State", "Position" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null)}),
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "SideType", "Points", "Rotation" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType), typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser, new[]{ "Name", "State", "Position" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null)})})
           }));
     }
@@ -338,6 +340,7 @@ namespace VinteR.Model.Gen {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public Body(Body other) : this() {
           bodyType_ = other.bodyType_;
+          sideType_ = other.sideType_;
           points_ = other.points_.Clone();
           Rotation = other.rotation_ != null ? other.Rotation.Clone() : null;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -359,10 +362,21 @@ namespace VinteR.Model.Gen {
           }
         }
 
+        /// <summary>Field number for the "SideType" field.</summary>
+        public const int SideTypeFieldNumber = 2;
+        private global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType sideType_ = 0;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType SideType {
+          get { return sideType_; }
+          set {
+            sideType_ = value;
+          }
+        }
+
         /// <summary>Field number for the "Points" field.</summary>
-        public const int PointsFieldNumber = 2;
+        public const int PointsFieldNumber = 3;
         private static readonly pb::FieldCodec<global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point> _repeated_points_codec
-            = pb::FieldCodec.ForMessage(18, global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser);
+            = pb::FieldCodec.ForMessage(26, global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser);
         private readonly pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point> points_ = new pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point>();
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point> Points {
@@ -370,7 +384,7 @@ namespace VinteR.Model.Gen {
         }
 
         /// <summary>Field number for the "Rotation" field.</summary>
-        public const int RotationFieldNumber = 3;
+        public const int RotationFieldNumber = 4;
         private global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion rotation_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion Rotation {
@@ -394,6 +408,7 @@ namespace VinteR.Model.Gen {
             return true;
           }
           if (BodyType != other.BodyType) return false;
+          if (SideType != other.SideType) return false;
           if(!points_.Equals(other.points_)) return false;
           if (!object.Equals(Rotation, other.Rotation)) return false;
           return Equals(_unknownFields, other._unknownFields);
@@ -403,6 +418,7 @@ namespace VinteR.Model.Gen {
         public override int GetHashCode() {
           int hash = 1;
           if (BodyType != 0) hash ^= BodyType.GetHashCode();
+          if (SideType != 0) hash ^= SideType.GetHashCode();
           hash ^= points_.GetHashCode();
           if (rotation_ != null) hash ^= Rotation.GetHashCode();
           if (_unknownFields != null) {
@@ -422,9 +438,13 @@ namespace VinteR.Model.Gen {
             output.WriteRawTag(8);
             output.WriteEnum((int) BodyType);
           }
+          if (SideType != 0) {
+            output.WriteRawTag(16);
+            output.WriteEnum((int) SideType);
+          }
           points_.WriteTo(output, _repeated_points_codec);
           if (rotation_ != null) {
-            output.WriteRawTag(26);
+            output.WriteRawTag(34);
             output.WriteMessage(Rotation);
           }
           if (_unknownFields != null) {
@@ -437,6 +457,9 @@ namespace VinteR.Model.Gen {
           int size = 0;
           if (BodyType != 0) {
             size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) BodyType);
+          }
+          if (SideType != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) SideType);
           }
           size += points_.CalculateSize(_repeated_points_codec);
           if (rotation_ != null) {
@@ -455,6 +478,9 @@ namespace VinteR.Model.Gen {
           }
           if (other.BodyType != 0) {
             BodyType = other.BodyType;
+          }
+          if (other.SideType != 0) {
+            SideType = other.SideType;
           }
           points_.Add(other.points_);
           if (other.rotation_ != null) {
@@ -478,11 +504,15 @@ namespace VinteR.Model.Gen {
                 bodyType_ = (global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType) input.ReadEnum();
                 break;
               }
-              case 18: {
-                points_.AddEntriesFrom(input, _repeated_points_codec);
+              case 16: {
+                sideType_ = (global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) input.ReadEnum();
                 break;
               }
               case 26: {
+                points_.AddEntriesFrom(input, _repeated_points_codec);
+                break;
+              }
+              case 34: {
                 if (rotation_ == null) {
                   rotation_ = new global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion();
                 }
@@ -503,6 +533,12 @@ namespace VinteR.Model.Gen {
             [pbr::OriginalName("RigidBody")] RigidBody = 2,
             [pbr::OriginalName("Skeleton")] Skeleton = 3,
             [pbr::OriginalName("Hand")] Hand = 4,
+          }
+
+          public enum ESideType {
+            [pbr::OriginalName("Left")] Left = 0,
+            [pbr::OriginalName("Right")] Right = 1,
+            [pbr::OriginalName("NoSide")] NoSide = 2,
           }
 
           public sealed partial class Point : pb::IMessage<Point> {

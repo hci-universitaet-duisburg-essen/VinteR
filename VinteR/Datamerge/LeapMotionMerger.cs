@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using NLog;
 using VinteR.Adapter;
@@ -12,6 +13,7 @@ namespace VinteR.Datamerge
 {
     public class LeapMotionMerger : IDataMerger
     {
+        private const string NameDivider = "_";
         private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IAdapterTracker _adapterTracker;
         private readonly ITransformator _transformator;
@@ -37,7 +39,6 @@ namespace VinteR.Datamerge
                 }
             }
             return frame;
-
         }
 
         /**
@@ -45,7 +46,7 @@ namespace VinteR.Datamerge
          */
         private Body Merge(Hand hand, string sourceId)
         {
-            var result = new Body { BodyType = Body.EBodyType.Hand };
+            var result = new Body {BodyType = Body.EBodyType.Hand, Side = hand.Side };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
 //            Logger.Debug("Leap motion position: {0}", leapMotionPosition);
@@ -64,16 +65,16 @@ namespace VinteR.Datamerge
                             if (bone.Type == EFingerBoneType.Metacarpal) // first bone in hand, needs start and end point added
                             {
                                 var boneGlobalStartPosition = _transformator.GetGlobalPosition(leapMotionPosition, bone.LocalStartPosition);
-                                points.Add(new Point(boneGlobalStartPosition));
-//                                Logger.Debug(finger.Type.ToString() + " point: " + bone.LocalStartPosition.ToString());
-//                                Logger.Debug(finger.Type.ToString() + " point: " + boneGlobalStartPosition);
+                                points.Add(CreatePoint(boneGlobalStartPosition, finger.Type, bone.Type));
+                                //                                Logger.Debug(finger.Type.ToString() + " point: " + bone.LocalStartPosition.ToString());
+                                //                                Logger.Debug(finger.Type.ToString() + " point: " + boneGlobalStartPosition);
 
                                 if (finger.Type != EFingerType.Thumb) // thumb has zero length metacarpal bone, so do not add end point as well
                                 {
                                     var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
                                         bone.LocalEndPosition,
                                         hand.LocalRotation);
-                                    points.Add(new Point(boneGlobalEndPosition));
+                                    points.Add(CreatePoint(boneGlobalEndPosition, finger.Type, bone.Type));
                                     //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalEndPosition.ToString());
                                 }
                             }
@@ -82,7 +83,7 @@ namespace VinteR.Datamerge
                                 var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
                                     bone.LocalEndPosition,
                                     hand.LocalRotation);
-                                points.Add(new Point(boneGlobalEndPosition));
+                                points.Add(CreatePoint(boneGlobalEndPosition, finger.Type, bone.Type));
                                 //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalEndPosition.ToString());
                             }
                         }
@@ -95,6 +96,14 @@ namespace VinteR.Datamerge
             // alert that merged body is available
             result.Points = points;
             return result;
+        }
+
+        private static Point CreatePoint(Vector3 position, EFingerType fingerType, EFingerBoneType boneType)
+        {
+            return new Point(position)
+            {
+                Name = string.Join(NameDivider, fingerType.ToString(), boneType.ToString())
+            };
         }
     }
 }
