@@ -145,6 +145,7 @@ namespace VinteR.Adapter.Kinect
         {
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
+                if (frame.Bodies.Count > 0)
                 FrameAvailable(this, frame);
             }
         }

@@ -7,7 +7,7 @@
             "adaptertype": "kinect",
             "skeleton.TrackingFilter.enabled":  true,
             "data.dir": "KinectData",
-            "colorStream.enabled": true,
+            "colorStream.enabled": false,
             "colorStream.flush": true,
             "colorStream.flushSize":  60,
             "colorStream.flush.dirname": "colorStreamData.json",
@@ -15,7 +15,7 @@
             "depthStream.flush": false,
             "depthStream.flushSize":  15,
             "depthStream.flush.dirname": "DepthStreamData.json",
-            "skeletonStream.flush": false,
+            "skeletonStream.flush": true,
             "skeletonStream.flushSize":  200,
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },

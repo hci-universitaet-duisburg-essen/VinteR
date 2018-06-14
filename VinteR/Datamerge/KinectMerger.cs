@@ -9,6 +9,7 @@ using VinteR.Model.Kinect;
 using VinteR.Tracking;
 using VinteR.Transform;
 
+
 namespace VinteR.Datamerge
 {
     public class KinectMerger : IDataMerger
@@ -43,22 +44,39 @@ namespace VinteR.Datamerge
         public Body Merge(KinectBody body, string sourceId)
         {
             var result = new Body { BodyType = Body.EBodyType.Skeleton};
-            // Logger.Debug("Kinect Hand");
-            //  if (result.Points[11])
-            // Logger.Debug("Location X {0}", result.Points[11].Position.X); // Hand Right
-            // Logger.Debug("Location Y {0}", result.Points[10].Position.Y); // Wrist Right
-            // Logger.Debug("Location Z {0}", result.Points[10].Position.Z); // Wrist Right
+            
+            // Logging Output to identify Hand Point
+            foreach (Point point in body.Points )
+            {
+                // Logger.Debug("Kinect Body: Point: {0}, State: {1}", point.Name, point.State);
+                if (point.Name == "HandRight" )
+                {
+                    Logger.Debug("HandRight, X: {0}, Y: {1}, Z: {2} ", point.Position.X, point.Position.Y, point.Position.Z);
+
+                }
+            }
+            
 
             var kinectPosition = _adapterTracker.Locate(sourceId);
 
             Logger.Debug("OptiTrack KinectPos X: {0}", kinectPosition.Location.X );
             Logger.Debug("OptiTrack KinectPos Y: {0}", kinectPosition.Location.Y );
             Logger.Debug("OptiTrack KinectPos Z: {0}", kinectPosition.Location.Z );
-
+            /*
             result.Points = body.Points
                 .Select(point => _transformator.GetGlobalPosition(kinectPosition, point.Position))
                 .Select(globalPosition => new Point(globalPosition))
                 .ToList();
+            */
+
+            foreach (Point point in body.Points)
+            {
+                Point resultPoint = new Point(point.Position);
+                resultPoint.Name = point.Name;
+                resultPoint.State = point.State;
+                result.Points.Add(resultPoint);
+            }
+
             Logger.Debug("Result After Transform {0}", result);
             return result;
         }
