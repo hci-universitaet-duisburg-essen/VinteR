@@ -114,6 +114,7 @@ namespace VinteR.Adapter.OptiTrack
             }
             else
             {
+
                 throw new ApplicationException("Could not connect to optitrack");
             }
         }

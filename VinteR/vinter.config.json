@@ -9,21 +9,25 @@
     ], 
     "adapters": [
         {
-            "enabled": false,
+            "enabled": true,
             "name": "kinect",
             "adaptertype": "kinect",
+            "skeleton.TrackingFilter.enabled":  true,
             "data.dir": "KinectData",
             "colorStream.enabled": false,
-            "colorStream.flush": false,
-            "colorStream.flush.filename": "colorStreamData.json",
-            "depthStream.enabled": true,
-            "depthStream.flush": true,
-            "depthStream.flush.filename": "DepthStreamData.json",
+            "colorStream.flush": true,
+            "colorStream.flushSize":  60,
+            "colorStream.flush.dirname": "colorStreamData.json",
+            "depthStream.enabled": false,
+            "depthStream.flush": false,
+            "depthStream.flushSize":  15,
+            "depthStream.flush.dirname": "DepthStreamData.json",
             "skeletonStream.flush": true,
-            "skeletonStream.flush.filename": "skeletonStreamData.json"
+            "skeletonStream.flushSize":  200,
+            "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
@@ -31,8 +35,8 @@
             "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
-            "server.ip": "127.0.0.1",
-            "client.ip": "127.0.0.1",
+            "server.ip": "10.23.112.35",
+            "client.ip": "10.23.112.25",
             "connection.type": "multicast"
         }
     ]

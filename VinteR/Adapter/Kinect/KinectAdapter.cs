@@ -65,16 +65,18 @@ namespace VinteR.Adapter.Kinect
         public KinectAdapter(IConfigurationService configurationService)
         {
             this._configurationService = configurationService;
-            // Create the Kinect Handler
-            this.kinectHandler = new KinectEventHandler(this);
             
-            
+
         }
 
         public void Run()
         {
+
+            // Create the Kinect Handler
+            this.kinectHandler = new KinectEventHandler(this, this._config);
+
             // Define the OutputHandling here, _config injected after constructor call
-            this.kinectOutputHandler = new KinectOutputHandler(this._configurationService, this._config);
+            this.kinectOutputHandler = new KinectOutputHandler(this._configurationService, this._config, this);
 
             lock (UsedSensorsLock)
             {
@@ -134,68 +136,16 @@ namespace VinteR.Adapter.Kinect
 
         public void Stop()
         {
-            if (_config.SkeletonStreamFlush)
-            {
-                
-                flushMocapData();
-            }
-
-            if (_config.ColorStreamEnabled && _config.ColorStreamFlush)
-            {
-                flushColorData();
-            }
-
-            if (_config.DepthStreamEnabled && _config.DepthStreamFlush)
-            {
-                flushDepthData();
-            }
+            
         }
 
-       /*
-       * Write all Data out using the File Based Writers
-       */
-        public void flushMocapData()
-        {
-            if (this.kinectOutputHandler != null)
-            {
-                // Write all Frames to the given JSON File
-                this.kinectOutputHandler.flushFrames(KinectEventHandler.frameList);
-            }  else
-            {
-                Logger.Debug("Could not Write Skeleton Data!");
-            }
-        }
-
-        public void flushDepthData()
-        {
-            if (this.kinectOutputHandler != null)
-            {
-                // Write all Depth information to the given JSON File
-                this.kinectOutputHandler.flushDepth(KinectEventHandler.depthList);
-            }
-            else
-            {
-                Logger.Debug("Could not Write Depth Data!");
-            }
-        }
-
-        public void flushColorData()
-        {
-            if (this.kinectOutputHandler != null)
-            {
-                // Write all Color bytes to the given JSON File
-                this.kinectOutputHandler.flushColor(KinectEventHandler.colorPixelList);
-
-            } else
-            {
-                Logger.Debug("Could not Write Color Data!");
-            }
-        }
+       
 
         public virtual void OnFrameAvailable(Model.MocapFrame frame)
         {
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
+                if (frame.Bodies.Count > 0)
                 FrameAvailable(this, frame);
             }
         }
