@@ -1,0 +1,50 @@
+﻿syntax = "proto3";
+option csharp_namespace = "VinteR.Model.Gen";
+
+message MocapFrame {
+    int64 ElapsedMillis = 1;
+    string SourceId = 2;
+    string AdapterType = 3;
+    string Gesture = 4;
+    float Latency = 5;
+
+    message Body {
+        enum EBodyType {
+            Marker = 0;
+            MarkerSet = 1;
+            RigidBody = 2;
+            Skeleton = 3;
+            Hand = 4;
+        }
+        EBodyType BodyType = 1;
+
+        enum ESideType {
+            Left = 0;
+            Right = 1;
+            NoSide = 2;
+        }
+        ESideType SideType = 2;
+
+        message Point {
+            string Name = 1;
+            string State = 2;
+
+            message Vector3 {
+                float X = 1;
+                float Y = 2;
+                float Z = 3;
+            }
+            Vector3 Position = 3;
+        }
+        repeated Point Points = 3;
+
+        message Quaternion {
+            float X = 1;
+            float Y = 2;
+            float Z = 3;
+            float W = 4;
+        }
+        Quaternion Rotation = 4;
+    }
+    repeated Body bodies = 6;
+}

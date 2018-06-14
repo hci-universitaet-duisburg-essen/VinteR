@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NatNetML;
-using VinteR.Configuration;
 
 namespace VinteR.Adapter.OptiTrack
 {
@@ -9,20 +8,54 @@ namespace VinteR.Adapter.OptiTrack
 
     public delegate void OptiTrackDataDescriptionsChangedEventHandler();
 
+    /// <summary>
+    /// An opti track client can be used to get data from a nat net server instance
+    /// for example motive. There are multiple events with which data can be retrieved
+    /// from the server.
+    /// </summary>
     public interface IOptiTrackClient
     {
+        /// <summary>
+        /// Triggered after a <see cref="NatNetML.FrameOfMocapData"/> is returned from the nat net server.
+        /// </summary>
         event OptiTrackFrameReadyEventHandler OnFrameReady;
+
+        /// <summary>
+        /// Triggered if the metadata of tracked items was changed.
+        /// </summary>
         event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
-        IEnumerable<MarkerSet> MarkerSets { get; }
+        /// <summary>
+        /// Contains all rigid bodies that are defined inside the nat net server.
+        /// </summary>
         IEnumerable<RigidBody> RigidBodies { get; }
-        IEnumerable<Skeleton> Skeletons { get; }
 
+        /// <summary>
+        /// Contains the multiplier that must be used to get the correct position
+        /// from the nat net server. For example Motive delivers all data in meters
+        /// and not millimeters.
+        /// </summary>
         float TranslationUnitMultiplier { get; }
 
+        /// <summary>
+        /// Returns <code>true</code> if this client is connected, <code>false</code>
+        /// otherwise
+        /// </summary>
+        /// <returns></returns>
         bool IsConnected();
 
+        /// <summary>
+        /// Connects this application to optitrack using client and server ip and the given connection type
+        /// </summary>
+        /// <param name="clientIp">Ip of this machine</param>
+        /// <param name="serverIp">Ip of the natnet server instance</param>
+        /// <param name="connectionType">use <code>unicast</code> or <code>multicast</code></param>
+        /// <exception cref="ApplicationException">Thrown if the client could not connect to opti track</exception>
         void Connect(string clientIp, string serverIp, string connectionType);
+
+        /// <summary>
+        /// Disconnects from the nat net server
+        /// </summary>
         void Disconnect();
     }
 
@@ -34,13 +67,10 @@ namespace VinteR.Adapter.OptiTrack
         public event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
         public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
-        public IEnumerable<Skeleton> Skeletons => _skeletons;
-        public float TranslationUnitMultiplier => _translationUnitMultiplier;
-        public IEnumerable<MarkerSet> MarkerSets => _markerSets;
+        public float TranslationUnitMultiplier { get; private set; }
 
         private NatNetML.NatNetClientML _natNetClient;
         private bool _isConnected;
-        private float _translationUnitMultiplier;
 
         private readonly List<RigidBody> _rigidBodies = new List<RigidBody>();
         private readonly List<Skeleton> _skeletons = new List<Skeleton>();
@@ -50,7 +80,7 @@ namespace VinteR.Adapter.OptiTrack
         public OptiTrackClient()
         {
             this._natNetClient = new NatNetClientML();
-            this._translationUnitMultiplier = 1.0f;
+            this.TranslationUnitMultiplier = 1.0f;
         }
 
         public void Connect(string clientIp, string serverIp, string connectionType)
@@ -91,14 +121,9 @@ namespace VinteR.Adapter.OptiTrack
 
         public void Disconnect()
         {
-            if (_isConnected)
-            {
-                _natNetClient.OnFrameReady -= NatNetClientOnOnFrameReady;
-            }
-            else
-            {
-                throw new ApplicationException("Could not disconnect from optitrack");
-            }
+            if (!_isConnected) return;
+
+            _natNetClient.OnFrameReady -= NatNetClientOnOnFrameReady;
             _natNetClient.Disconnect();
         }
 
@@ -112,7 +137,7 @@ namespace VinteR.Adapter.OptiTrack
                 Logger.Info("Success: Connected to the optitrack server\n");
                 // Tracking Tools and Motive report in meters - lets convert to millimeters
                 if (description.HostApp.Contains("TrackingTools") || description.HostApp.Contains("Motive"))
-                    _translationUnitMultiplier = 1000.0f;
+                    TranslationUnitMultiplier = 1000.0f;
 
                 PrintServerDescription(description);
                 FireDataDescriptionChanged();

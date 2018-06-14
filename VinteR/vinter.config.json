@@ -1,5 +1,12 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
+    "port":  5060, 
+    "udp.receivers":  [
+        {
+            "ip": "127.0.0.1",
+            "port": 5080
+        }
+    ], 
     "adapters": [
         {
             "enabled": true,
@@ -28,7 +35,6 @@
             "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
-            "isGlobalRoot": true,
             "server.ip": "10.23.112.35",
             "client.ip": "10.23.112.25",
             "connection.type": "multicast"

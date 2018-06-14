@@ -35,6 +35,8 @@ namespace VinteR
 
             Bind<IOutputManager>().To<OutputManager.OutputManager>();
             Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
+            Bind<IOutputAdapter>().To<FileOutputAdapter>();
+            Bind<IOutputAdapter>().To<UdpSender>();
         }
     }
 }

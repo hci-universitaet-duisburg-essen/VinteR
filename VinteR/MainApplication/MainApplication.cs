@@ -24,11 +24,12 @@ namespace VinteR.MainApplication
         /// </summary>
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
-        private IList<IInputAdapter> _adapters;
+        private IList<IInputAdapter> _inputAdapters;
         private StandardKernel _kernel;
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
 
+        private OutputManager.IOutputManager _outputManager;
         /*
          * kernel must be an attribute to this class. I tired to reach it by using
          * Bind<IMainApplication>().To<MainApplication>().WithPropertyValue("kernel", kernel);
@@ -40,7 +41,7 @@ namespace VinteR.MainApplication
         {
             this.IsAvailable = true;
             this._kernel = kernel;
-            this._adapters = new List<IInputAdapter>();
+            this._inputAdapters = new List<IInputAdapter>();
             var configService = kernel.Get<IConfigurationService>();
 
 
@@ -48,22 +49,20 @@ namespace VinteR.MainApplication
             this._outputAdapters = kernel.GetAll<IOutputAdapter>();
 
             //Get output manager
-            var outputManager = kernel.Get<IOutputManager>();
+            this._outputManager = kernel.Get<IOutputManager>();
 
             //assign event handler
-            foreach (IOutputAdapter outputAdapter in _outputAdapters)
+            foreach (var outputAdapter in _outputAdapters)
             {
-                outputManager.OutputNotification += outputAdapter.OnDataReceived;
-
-
+                _outputManager.OutputNotification += outputAdapter.OnDataReceived;
+                new Thread(outputAdapter.Start).Start();
             }
             /*
              * outputManager.ReadyToOutput(new MocapFrame("1","abc")); waiting called by datamerger.
              * Not sure which is the output or result of datamerger.
              * merger.HandleFrame(frame)?
              */
-
-
+          
 
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
@@ -80,7 +79,7 @@ namespace VinteR.MainApplication
                 inputAdapter.Config = adapterItem;
 
                 // add the adapter to the list that will be run
-                _adapters.Add(inputAdapter);
+                _inputAdapters.Add(inputAdapter);
             }
 
             lock (StopwatchLock)
@@ -88,7 +87,7 @@ namespace VinteR.MainApplication
                 _applicationWatch.Start();
             }
 
-            foreach (var adapter in _adapters)
+            foreach (var adapter in _inputAdapters)
             {
                 // Add delegate to frame available event
                 adapter.FrameAvailable += HandleFrameAvailable;
@@ -105,15 +104,20 @@ namespace VinteR.MainApplication
             }
 
             Logger.Info("VinteR server started");
+            
         }
 
         public void Stop()
         {
             Logger.Info("Stopping started adapters");
-            foreach (var adapter in _adapters)
+            foreach (var adapter in _inputAdapters)
             {
                 adapter.FrameAvailable -= HandleFrameAvailable;
                 adapter.Stop();
+            }
+            foreach (var outputAdapter in _outputAdapters)
+            {
+                _outputManager.OutputNotification -= outputAdapter.OnDataReceived;
             }
 
             IsAvailable = false;
@@ -136,7 +140,11 @@ namespace VinteR.MainApplication
              */
             var merger = _kernel.Get<IDataMerger>(source.Config.AdapterType);
             Logger.Debug("{Frame #{0} available from {1}", frame.ElapsedMillis, source.Config.AdapterType);
-            merger.HandleFrame(frame);
+            //merger.HandleFrame(frame);
+
+            //get the output from datamerger to output manager
+            _outputManager.ReadyToOutput(merger.HandleFrame(frame));
+
         }
 
         private void HandleErrorEvent(IInputAdapter source, Exception e)

@@ -11,11 +11,6 @@
             "type": "string",
             "description": "Used to identify the object"
         },
-        "isGlobalRoot": {
-            "type": "boolean",
-            "default": false,
-            "description": "true if the adapter is able to handle position of other adapters inside the global coordinate system"
-        },
 
         "leapmotion": {
             "type": "object",
@@ -84,6 +79,22 @@
             "examples": [
                 "C:\\VinteRData"
             ]
+        },
+        "port":  { "type": "integer"} ,
+        "udp.receivers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ip": {
+                        "type": "string",
+                        "default": "127.0.0.1"
+                    },
+                    "port": {
+                        "type": "integer"
+                    }
+                }
+            }
         },
         "adapters": {
             "type": "array",

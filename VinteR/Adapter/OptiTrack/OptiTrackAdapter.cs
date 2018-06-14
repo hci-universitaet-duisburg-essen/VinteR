@@ -7,7 +7,7 @@ namespace VinteR.Adapter.OptiTrack
     {
         public const string AdapterTypeName = "optitrack";
 
-        private IOptiTrackClient _otClient;
+        private readonly IOptiTrackClient _otClient;
         private OptiTrackEventHandler _listener;
 
         public event MocapFrameAvailableEventHandler FrameAvailable;
@@ -47,6 +47,7 @@ namespace VinteR.Adapter.OptiTrack
             }
             catch (ApplicationException e)
             {
+                _otClient.OnFrameReady -= _listener.ClientFrameReady;
                 OnError(e);
             }
         }

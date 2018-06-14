@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Numerics;
 using NatNetML;
@@ -12,14 +12,16 @@ namespace VinteR.Tracking
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly object RigidBodiesLock = new object();
+        private const int MaxConnectRetries = 60;
 
         private readonly IOptiTrackClient _client;
 
         private readonly IConfigurationService _configService;
 
-        private readonly IDictionary<RigidBody, RigidBodyData>
-            _rigidBodies = new Dictionary<RigidBody, RigidBodyData>();
+        private int _connectRetries;
+
+        private readonly ConcurrentDictionary<RigidBody, RigidBodyData>
+            _rigidBodies = new ConcurrentDictionary<RigidBody, RigidBodyData>();
 
         public OptiTrackAdapterTracker(IOptiTrackClient client, IConfigurationService configurationService)
         {
@@ -36,36 +38,40 @@ namespace VinteR.Tracking
             if (!_client.IsConnected())
             {
                 var config = _configService.GetConfiguration().Adapters
-                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName) && a.IsGlobalRoot)
+                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName))
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
                 if (config == null)
                     throw new ApplicationException("No optitrack config with global root given");
-                _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
+
+                try
+                {
+                    _client.Connect(config.ClientIp, config.ServerIp, config.ConnectionType);
+                    _connectRetries = 0;
+                }
+                catch (ApplicationException)
+                {
+                    _connectRetries++;
+                    if (_connectRetries >= MaxConnectRetries)
+                        Logger.Error("Could not connect to optitrack {0} after {1} retries", config.ServerIp, _connectRetries);
+                }
             }
 
             /*
              * Load rigid bodies if necessary. It is not sufficient to load rigid bodies only on the event
              * handler because it may not be executed.
              */
-            lock (RigidBodiesLock)
-            {
-                if (_rigidBodies.Count == 0)
-                    LoadRigidBodies();
-            }
+            if (_rigidBodies.Count == 0)
+                LoadRigidBodies();
 
             /*
              * All adapters are tracked as rigid bodies. Try to locate the adapter
              * that has the given name specified inside motive.
              */
-            RigidBodyData rigidBodyData;
-            lock (RigidBodiesLock)
-            {
-                rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
-                    .Select(p => p.Value)
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault();
-            }
+            var rigidBodyData = _rigidBodies.Where(p => p.Key.Name.Equals(name))
+                .Select(p => p.Value)
+                .DefaultIfEmpty(null)
+                .FirstOrDefault();
 
             var result = Position.Zero;
             if (rigidBodyData != null)
@@ -83,21 +89,15 @@ namespace VinteR.Tracking
 
         private void HandleDataDescriptionsChanged()
         {
-            lock (RigidBodiesLock)
-            {
-                _rigidBodies.Clear();
-                LoadRigidBodies();
-            }
+            _rigidBodies.Clear();
+            LoadRigidBodies();
         }
 
         private void LoadRigidBodies()
         {
-            lock (RigidBodiesLock)
+            foreach (var rigidBody in _client.RigidBodies)
             {
-                foreach (var rigidBody in _client.RigidBodies)
-                {
-                    _rigidBodies.Add(rigidBody, null);
-                }
+                _rigidBodies.TryAdd(rigidBody, new RigidBodyData());
             }
         }
 
@@ -108,17 +108,14 @@ namespace VinteR.Tracking
             {
                 var rigidBodyData = mocapData.RigidBodies[i];
 
-                lock (RigidBodiesLock)
-                {
-                    var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
-                        .Select(p => p.Key)
-                        .DefaultIfEmpty(null)
-                        .FirstOrDefault();
+                var rigidBody = _rigidBodies.Where(p => p.Key.ID == rigidBodyData.ID)
+                    .Select(p => p.Key)
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault();
 
-                    if (rigidBody == null) continue;
+                if (rigidBody == null) continue;
 
-                    _rigidBodies[rigidBody] = rigidBodyData;
-                }
+                _rigidBodies[rigidBody] = rigidBodyData;
             }
         }
     }

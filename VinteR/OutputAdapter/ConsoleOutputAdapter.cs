@@ -15,11 +15,17 @@ namespace VinteR.OutputAdapter
     class ConsoleOutputAdapter : IOutputAdapter
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public void OnDataReceived(MocapFrame mocapFrame)
         {
             
-            //Logger.Info(mocapFrame.ToString);
+           // Logger.Info(mocapFrame.ToString);
 
+        }
+
+        public void Start()
+        {
+            //do nothing for now
         }
     }
 }

@@ -12,8 +12,17 @@ namespace VinteR.Configuration
     public class Configuration
     {
         [JsonProperty("home.dir")] public string HomeDir { get; set; }
+        [JsonProperty("port")] public int Port { get; set; }
+
+        [JsonProperty("udp.receivers")] public IList<UdpReceiver> UdpReceivers { get; set; }
 
         [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
+    }
+
+    public class UdpReceiver
+    {
+        [JsonProperty("ip")] public string Ip { get; set; }
+        [JsonProperty("port")] public int Port { get; set; }
     }
 
     public class Adapter
@@ -22,8 +31,6 @@ namespace VinteR.Configuration
         [JsonProperty("name")] public string Name { get; set; }
         [JsonProperty("adaptertype")] public string AdapterType { get; set; }
         [JsonExtensionData] private readonly IDictionary<string, JToken> _additionalSettings;
-
-        [JsonProperty("isGlobalRoot")] public bool IsGlobalRoot { get; set; }
 
         public IDictionary<string, JToken> AdditionalSettings => _additionalSettings;
 
@@ -58,15 +65,15 @@ namespace VinteR.Configuration
             var setting = _additionalSettings.GetValueOrDefault("colorStream.enabled", null);
             ColorStreamEnabled = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("colorStream.enabled", null);
-            ColorStreamEnabled = setting != null && bool.TrueString.Equals((string)setting);
+            ColorStreamEnabled = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("colorStream.flush", null);
-            ColorStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            ColorStreamFlush = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("depthStream.enabled", null);
-            DepthStreamEnabled = setting != null && bool.TrueString.Equals((string)setting);
+            DepthStreamEnabled = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("depthStream.flush", null);
-            DepthStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            DepthStreamFlush = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("skeletonStream.flush", null);
-            SkeletonStreamFlush = setting != null && bool.TrueString.Equals((string)setting);
+            SkeletonStreamFlush = setting != null && bool.TrueString.Equals((string) setting);
             setting = _additionalSettings.GetValueOrDefault("data.dir", "KinectData");
             DataDir = (string) setting;
             setting = _additionalSettings.GetValueOrDefault("colorStream.flush.dirname", "ColorStreamData");
@@ -86,13 +93,12 @@ namespace VinteR.Configuration
             SkeletonTrackingStateFilter = setting != null && bool.TrueString.Equals((string)setting);
 
             setting = _additionalSettings.GetValueOrDefault("server.ip", null);
-            ServerIp = setting != null ? (string)setting : null;
+            ServerIp = setting != null ? (string) setting : null;
             setting = _additionalSettings.GetValueOrDefault("client.ip", null);
-            ClientIp = setting != null ? (string)setting : null;
+            ClientIp = setting != null ? (string) setting : null;
             setting = _additionalSettings.GetValueOrDefault("connection.type", null);
-            ConnectionType = setting != null ? (string)setting : null;
+            ConnectionType = setting != null ? (string) setting : null;
         }
-
     }
 
     public static class DictionaryExtension

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Google.Protobuf;
+using Google.Protobuf.Collections;
 
 namespace VinteR.Model
 {
@@ -34,7 +34,7 @@ namespace VinteR.Model
         /// of previous frames. If the gesture is completely recorgnized
         /// this field contains the name of the gesture.
         /// </summary>
-        public string Gesture { get; set; }
+        public string Gesture { get; set; } = "";
 
         /// <summary>
         /// Contains the time when all tracking data is processed and
@@ -68,6 +68,56 @@ namespace VinteR.Model
         public void AddBody(ref Body body)
         {
             this.Bodies.Add(body);
+        }
+
+        /// <summary>
+        /// Maps this mocap frame to a mocap frame defined inside the
+        /// protobuf model. For faster calculation this should be
+        /// done in each input adapter.
+        /// </summary>
+        /// <returns></returns>
+        public byte[] ToBytes()
+        {
+            byte[] bytes;
+            // create mapping from MocapFrame to Gen.MocapFrame
+            var protoBufFrame = new Gen.MocapFrame()
+            {
+                AdapterType = this.AdapterType,
+                ElapsedMillis = this.ElapsedMillis,
+                Gesture = this.Gesture ?? "", // set default value otherwise serialization breaks
+                Latency = this.Latency,
+                SourceId = this.SourceId
+            };
+
+            foreach (var body in Bodies)
+            {
+                var protoBody = new Gen.MocapFrame.Types.Body()
+                {
+                    BodyType = body.GetBodyTypeProto(),
+                    Rotation = body.Rotation.ToProto(),
+                    SideType = body.GetSideTypeProto()
+                };
+                foreach (var point in body.Points)
+                {
+                    var protoPoint = new Gen.MocapFrame.Types.Body.Types.Point()
+                    {
+                        Name = point.Name ?? "",
+                        State = point.State ?? "",
+                        Position = point.Position.ToProto()
+                    };
+                    protoBody.Points.Add(protoPoint);
+                }
+                protoBufFrame.Bodies.Add(protoBody);
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                // Save the frame to a stream
+                protoBufFrame.WriteTo(stream);
+                bytes = stream.ToArray();
+            }
+
+            return bytes;
         }
     }
 }
