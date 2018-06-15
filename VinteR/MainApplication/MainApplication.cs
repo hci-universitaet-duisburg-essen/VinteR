@@ -104,7 +104,8 @@ namespace VinteR.MainApplication
             }
 
             Logger.Info("VinteR server started");
-            
+
+
         }
 
         public void Stop()

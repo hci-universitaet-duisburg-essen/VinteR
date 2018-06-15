@@ -29,11 +29,13 @@ namespace VinteR.OutputAdapter
         private readonly List<MocapFrame> _frames;
         private readonly string _homeDir;
         private bool _isAppend;
+        private bool _isAlive;
 
         public FileOutputAdapter(IConfigurationService configurationService)
         {
             _frames = new List<MocapFrame>();
             _isAppend = false;
+            _isAlive = true;
             _homeDir = configurationService.GetConfiguration().HomeDir;
         }
 
@@ -49,13 +51,19 @@ namespace VinteR.OutputAdapter
          */
         public void Start()
         {
-            Thread.Sleep(500);
-            if (_frames.Count > 100)
+            while (_isAlive)
             {
-                
-                WriterToCsv();
-                _frames.Clear();
+                Thread.Sleep(500);
+                if (_frames.Count > 100)
+                {
+
+                    WriterToCsv();
+                    _frames.Clear();
+                }
+
             }
+
+
 
         }
 
