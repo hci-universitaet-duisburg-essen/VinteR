@@ -12,5 +12,10 @@ namespace VinteR
         {
             return (float) Math.PI * degrees / 180;
         }
+
+        public static double ToDegrees(this double radians)
+        {
+            return radians * 180 / Math.PI;
+        }
     }
 }
