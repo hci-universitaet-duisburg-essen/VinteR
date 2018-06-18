@@ -26,21 +26,29 @@ namespace VinteR.OutputAdapter
     public class FileOutputAdapter : IOutputAdapter
     {
         private  CsvWriter _writer;
-        private readonly List<MocapFrame> _frames;
+        private static readonly List<MocapFrame> Frames = new List<MocapFrame>();
         private readonly string _homeDir;
-        private bool _isAppend;
+        private static bool _isAppend = false;
 
         public FileOutputAdapter(IConfigurationService configurationService)
         {
-            _frames = new List<MocapFrame>();
-            _isAppend = false;
             _homeDir = configurationService.GetConfiguration().HomeDir;
         }
 
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            _frames.Add(mocapFrame);
+            Frames.Add(mocapFrame);
+
+            
+                if (Frames.Count > 150)
+                {
+                    WriterToCsv();
+                    Frames.Clear();
+                }
+
+
+
         }
 
         /*
@@ -49,14 +57,20 @@ namespace VinteR.OutputAdapter
          */
         public void Start()
         {
-            Thread.Sleep(500);
-            if (_frames.Count > 100)
-            {
-                
-                WriterToCsv();
-                _frames.Clear();
-            }
 
+            
+
+
+        }
+
+        public void Stop()
+        {
+            if (Frames != null && Frames.Count > 0)
+            {
+                WriterToCsv();
+                Frames.Clear();
+            }
+            
         }
 
         public void WriterToCsv()
@@ -86,7 +100,7 @@ namespace VinteR.OutputAdapter
 
 
                 //_writer.WriteRecord(mocapFrame);
-                _writer.WriteRecords(_frames);
+                _writer.WriteRecords(Frames);
                 _writer.Flush();
 
 

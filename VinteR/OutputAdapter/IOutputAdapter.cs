@@ -9,5 +9,6 @@ namespace VinteR.OutputAdapter
         void OnDataReceived(MocapFrame mocapFrame);
 
         void Start();
+        void Stop();
     }
 }
