@@ -68,7 +68,7 @@ namespace VinteR.OutputAdapter
 
         public void Stop()
         {
-            //do nothing for now
+            _udpServer.Close();
         }
     }
 }
