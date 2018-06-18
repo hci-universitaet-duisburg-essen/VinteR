@@ -27,5 +27,10 @@ namespace VinteR.OutputAdapter
         {
             //do nothing for now
         }
+
+        public void Stop()
+        {
+            //do nothing for now
+        }
     }
 }

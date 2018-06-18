@@ -65,5 +65,10 @@ namespace VinteR.OutputAdapter
                 }
             }
         }
+
+        public void Stop()
+        {
+            //do nothing for now
+        }
     }
 }

@@ -62,7 +62,9 @@ namespace VinteR.MainApplication
              * Not sure which is the output or result of datamerger.
              * merger.HandleFrame(frame)?
              */
-          
+
+
+
 
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
@@ -105,7 +107,6 @@ namespace VinteR.MainApplication
 
             Logger.Info("VinteR server started");
 
-
         }
 
         public void Stop()
@@ -119,6 +120,7 @@ namespace VinteR.MainApplication
             foreach (var outputAdapter in _outputAdapters)
             {
                 _outputManager.OutputNotification -= outputAdapter.OnDataReceived;
+                outputAdapter.Stop();
             }
 
             IsAvailable = false;
