@@ -60,7 +60,8 @@ namespace VinteR.Tests
                                 Name = "",
                                 State = ""
                             }
-                        }
+                        },
+                        Name = "dynamite"
                     }
                 }
             });
@@ -71,6 +72,8 @@ namespace VinteR.Tests
 
             var centroid = frame.Bodies[0].Centroid;
             Assert.AreEqual(Vector3.One, new Vector3(centroid.X, centroid.Y, centroid.Z));
+
+            Assert.AreEqual("dynamite", frame.Bodies[0].Name);
         }
     }
 }

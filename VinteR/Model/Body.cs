@@ -57,6 +57,12 @@ namespace VinteR.Model
         /// </summary>
         public Quaternion Rotation { get; set; }
 
+        /// <summary>
+        /// Contains the name of a body. This may be used for later
+        /// identification of bodies
+        /// </summary>
+        public string Name { get; set; }
+
         // The Body Type of the Body object
         public Body()
         {
@@ -75,6 +81,7 @@ namespace VinteR.Model
             Rotation = source.Rotation;
             Centroid = source.Centroid;
             Side = source.Side;
+            Name = source.Name;
         }
 
         public Gen.MocapFrame.Types.Body.Types.EBodyType GetBodyTypeProto()
