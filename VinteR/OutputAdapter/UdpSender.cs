@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -68,7 +68,7 @@ namespace VinteR.OutputAdapter
 
         public void Stop()
         {
-            _udpServer.Close();
+            _udpServer?.Close();
         }
     }
 }
