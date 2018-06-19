@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace VinteR.Model
@@ -49,6 +46,12 @@ namespace VinteR.Model
         }
 
         /// <summary>
+        /// Contains the center of this body inside the global
+        /// coordinate system.
+        /// </summary>
+        public Vector3 Centroid { get; set; }
+
+        /// <summary>
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
@@ -57,7 +60,7 @@ namespace VinteR.Model
         // The Body Type of the Body object
         public Body()
         {
-            this._points = new List<Point>();
+            _points = new List<Point>();
         }
 
         /// <summary>
@@ -67,9 +70,11 @@ namespace VinteR.Model
         /// <param name="source"></param>
         public void Load(Body source)
         {
-            this.BodyType = source.BodyType;
-            this.Points = source.Points;
-            this.Rotation = source.Rotation;
+            BodyType = source.BodyType;
+            Points = source.Points;
+            Rotation = source.Rotation;
+            Centroid = source.Centroid;
+            Side = source.Side;
         }
 
         public Gen.MocapFrame.Types.Body.Types.EBodyType GetBodyTypeProto()

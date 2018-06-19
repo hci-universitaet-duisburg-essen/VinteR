@@ -52,6 +52,7 @@ namespace VinteR.Tests
                     {
                         BodyType = Body.EBodyType.Marker,
                         Rotation = Quaternion.Identity,
+                        Centroid = Vector3.One,
                         Points = new List<Point>()
                         {
                             new Point(-3.2f, 4.0f, 5.657f)
@@ -65,8 +66,11 @@ namespace VinteR.Tests
             });
             var received = client.Receive(ref serverAddress);
 
-            var frame = VinteR.Model.Gen.MocapFrame.Parser.ParseFrom(received);
+            var frame = Model.Gen.MocapFrame.Parser.ParseFrom(received);
             Assert.AreEqual(5.3f, frame.Latency);
+
+            var centroid = frame.Bodies[0].Centroid;
+            Assert.AreEqual(Vector3.One, new Vector3(centroid.X, centroid.Y, centroid.Z));
         }
     }
 }

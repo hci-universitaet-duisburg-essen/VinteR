@@ -108,12 +108,10 @@
     <Compile Include="MainApplication\IMainApplication.cs" />
     <Compile Include="MainApplication\MainApplication.cs" />
     <Compile Include="Model\Body.cs" />
-    <Compile Include="Model\OptiTrack\MarkerSet.cs" />
     <Compile Include="Model\Point.cs" />
     <Compile Include="Model\Kinect\KinectBody.cs" />
     <Compile Include="Model\MocapFrame.cs" />
     <Compile Include="Model\OptiTrack\OptiTrackBody.cs" />
-    <Compile Include="Model\OptiTrack\RigidBody.cs" />
     <Compile Include="Model\OptiTrack\Skeleton.cs" />
     <Compile Include="Model\ESideType.cs" />
     <Compile Include="Model\LeapMotion\Hand.cs" />
