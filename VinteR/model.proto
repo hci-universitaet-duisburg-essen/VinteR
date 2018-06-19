@@ -48,6 +48,8 @@ message MocapFrame {
         Quaternion Rotation = 4;
 
         Vector3 Centroid = 5;
+
+        string Name = 6;
     }
     repeated Body bodies = 6;
 }

@@ -11,6 +11,8 @@ namespace VinteR.Adapter.LeapMotion
     class LeapMotionEventHandler
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly string NameHandRight = "HandRight";
+        private static readonly string NameHandLeft = "HandLeft";
         private LeapMotionAdapter adapter;
 
         public LeapMotionEventHandler(LeapMotionAdapter adapter)
@@ -101,6 +103,7 @@ namespace VinteR.Adapter.LeapMotion
                 modelHand.LocalPosition = new System.Numerics.Vector3(direction.x, direction.y, direction.z);
                 modelHand.Side = getHandSideType(hand);
                 modelHand.Fingers = fingers;
+                modelHand.Name = hand.IsLeft ? NameHandLeft : NameHandRight;
                 //Logger.Info("Model Hand side: {0}", modelHand.Side.ToString());
 
                 // Create hand body to add to mocapFrame

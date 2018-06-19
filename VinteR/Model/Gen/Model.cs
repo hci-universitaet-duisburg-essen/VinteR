@@ -24,27 +24,27 @@ namespace VinteR.Model.Gen {
     static ModelReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgttb2RlbC5wcm90byKrBQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
+            "Cgttb2RlbC5wcm90byK5BQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
             "GAEgASgDEhAKCFNvdXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJ",
             "Eg8KB0dlc3R1cmUYBCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMY",
-            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHkamgQKBEJvZHkSLAoIQm9keVR5cGUY",
+            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHkaqAQKBEJvZHkSLAoIQm9keVR5cGUY",
             "ASABKA4yGi5Nb2NhcEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBl",
             "GAIgASgOMhouTW9jYXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMY",
             "AyADKAsyFi5Nb2NhcEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCAB",
             "KAsyGy5Nb2NhcEZyYW1lLkJvZHkuUXVhdGVybmlvbhIqCghDZW50cm9pZBgF",
-            "IAEoCzIYLk1vY2FwRnJhbWUuQm9keS5WZWN0b3IzGioKB1ZlY3RvcjMSCQoB",
-            "WBgBIAEoAhIJCgFZGAIgASgCEgkKAVoYAyABKAIaUAoFUG9pbnQSDAoETmFt",
-            "ZRgBIAEoCRINCgVTdGF0ZRgCIAEoCRIqCghQb3NpdGlvbhgDIAEoCzIYLk1v",
-            "Y2FwRnJhbWUuQm9keS5WZWN0b3IzGjgKClF1YXRlcm5pb24SCQoBWBgBIAEo",
-            "AhIJCgFZGAIgASgCEgkKAVoYAyABKAISCQoBVxgEIAEoAiJNCglFQm9keVR5",
-            "cGUSCgoGTWFya2VyEAASDQoJTWFya2VyU2V0EAESDQoJUmlnaWRCb2R5EAIS",
-            "DAoIU2tlbGV0b24QAxIICgRIYW5kEAQiLAoJRVNpZGVUeXBlEggKBExlZnQQ",
-            "ABIJCgVSaWdodBABEgoKBk5vU2lkZRACQhOqAhBWaW50ZVIuTW9kZWwuR2Vu",
-            "YgZwcm90bzM="));
+            "IAEoCzIYLk1vY2FwRnJhbWUuQm9keS5WZWN0b3IzEgwKBE5hbWUYBiABKAka",
+            "KgoHVmVjdG9yMxIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhpQ",
+            "CgVQb2ludBIMCgROYW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEioKCFBvc2l0",
+            "aW9uGAMgASgLMhguTW9jYXBGcmFtZS5Cb2R5LlZlY3RvcjMaOAoKUXVhdGVy",
+            "bmlvbhIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQg",
+            "ASgCIk0KCUVCb2R5VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARIN",
+            "CglSaWdpZEJvZHkQAhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lk",
+            "ZVR5cGUSCAoETGVmdBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAJCE6oCEFZp",
+            "bnRlUi5Nb2RlbC5HZW5iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "SideType", "Points", "Rotation", "Centroid" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType), typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "SideType", "Points", "Rotation", "Centroid", "Name" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType), typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser, new[]{ "Name", "State", "Position" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null)})})
           }));
@@ -346,6 +346,7 @@ namespace VinteR.Model.Gen {
           points_ = other.points_.Clone();
           Rotation = other.rotation_ != null ? other.Rotation.Clone() : null;
           Centroid = other.centroid_ != null ? other.Centroid.Clone() : null;
+          name_ = other.name_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -408,6 +409,17 @@ namespace VinteR.Model.Gen {
           }
         }
 
+        /// <summary>Field number for the "Name" field.</summary>
+        public const int NameFieldNumber = 6;
+        private string name_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public string Name {
+          get { return name_; }
+          set {
+            name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public override bool Equals(object other) {
           return Equals(other as Body);
@@ -426,6 +438,7 @@ namespace VinteR.Model.Gen {
           if(!points_.Equals(other.points_)) return false;
           if (!object.Equals(Rotation, other.Rotation)) return false;
           if (!object.Equals(Centroid, other.Centroid)) return false;
+          if (Name != other.Name) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -437,6 +450,7 @@ namespace VinteR.Model.Gen {
           hash ^= points_.GetHashCode();
           if (rotation_ != null) hash ^= Rotation.GetHashCode();
           if (centroid_ != null) hash ^= Centroid.GetHashCode();
+          if (Name.Length != 0) hash ^= Name.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -467,6 +481,10 @@ namespace VinteR.Model.Gen {
             output.WriteRawTag(42);
             output.WriteMessage(Centroid);
           }
+          if (Name.Length != 0) {
+            output.WriteRawTag(50);
+            output.WriteString(Name);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -487,6 +505,9 @@ namespace VinteR.Model.Gen {
           }
           if (centroid_ != null) {
             size += 1 + pb::CodedOutputStream.ComputeMessageSize(Centroid);
+          }
+          if (Name.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -517,6 +538,9 @@ namespace VinteR.Model.Gen {
               centroid_ = new global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3();
             }
             Centroid.MergeFrom(other.Centroid);
+          }
+          if (other.Name.Length != 0) {
+            Name = other.Name;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -553,6 +577,10 @@ namespace VinteR.Model.Gen {
                   centroid_ = new global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3();
                 }
                 input.ReadMessage(centroid_);
+                break;
+              }
+              case 50: {
+                Name = input.ReadString();
                 break;
               }
             }

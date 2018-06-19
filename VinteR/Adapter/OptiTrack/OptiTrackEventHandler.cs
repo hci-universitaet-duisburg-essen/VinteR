@@ -75,12 +75,12 @@ namespace VinteR.Adapter.OptiTrack
                 for (var j = 0; j < sklData.nRigidBodies; j++)
                 {
                     var boneData = sklData.RigidBodies[j];
-
+                    
                     var bone = new OptiTrackBody(boneData.ID.ToString())
                     {
                         Centroid = new Vector3(boneData.x, boneData.y, boneData.z) * TranslationUnitMultiplier,
                         Rotation = new Quaternion(boneData.qx, boneData.qy, boneData.qz, boneData.qw)
-                    }; // Create RB
+                    };
                     skl.RigidBodies.Add(bone); // Add bone to skeleton
                 }
                 handledFrame.Bodies.Add(skl);
@@ -107,6 +107,7 @@ namespace VinteR.Adapter.OptiTrack
                 var name = _client.NameById(rbData.ID);
                 if (markerSets.TryGetValue(name, out var ms))
                 {
+                    rb.Name = name;
                     foreach (var point in ms.Points)
                     {
                         rb.Points.Add(point);

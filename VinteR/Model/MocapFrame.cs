@@ -96,7 +96,8 @@ namespace VinteR.Model
                     BodyType = body.GetBodyTypeProto(),
                     Rotation = body.Rotation.ToProto(),
                     SideType = body.GetSideTypeProto(),
-                    Centroid = body.Centroid.ToProto()
+                    Centroid = body.Centroid.ToProto(),
+                    Name = body.Name
                 };
                 foreach (var point in body.Points)
                 {
