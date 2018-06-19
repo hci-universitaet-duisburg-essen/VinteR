@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace VinteR.Model
 {
@@ -24,12 +25,13 @@ namespace VinteR.Model
             Skeleton,
             Hand
         }
-
+        [BsonElement]
         public EBodyType BodyType { get; set; }
- 
+
         /// <summary>
         /// Contains the side of a body if one exists, for example "left" hand
         /// </summary>
+        [BsonElement]
         public ESideType Side { get; set; } = ESideType.NoSide;
 
         private IList<Point> _points;
@@ -38,6 +40,7 @@ namespace VinteR.Model
         /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
+        [BsonElement]
         public IList<Point> Points
         {
             get => _points;
@@ -52,6 +55,7 @@ namespace VinteR.Model
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
+        [BsonElement]
         public Quaternion Rotation { get; set; }
 
         // The Body Type of the Body object

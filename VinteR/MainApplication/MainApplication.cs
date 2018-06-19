@@ -62,12 +62,15 @@ namespace VinteR.MainApplication
              * Not sure which is the output or result of datamerger.
              * merger.HandleFrame(frame)?
              */
-            Thread.Sleep(500);
+
+             Thread.Sleep(500);
+            /*
             for (int i = 0; i <50; i++ )
             {
                 MocapFrame testFrame = new MocapFrame("main", "mongotester");
                 this._outputManager.ReadyToOutput(testFrame);
             }
+            */
 
 
 

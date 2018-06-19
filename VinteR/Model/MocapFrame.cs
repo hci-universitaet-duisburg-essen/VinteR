@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
 
 namespace VinteR.Model
 {
@@ -17,16 +20,19 @@ namespace VinteR.Model
         /// <summary>
         /// Time in milliseconds since application start
         /// </summary>
+        [BsonElement]
         public long ElapsedMillis { get; set; }
 
         /// <summary>
         /// Name of the input adapter that sends the frame
         /// </summary>
+        [BsonElement]
         public string SourceId { get; set; }
 
         /// <summary>
         /// Contains the type of the adapter that sends the frame
         /// </summary>
+        [BsonElement]
         public string AdapterType { get; set; }
 
         /// <summary>
@@ -34,20 +40,24 @@ namespace VinteR.Model
         /// of previous frames. If the gesture is completely recorgnized
         /// this field contains the name of the gesture.
         /// </summary>
+        [BsonElement]
         public string Gesture { get; set; } = "";
 
         /// <summary>
         /// Contains the time when all tracking data is processed and
         /// ready to be streamed.
         /// </summary>
+        [BsonElement]
         public float Latency { get; set; }
 
+        [BsonElement]
         private IList<Body> _bodies;
 
         /// <summary>
         /// Contains a list of bodies that the input adapter has
         /// detected.
         /// </summary>
+        [BsonElement]
         public IList<Body> Bodies
         {
             get => _bodies;
@@ -61,6 +71,13 @@ namespace VinteR.Model
         public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
+            this.SourceId = sourceId;
+            this.AdapterType = adapter;
+        }
+
+        public MocapFrame(string sourceId, string adapter, IList<Body> bodies)
+        {
+            this.Bodies = bodies;
             this.SourceId = sourceId;
             this.AdapterType = adapter;
         }

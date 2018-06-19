@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +33,18 @@ namespace VinteR.OutputAdapter
             if (this._configurationService.GetConfiguration().Mongo.Enabled)
             {
                 Logger.Debug("Data Received for MongoDB");
-                if (this.client != null)
+                if (mocapFrame.Bodies.Count > 0) // for debug
                 {
-                    Task.Factory.StartNew(() =>
+                    Logger.Debug("Frame with Body");
+
+                    if (this.frameCollection != null)
                     {
-                        this.frameCollection.InsertOneAsync(mocapFrame);
-                        Logger.Debug("Frame Inserted");
-                    });
+                        Task.Factory.StartNew(() =>
+                        {
+                            this.frameCollection.InsertOneAsync(mocapFrame);
+                            Logger.Debug("Frame Inserted");
+                        });
+                    }
                 }
             }
             
@@ -70,6 +76,12 @@ namespace VinteR.OutputAdapter
 
                 try
                 {
+                    BsonClassMap.RegisterClassMap<MocapFrame>(cm =>
+                    {
+                        cm.AutoMap();
+                        // cm.SetIsRootClass(true);
+                    });
+
                     var mongoUrl = buildMongoUrl();
                     this.client = new MongoClient(mongoUrl);
 
@@ -77,11 +89,13 @@ namespace VinteR.OutputAdapter
                     this.database = this.client.GetDatabase("vinter");
                     this.frameCollection = this.database.GetCollection<MocapFrame>("VinterMergedData");
 
+
                     Logger.Debug("Client set");
                 }
-                catch
+                catch (Exception e)
                 {
                     Logger.Error("Connection to MongoDB Database failed");
+                    Logger.Error(e);
                     throw new ApplicationException("Connection to MongoDB failed!");
                 }
             } else
