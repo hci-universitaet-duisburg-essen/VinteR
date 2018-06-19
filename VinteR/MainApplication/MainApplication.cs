@@ -63,7 +63,10 @@ namespace VinteR.MainApplication
              * merger.HandleFrame(frame)?
              */
 
-
+            for (int i = 0; i < 50; i++)
+            {
+                _outputManager.ReadyToOutput(new MocapFrame("1", "abc"));
+            }
 
 
             // for each json object inside inside the adapters array inside the config

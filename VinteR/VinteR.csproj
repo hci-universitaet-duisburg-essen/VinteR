@@ -83,6 +83,7 @@
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
     <Compile Include="OutputAdapter\FileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
+    <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />
     <Compile Include="OutputManager\OutputManager.cs" />
