@@ -20,19 +20,19 @@ namespace VinteR.Model
         /// <summary>
         /// Time in milliseconds since application start
         /// </summary>
-        [BsonElement]
+        
         public long ElapsedMillis { get; set; }
 
         /// <summary>
         /// Name of the input adapter that sends the frame
         /// </summary>
-        [BsonElement]
+        
         public string SourceId { get; set; }
 
         /// <summary>
         /// Contains the type of the adapter that sends the frame
         /// </summary>
-        [BsonElement]
+        
         public string AdapterType { get; set; }
 
         /// <summary>
@@ -40,37 +40,49 @@ namespace VinteR.Model
         /// of previous frames. If the gesture is completely recorgnized
         /// this field contains the name of the gesture.
         /// </summary>
-        [BsonElement]
+        
         public string Gesture { get; set; } = "";
 
         /// <summary>
         /// Contains the time when all tracking data is processed and
         /// ready to be streamed.
         /// </summary>
-        [BsonElement]
+        
         public float Latency { get; set; }
 
         [BsonElement]
+        private List<Body> _bson_bodies { get; set; }
+
+        [BsonIgnore]
         private IList<Body> _bodies;
 
         /// <summary>
         /// Contains a list of bodies that the input adapter has
         /// detected.
         /// </summary>
-        [BsonElement]
+        
+        [BsonIgnore]
         public IList<Body> Bodies
         {
             get => _bodies;
             set
             {
-                if (value == null) _bodies.Clear();
-                else _bodies = value;
+                if (value == null)
+                {
+                    _bodies.Clear();
+                    _bson_bodies.Clear();
+                }
+                else
+                {
+                    _bodies = value;
+                }
             }
         }
 
         public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
+            this._bson_bodies = new List<Body>();
             this.SourceId = sourceId;
             this.AdapterType = adapter;
         }
@@ -85,6 +97,7 @@ namespace VinteR.Model
         public void AddBody(ref Body body)
         {
             this.Bodies.Add(body);
+            this._bson_bodies.Add(body);
         }
 
         /// <summary>
