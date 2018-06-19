@@ -27,8 +27,8 @@ namespace VinteR.OutputAdapter
             // create a new target of Nlog config
             var logfile = new NLog.Targets.FileTarget("JsonLogger");
 
-            
-            //set the layout of json format
+
+            //set the layout of json format, MaxRecursionLimit can make sub object serialized, too!!!
             var jsonLayout = new JsonLayout
             {
                 Attributes =
@@ -39,7 +39,7 @@ namespace VinteR.OutputAdapter
                     new JsonAttribute("eventProperties", new JsonLayout
                     {
                         IncludeAllProperties = true,
-                        MaxRecursionLimit = 2
+                        MaxRecursionLimit = 10
                     }, false)
                 }
 
@@ -73,7 +73,6 @@ namespace VinteR.OutputAdapter
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            
             // logging the mocapFrame into JsonFile. 
             _logger.Info("mocapFrame {frame}", mocapFrame);
         }
@@ -89,6 +88,10 @@ namespace VinteR.OutputAdapter
         {
             //nothing to do for now
         }
+
+
     }
+
+
 
 }
