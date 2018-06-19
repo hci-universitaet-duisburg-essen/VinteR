@@ -17,9 +17,9 @@ namespace VinteR
             return v;
         }
 
-        public static VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Types.Vector3 ToProto(this Vector3 point)
+        public static VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3 ToProto(this Vector3 point)
         {
-            return new MocapFrame.Types.Body.Types.Point.Types.Vector3()
+            return new MocapFrame.Types.Body.Types.Vector3()
             {
                 X = point.X,
                 Y = point.Y,

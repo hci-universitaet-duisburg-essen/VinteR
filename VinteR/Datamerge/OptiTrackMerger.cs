@@ -8,7 +8,7 @@ namespace VinteR.Datamerge
 {
     public class OptiTrackMerger : IDataMerger
     {
-        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public MocapFrame HandleFrame(MocapFrame frame)
         {
@@ -21,7 +21,7 @@ namespace VinteR.Datamerge
                 }
                 else
                 {
-                    Logger.Warn("Could not frame for {0,15} by type {1}", frame.SourceId, frame.AdapterType);
+                    Logger.Warn("Could not merge frame for {0,15} by type {1}", frame.SourceId, frame.AdapterType);
                 }
             }
             return frame;
@@ -30,16 +30,10 @@ namespace VinteR.Datamerge
         public Body Merge(OptiTrackBody body)
         {
             Body result;
-            switch (body)
+            switch (body.BodyType)
             {
-                case RigidBody _:
-                    result = MergeRigidBody(body as RigidBody);
-                    break;
-                case Skeleton _:
+                case Body.EBodyType.Skeleton:
                     result = MergeSkeleton(body as Skeleton);
-                    break;
-                case MarkerSet _:
-                    result = MergeMarkerSet(body as MarkerSet);
                     break;
                 default:
                     result = MergeDefault(body);
@@ -47,17 +41,6 @@ namespace VinteR.Datamerge
             }
 
             return result;
-        }
-
-        private static Body MergeRigidBody(RigidBody rigidBody)
-        {
-            var body = new Body
-            {
-                BodyType = Body.EBodyType.RigidBody,
-                Points = rigidBody.Points,
-                Rotation = rigidBody.LocalRotation
-            };
-            return body;
         }
 
         private static Body MergeSkeleton(Skeleton skeleton)
@@ -73,30 +56,16 @@ namespace VinteR.Datamerge
             return body;
         }
 
-        private static Body MergeMarkerSet(MarkerSet markerSet)
-        {
-            var points = markerSet.Markers;
-
-            var body = new Body
-            {
-                BodyType = Body.EBodyType.MarkerSet,
-                Points = points,
-                Rotation = Quaternion.Identity
-            };
-            if (body.Points?.Count == 1)
-                body.BodyType = Body.EBodyType.Marker;
-            return body;
-        }
-
         private static Body MergeDefault(OptiTrackBody body)
         {
             var result = new Body
             {
-                BodyType = Body.EBodyType.MarkerSet,
                 Points = body.Points,
-                Rotation = body.Rotation
+                Centroid = body.Centroid,
+                Rotation = body.Rotation,
+                Side = body.Side
             };
-            if (result.Points?.Count == 1)
+            if (result.Points?.Count == 1 && result.BodyType.Equals(Body.EBodyType.MarkerSet))
                 result.BodyType = Body.EBodyType.Marker;
             return result;
         }

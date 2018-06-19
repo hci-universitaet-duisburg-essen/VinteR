@@ -38,7 +38,7 @@ namespace VinteR.Adapter.OptiTrack
 
         public void Run()
         {
-            _listener = new OptiTrackEventHandler(this);
+            _listener = new OptiTrackEventHandler(this, _otClient);
             try
             {
                 _otClient.Connect(_config.ClientIp, _config.ServerIp, _config.ConnectionType);

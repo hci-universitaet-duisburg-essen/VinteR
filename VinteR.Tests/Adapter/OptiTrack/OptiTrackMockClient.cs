@@ -87,6 +87,11 @@ namespace VinteR.Tests.Adapter.OptiTrack
         {
         }
 
+        public string NameById(int id)
+        {
+            return string.Empty;
+        }
+
         private static MarkerSetData MockMarkerSetData(string name, IReadOnlyList<Vector3> points)
         {
             var result = new MarkerSetData()

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using Ninject;
+using NLog;
 using NUnit.Framework;
 using VinteR.Adapter.Kinect;
 using VinteR.Adapter.LeapMotion;
@@ -72,7 +72,11 @@ namespace VinteR.Tests
         public void TestMergeOptiTrackBody()
         {
             var merger = _ninjectKernel.Get<IDataMerger>(OptiTrackAdapter.AdapterTypeName);
-            var optiTrackBody = new OptiTrackBody("testbody") {Points = new List<Point>() {new Point(Vector3.One)}};
+            var optiTrackBody = new OptiTrackBody("testbody")
+            {
+                Points = new List<Point>() {new Point(Vector3.One)},
+                BodyType = Body.EBodyType.Marker
+            };
             var frame = new MocapFrame("optitrack", OptiTrackAdapter.AdapterTypeName)
             {
                 Bodies = new List<Body>() {optiTrackBody}

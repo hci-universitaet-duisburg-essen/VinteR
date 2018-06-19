@@ -35,7 +35,7 @@ namespace VinteR.Datamerge
                 }
                 else
                 {
-                    Logger.Warn("Could not frame for {0,15} by type {1}", frame.SourceId, frame.AdapterType);
+                    Logger.Warn("Could not merge frame for {0,15} by type {1}", frame.SourceId, frame.AdapterType);
                 }
             }
             return frame;
@@ -46,7 +46,13 @@ namespace VinteR.Datamerge
          */
         private Body Merge(Hand hand, string sourceId)
         {
-            var result = new Body {BodyType = Body.EBodyType.Hand, Side = hand.Side };
+            var result = new Body
+            {
+                BodyType = Body.EBodyType.Hand,
+                Side = hand.Side,
+                Centroid = hand.LocalPosition,
+                Rotation = hand.LocalRotation
+            };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
 //            Logger.Debug("Leap motion position: {0}", leapMotionPosition);
