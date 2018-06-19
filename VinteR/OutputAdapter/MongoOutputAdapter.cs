@@ -29,27 +29,64 @@ namespace VinteR.OutputAdapter
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            this.frameCollection.InsertOne(mocapFrame);
+            if (this._configurationService.GetConfiguration().Mongo.Enabled)
+            {
+                Logger.Debug("Data Received for MongoDB");
+                if (this.client != null)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        this.frameCollection.InsertOneAsync(mocapFrame);
+                        Logger.Debug("Frame Inserted");
+                    });
+                }
+            }
+            
+        }
+
+        // Build Connection URL
+        // mongodb://<dbuser>:<dbpassword>@<domain>:<port>/<database>
+        private MongoUrl buildMongoUrl()
+        {
+            var url =
+                "mongodb://"
+                + this._configurationService.GetConfiguration().Mongo.User // <dbuser>
+                + ":"
+                + this._configurationService.GetConfiguration().Mongo.Password // <dbpassword>
+                + "@"
+                + this._configurationService.GetConfiguration().Mongo.Domain // <domain>
+                + ":"
+                + this._configurationService.GetConfiguration().Mongo.Port // <port>
+                + "/"
+                + this._configurationService.GetConfiguration().Mongo.Database; // <database>
+            return new MongoUrl(url);
         }
 
         public void Start()
         {
-            // TBD Get data from Configuration, currently use hardcoded values
-
-            // Setup the client and its connection
-            try {
-                var mongoUrl = new MongoUrl("mongodb://dbvinter:dbvinter18@ds161710.mlab.com:61710/vinter");
-                this.client = new MongoClient(mongoUrl);
-
-                // Setup Database
-                this.database = this.client.GetDatabase("vinter");
-                this.frameCollection = this.database.GetCollection<MocapFrame>("merged_data");
-            } catch
+            if (this._configurationService.GetConfiguration().Mongo.Enabled)
             {
-                // In case something wents wrong with the database initialization
-                this.client = null;
-                Logger.Error("Connection to MongoDB Database failed");
-                throw new ApplicationException("Connection with MongoDB failed");
+                Logger.Info("MongoDB Output Enabled");
+
+                try
+                {
+                    var mongoUrl = buildMongoUrl();
+                    this.client = new MongoClient(mongoUrl);
+
+                    // Setup Database
+                    this.database = this.client.GetDatabase("vinter");
+                    this.frameCollection = this.database.GetCollection<MocapFrame>("VinterMergedData");
+
+                    Logger.Debug("Client set");
+                }
+                catch
+                {
+                    Logger.Error("Connection to MongoDB Database failed");
+                    throw new ApplicationException("Connection to MongoDB failed!");
+                }
+            } else
+            {
+                Logger.Info("MongoDB Output Disabled!");
             }
             
         }

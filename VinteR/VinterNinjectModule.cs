@@ -37,6 +37,7 @@ namespace VinteR
             Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
             Bind<IOutputAdapter>().To<FileOutputAdapter>();
             Bind<IOutputAdapter>().To<UdpSender>();
+            Bind<IOutputAdapter>().To<MongoOutputAdapter>();
         }
     }
 }

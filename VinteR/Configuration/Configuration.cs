@@ -15,9 +15,19 @@ namespace VinteR.Configuration
         [JsonProperty("port")] public int Port { get; set; }
 
         [JsonProperty("udp.receivers")] public IList<UdpReceiver> UdpReceivers { get; set; }
-
+        [JsonProperty("mongodb")] public MongoDB Mongo { get; set;  }
         [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
     }
+
+    public class MongoDB
+    {
+        [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("domain")] public string Domain { get; set; }
+        [JsonProperty("user")] public string User { get; set; }
+        [JsonProperty("password")] public string Password { get; set; }
+        [JsonProperty("database")] public string Database { get; set; }
+        [JsonProperty("port")] public int Port { get; set; }
+    } 
 
     public class UdpReceiver
     {
