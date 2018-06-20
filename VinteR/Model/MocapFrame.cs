@@ -16,6 +16,8 @@ namespace VinteR.Model
     /// </summary>
     public class MocapFrame
     {
+        [BsonId]
+        public BsonObjectId _id;
 
         /// <summary>
         /// Time in milliseconds since application start
@@ -50,9 +52,13 @@ namespace VinteR.Model
         
         public float Latency { get; set; }
 
-        [BsonElement]
-        private List<Body> _bson_bodies { get; set; }
+        // [BsonElement]
+        // private List<Body> _bson_bodies { get; set; }
 
+        [BsonElement]
+        public List<BsonObjectId> _referenceBodies;
+        
+       
         [BsonIgnore]
         private IList<Body> _bodies;
 
@@ -70,7 +76,6 @@ namespace VinteR.Model
                 if (value == null)
                 {
                     _bodies.Clear();
-                    _bson_bodies.Clear();
                 }
                 else
                 {
@@ -82,9 +87,11 @@ namespace VinteR.Model
         public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
-            this._bson_bodies = new List<Body>();
+            // this._bson_bodies = new List<Body>();
             this.SourceId = sourceId;
             this.AdapterType = adapter;
+            this._id = new BsonObjectId(ObjectId.GenerateNewId());
+            this._referenceBodies = new List<BsonObjectId>();
         }
 
         public MocapFrame(string sourceId, string adapter, IList<Body> bodies)
@@ -92,12 +99,14 @@ namespace VinteR.Model
             this.Bodies = bodies;
             this.SourceId = sourceId;
             this.AdapterType = adapter;
+            this._id = new BsonObjectId(ObjectId.GenerateNewId());
+            this._referenceBodies = new List<BsonObjectId>();
         }
 
         public void AddBody(ref Body body)
         {
             this.Bodies.Add(body);
-            this._bson_bodies.Add(body);
+            // this._bson_bodies.Add(body);
         }
 
         /// <summary>

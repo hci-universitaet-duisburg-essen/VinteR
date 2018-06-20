@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace VinteR.Model
 {
@@ -25,6 +26,10 @@ namespace VinteR.Model
             Skeleton,
             Hand
         }
+
+        [BsonId]
+        public BsonObjectId _id;
+
         public EBodyType BodyType { get; set; }
 
         /// <summary>
@@ -60,6 +65,7 @@ namespace VinteR.Model
         public Body()
         {
             this._points = new List<Point>();
+            this._id = new BsonObjectId(ObjectId.GenerateNewId());
         }
 
         /// <summary>

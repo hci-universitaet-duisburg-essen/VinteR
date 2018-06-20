@@ -19,6 +19,7 @@ namespace VinteR.OutputAdapter
         private MongoClient client;
         private IMongoDatabase database;
         private IMongoCollection<MocapFrame> frameCollection;
+        private IMongoCollection<Body> bodyCollection;
 
         public MongoOutputAdapter(IConfigurationService configurationService)
         {
@@ -26,6 +27,7 @@ namespace VinteR.OutputAdapter
             this.client = null;
             this.database = null;
             this.frameCollection = null;
+            this.bodyCollection = null;
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
@@ -35,12 +37,19 @@ namespace VinteR.OutputAdapter
                 Logger.Debug("Data Received for MongoDB");
                 if (mocapFrame.Bodies.Count > 0) // for debug
                 {
+
                     Logger.Debug("Frame with Body");
 
-                    if (this.frameCollection != null)
+                    if ( (this.frameCollection != null) && (this.bodyCollection != null) )
                     {
+                        foreach (Body body in mocapFrame.Bodies)
+                        {
+                            mocapFrame._referenceBodies.Add(body._id);
+                        }
+
                         Task.Factory.StartNew(() =>
                         {
+                            this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
                             this.frameCollection.InsertOneAsync(mocapFrame);
                             Logger.Debug("Frame Inserted");
                         });
@@ -76,19 +85,20 @@ namespace VinteR.OutputAdapter
 
                 try
                 {
+                    /*
                     BsonClassMap.RegisterClassMap<MocapFrame>(cm =>
                     {
                         cm.AutoMap();
                         // cm.SetIsRootClass(true);
                     });
-
+                    */
                     var mongoUrl = buildMongoUrl();
                     this.client = new MongoClient(mongoUrl);
 
                     // Setup Database
                     this.database = this.client.GetDatabase("vinter");
                     this.frameCollection = this.database.GetCollection<MocapFrame>("VinterMergedData");
-
+                    this.bodyCollection = this.database.GetCollection<Body>("VinterMergedBody");
 
                     Logger.Debug("Client set");
                 }
