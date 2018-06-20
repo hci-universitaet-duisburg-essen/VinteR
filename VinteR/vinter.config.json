@@ -9,7 +9,7 @@
     ], 
     "adapters": [
         {
-            "enabled": true,
+            "enabled": false,
             "name": "kinect",
             "adaptertype": "kinect",
             "skeleton.TrackingFilter.enabled":  true,
@@ -27,7 +27,7 @@
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },

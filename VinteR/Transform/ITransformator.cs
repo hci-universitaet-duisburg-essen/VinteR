@@ -37,40 +37,6 @@ namespace VinteR.Transform
         Vector3 GetGlobalPosition(Position coordinateSystemPosition, Vector3 localPosition);
 
         /// <summary>
-        /// Returns the world coordinates of an object that is located inside a
-        /// local coordinate system and was rotated inside the local coordination system
-        /// system.
-        /// </summary>
-        /// <param name="coordinateSystemPosition">Contains the global coordinate of the local coordinate system root</param>
-        /// <param name="localPosition">Position relative to the local coordinate system root</param>
-        /// <param name="localObjectRotation">Rotation relative to the local coordinate system root</param>
-        /// <returns>The computed world rotation</returns>
-        Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Vector3 localPosition,
-            Quaternion localObjectRotation);
-
-        /// <summary>
-        /// Returns the rotation inside the world of a rotation given inside a local coordinate system.
-        /// system.
-        /// </summary>
-        /// <param name="coordinateSystemPosition">Contains the global coordinate of the local coordinate system root</param>
-        /// <param name="coordinateSystemRotation">Rotation of the root of the local coordinate system</param>
-        /// <param name="localPosition">Position relative to the local coordinate system root</param>
-        /// <param name="localObjectRotation">Rotation relative to the local coordinate system root</param>
-        /// <returns>The computed world rotation</returns>
-        Vector3 GetGlobalPosition(Vector3 coordinateSystemPosition, Quaternion coordinateSystemRotation,
-            Vector3 localPosition, Quaternion localObjectRotation);
-
-        /// <summary>
-        /// Returns the rotation inside the world of a rotation given inside a local coordinate system.
-        /// system.
-        /// </summary>
-        /// <param name="coordinateSystemPosition">Contains the global position of the local coordinate system root</param>
-        /// <param name="localPosition">Position relative to the local coordinate system root</param>
-        /// <param name="localObjectRotation">Rotation relative to the local coordinate system root</param>
-        /// <returns>The computed world rotation</returns>
-        Vector3 GetGlobalPosition(Position coordinateSystemPosition, Vector3 localPosition, Quaternion localObjectRotation);
-
-        /// <summary>
         /// Returns the centroid of all given points
         /// </summary>
         /// <param name="points">All points that are relevant for the calculation</param>

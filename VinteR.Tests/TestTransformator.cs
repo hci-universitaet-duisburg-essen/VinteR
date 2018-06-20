@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+﻿using System.Numerics;
 using Ninject;
 using NUnit.Framework;
+using VinteR.Tracking;
 using VinteR.Transform;
 
 namespace VinteR.Tests
@@ -34,55 +30,18 @@ namespace VinteR.Tests
         }
 
         [Test]
-        public void TestGetGlobalPositionWithLocalRotation()
+        public void TestGetGlobalPositionWithRotation()
         {
-            var localOrigin = new Vector3(1, 1, 1);
-            var localPosition = new Vector3(0, 0, 0);
+            var position = new Position()
+            {
+                Location = new Vector3(1, 1, 0),
+                Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, 90f.ToRadians())
+            };
+            var localPosition = new Vector3(1, 1, 0);
 
-            var expected = new Vector3(1, 1, 1);
-            var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(90));
-            var actual = _transformator.GetGlobalPosition(localOrigin, localPosition, rotation);
-            actual = Round(actual);
+            var expected = new Vector3(1, 2, -1);
+            var actual = _transformator.GetGlobalPosition(position, localPosition).Round();
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void TestGetGlobalPositionWithLocalRotation2()
-        {
-            var localOrigin = new Vector3(1, 0, 1);
-            var localPosition = new Vector3(1, 0, 1);
-
-            var expected = new Vector3(0, 0, 2);
-            var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(-90));
-            var actual = _transformator.GetGlobalPosition(localOrigin, localPosition, rotation);
-            actual = Round(actual);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void TestGetGlobalPositionWithLocalRotation3()
-        {
-            var localOrigin = new Vector3(1, 0, 1);
-            var localPosition = new Vector3(1, 0, 1);
-
-            var expected = new Vector3(-2, 0, 0);
-
-            var localRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(-90));
-            var localOriginRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, ToRadians(-90));
-            var actual = _transformator.GetGlobalPosition(localOrigin, localOriginRotation, localPosition, localRotation);
-            actual = Round(actual);
-            Assert.AreEqual(expected, actual);
-        }
-
-        private static Vector3 Round(Vector3 v)
-        {
-            var roundFloat = new Func<float, float>((float f) => (float) Math.Round(f, 3));
-            return new Vector3(roundFloat(v.X), roundFloat(v.Y), roundFloat(v.Z));
-        }
-
-        private static float ToRadians(float val)
-        {
-            return ((float)Math.PI / 180) * val;
         }
     }
 }
