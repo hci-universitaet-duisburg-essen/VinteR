@@ -11,6 +11,9 @@ As this project makes heavy use of OptiTrack, Leap Motion and Microsoft Kinect i
 
 The leap motion requires the .NET Framework 4.5.x! 4.6 and higher might work but are not tested. For Windows 10 users the kinect sdk has to be installed in windows 7 compatibility mode! Otherwise runtime errors are going to occure. To get the frames from the Leap Motion, you need to install the Leap Motion Orion Software on your machine, for building or running the solution it is not necessary. If you want use a gitlab runner instance on your machine to execute continuous integration Visual Studio 2017 Enterprise is required. Take a look at the `.gitlab-ci.yml`. There is an absolute path to the `MSBuild.exe`.
 
+## Specific Device Settings
+The Leap Motion is able to automatically rotate its coordinate system depending on the position and rotation of the hands. This should be disabled in the Orion software's settings to ensure a stable coordinate system. This can be done in the general settings (`Automatically align tracking`).
+
 ## GitLab Runner
 
 On the GitLab is a [.NET project](https://git.uni-due.de/VinteR/TheApplication) created which has CI configurations. Unfortunately, CI jobs cannot run on the GitLab because an installed Visual Studio 2017 Enterprise is required. Currently, the jobs are running on different developer machines. A GitLab runner has been installed and registered for this purpose. This was done according to the following instructions:
@@ -34,6 +37,9 @@ To execute the runner locally execute the following command in a powershell inst
 ```
 
 This command must be executed inside the folder that contains the solution (`VinteR.sln`).
+
+# Logging Output
+NLogger is used for logging. This component can log different levels (e.g. INFO or DEBUG) for the whole project or for single namespaces. These settings are placed in a file named `NLog.config`. It can be defined, how the information is displayed and multiple rules can be created. The output can be logged to the console or to a file.
 
 # Writing tests
 
