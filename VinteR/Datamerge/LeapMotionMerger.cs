@@ -78,8 +78,7 @@ namespace VinteR.Datamerge
                                 if (finger.Type != EFingerType.Thumb) // thumb has zero length metacarpal bone, so do not add end point as well
                                 {
                                     var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
-                                        bone.LocalEndPosition,
-                                        hand.LocalRotation);
+                                        bone.LocalEndPosition);
                                     points.Add(CreatePoint(boneGlobalEndPosition, finger.Type, bone.Type));
                                     //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalEndPosition.ToString());
                                 }
@@ -87,8 +86,7 @@ namespace VinteR.Datamerge
                             else // add all other bone end points
                             {
                                 var boneGlobalEndPosition = _transformator.GetGlobalPosition(leapMotionPosition,
-                                    bone.LocalEndPosition,
-                                    hand.LocalRotation);
+                                    bone.LocalEndPosition);
                                 points.Add(CreatePoint(boneGlobalEndPosition, finger.Type, bone.Type));
                                 //Logger.Info(finger.Type.ToString() + " point: " + bone.LocalEndPosition.ToString());
                             }

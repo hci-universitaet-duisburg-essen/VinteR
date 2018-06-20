@@ -59,6 +59,13 @@ namespace VinteR.Adapter.OptiTrack
         /// </summary>
         void Disconnect();
 
+        /// <summary>
+        /// Returns the name of an rigid body or skeleton that is identified by given id.
+        /// Names are only given inside the data descriptors and not each single frame of mocap
+        /// data. To name these objects all names are stored with its corresponding id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The name of the rigid body, skeleton or an empty string if none exists</returns>
         string NameById(int id);
     }
 
@@ -119,7 +126,6 @@ namespace VinteR.Adapter.OptiTrack
             }
             else
             {
-
                 throw new ApplicationException("Could not connect to optitrack");
             }
         }
@@ -134,8 +140,8 @@ namespace VinteR.Adapter.OptiTrack
 
         public string NameById(int id)
         {
-            return _nameById.ContainsKey(id) 
-                ? _nameById[id] 
+            return _nameById.ContainsKey(id)
+                ? _nameById[id]
                 : string.Empty;
         }
 
@@ -202,7 +208,7 @@ namespace VinteR.Adapter.OptiTrack
 
                 FireDataDescriptionChanged();
             }
-            
+
             FireOnFrameReady(data);
         }
 
