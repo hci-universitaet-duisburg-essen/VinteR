@@ -68,32 +68,30 @@ namespace VinteR.Adapter.Kinect
             // ColorStream
             if (this._config.ColorStreamEnabled && this._config.ColorStreamFlush)
             {
-                if (! (Directory.Exists( this.ColorStreamPath )))
-                {
-                    // Create Directory
-                    Directory.CreateDirectory( this.ColorStreamPath );
-                }
+                CreateDirectory(ColorStreamPath);
             }
 
             // DepthStream
             if (this._config.DepthStreamEnabled && this._config.DepthStreamFlush)
             {
-                if (! (Directory.Exists( this.DepthStreamPath )))
-                {
-                    // Create Directory
-                    Directory.CreateDirectory( this.DepthStreamPath );
-                }
+                CreateDirectory(DepthStreamPath);
             }
 
 
             // SkeletonStream
             if (this._config.SkeletonStreamFlush)
             {
-                if (! (Directory.Exists( this.SkeletonStreamPath )))
-                {
-                    // Create Directory
-                    Directory.CreateDirectory( this.SkeletonStreamPath );
-                }
+                CreateDirectory(SkeletonStreamPath);
+            }
+        }
+
+        private static void CreateDirectory(string path)
+        {
+            var directory = Path.GetDirectoryName(path);
+            if (directory != null && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+                Logger.Info("Created directory {0}", directory);
             }
         }
 
