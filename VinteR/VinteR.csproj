@@ -87,6 +87,8 @@
     <Compile Include="OutputManager\IOutputManager.cs" />
     <Compile Include="OutputManager\OutputManager.cs" />
     <Compile Include="QuaternionExtensions.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Tracking\IAdapterTracker.cs" />
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />

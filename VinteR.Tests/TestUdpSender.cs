@@ -7,6 +7,7 @@ using NUnit.Framework;
 using VinteR.Configuration;
 using VinteR.Model;
 using VinteR.OutputAdapter;
+using VinteR.Serialization;
 
 namespace VinteR.Tests
 {
@@ -20,7 +21,7 @@ namespace VinteR.Tests
         public void OnSetupFixture()
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
-            _udpSender = new UdpSender(ninjectKernel.Get<IConfigurationService>())
+            _udpSender = new UdpSender(ninjectKernel.Get<IConfigurationService>(), ninjectKernel.Get<ISerializer>())
             {
                 UdpReceivers = new List<UdpReceiver>()
                 {
