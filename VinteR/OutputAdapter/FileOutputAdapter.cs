@@ -25,7 +25,8 @@ namespace VinteR.OutputAdapter
      */
     public class FileOutputAdapter : IOutputAdapter
     {
-        private  CsvWriter _writer;
+        private CsvWriter _writer;
+        private static readonly object WriteLock = new object();
         private static readonly List<MocapFrame> Frames = new List<MocapFrame>();
         private readonly string _homeDir;
         private static bool _isAppend = false;
@@ -38,17 +39,16 @@ namespace VinteR.OutputAdapter
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            Frames.Add(mocapFrame);
+            lock (WriteLock)
+            {
+                Frames.Add(mocapFrame);
 
-            
                 if (Frames.Count > 150)
                 {
                     WriterToCsv();
                     Frames.Clear();
                 }
-
-
-
+            }
         }
 
         /*
@@ -57,61 +57,51 @@ namespace VinteR.OutputAdapter
          */
         public void Start()
         {
-
-            
-
-
         }
 
         public void Stop()
         {
-            if (Frames != null && Frames.Count > 0)
+            lock (WriteLock)
             {
-                WriterToCsv();
-                Frames.Clear();
+                if (Frames != null && Frames.Count > 0)
+                {
+                    WriterToCsv();
+                    Frames.Clear();
+                }
             }
-            
         }
 
-        public void WriterToCsv()
+        private void WriterToCsv()
         {
-            string filePath = this._homeDir+@"\output.csv";
-            // Steamwriter seems closed every time after output. so need new every time. Stranger.
-            using (TextWriter writer = new StreamWriter(filePath, true))
+            lock (WriteLock)
             {
-               
-                _writer = new CsvWriter(writer);
-               
-                
-                _writer.Configuration.RegisterClassMap<CsvDataModel>();
-
-                //poor way to delete unrequired titel when appending new records;
-
-                if (!_isAppend)
+                string filePath = this._homeDir + @"\output.csv";
+                // Steamwriter seems closed every time after output. so need new every time. Stranger.
+                using (TextWriter writer = new StreamWriter(filePath, true))
                 {
-                    _isAppend = true;
+                    _writer = new CsvWriter(writer);
+                    _writer.Configuration.RegisterClassMap<CsvDataModel>();
+
+                    //poor way to delete unrequired titel when appending new records;
+
+                    if (!_isAppend)
+                    {
+                        _isAppend = true;
+                    }
+                    else
+                    {
+                        _writer.Configuration.HasHeaderRecord = false;
+                    }
+
+                    _writer.WriteRecords(Frames);
+                    _writer.Flush();
                 }
-                else
-                {
-                    _writer.Configuration.HasHeaderRecord = false;
-                }
-
-
-
-
-                //_writer.WriteRecord(mocapFrame);
-                _writer.WriteRecords(Frames);
-                _writer.Flush();
-
-
             }
-
         }
     }
 
     public sealed class CsvDataModel : ClassMap<MocapFrame>
     {
-
         /*
          * Mapping attributes of mocapframe to attributes of csv files.
          * each row of Map() means one Column.
@@ -135,9 +125,6 @@ namespace VinteR.OutputAdapter
              * m.Bodies[0] is the way to get first Object in the list.
              */
             Map(m => m.Bodies);
-
-
         }
-
     }
 }
