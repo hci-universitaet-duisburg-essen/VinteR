@@ -64,7 +64,6 @@ namespace VinteR.OutputAdapter
                         }
                     }
                 }
-                    
 
                 // write the current Frame
                 writeToDatabase(mocapFrame);
