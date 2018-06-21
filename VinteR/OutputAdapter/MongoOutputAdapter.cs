@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,8 @@ namespace VinteR.OutputAdapter
 
         private readonly IConfigurationService _configurationService;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
+        private readonly int _bufferSize;
+        private IList _buffer;
         private MongoClient client;
         private IMongoDatabase database;
         private IMongoCollection<MocapFrame> frameCollection;
@@ -28,6 +30,8 @@ namespace VinteR.OutputAdapter
             this.database = null;
             this.frameCollection = null;
             this.bodyCollection = null;
+            this._buffer = new List<MocapFrame>();
+            this._bufferSize = this._configurationService.GetConfiguration().Mongo.MongoBufferSize;
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
@@ -36,22 +40,55 @@ namespace VinteR.OutputAdapter
             {
                 Logger.Debug("Data Received for MongoDB");
 
-                if ( (this.frameCollection != null) && (this.bodyCollection != null) )
+                // buffer frames before init
+                if ( (this.frameCollection == null) || (this.bodyCollection == null) )
                 {
-                    foreach (Body body in mocapFrame.Bodies)
+                    if (this._buffer.Count <= this._bufferSize )
                     {
-                        mocapFrame._referenceBodies.Add(body._id);
+                        this._buffer.Add(mocapFrame);
                     }
-
-                    Task.Factory.StartNew(() =>
+                    else
                     {
-                        this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
-                        this.frameCollection.InsertOneAsync(mocapFrame);
-                        Logger.Debug("Frame Inserted");
-                    });
+                        this._buffer.Clear();
+                    }
                 }
+
+                if ((this.frameCollection != null) && (this.bodyCollection != null))
+                {
+                    // empty the buffer
+                    if (this._buffer.Count > 0)
+                    {
+                        foreach (MocapFrame frame in this._buffer)
+                        {
+                            writeToDatabase(frame);
+                        }
+                    }
+                }
+                    
+
+                // write the current Frame
+                writeToDatabase(mocapFrame);
+
             }
             
+        }
+
+        public void writeToDatabase(MocapFrame mocapFrame)
+        {
+            if ((this.frameCollection != null) && (this.bodyCollection != null))
+            {
+                foreach (Body body in mocapFrame.Bodies)
+                {
+                    mocapFrame._referenceBodies.Add(body._id);
+                }
+
+                Task.Factory.StartNew(() =>
+                {
+                    this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
+                    this.frameCollection.InsertOneAsync(mocapFrame);
+                    Logger.Debug("Frame Inserted");
+                });
+            }
         }
 
         // Build Connection URL

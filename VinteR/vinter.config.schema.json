@@ -19,9 +19,10 @@
           "user": { "type": "string" },
           "password": { "type": "string" },
           "database": { "type": "string" },
-          "port": { "type": "integer" }
+          "port": { "type": "integer" },
+          "bufferSize":  {"type":  "integer"}
         },
-        "required": ["enabled", "domain", "user", "password", "database", "port"] 
+        "required": ["enabled", "domain", "user", "password", "database", "port", "bufferSize"] 
       },
         "leapmotion": {
             "type": "object",

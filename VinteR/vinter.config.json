@@ -13,7 +13,8 @@
     "user": "dbvinter",
     "password": "dbvinter18",
     "database": "vinter",
-    "port": 61710
+    "port": 61710,
+    "bufferSize":  5000
   },
     "adapters": [
       {
