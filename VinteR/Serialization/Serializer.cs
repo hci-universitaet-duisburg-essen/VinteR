@@ -26,7 +26,7 @@ namespace VinteR.Serialization
                     Rotation = body.Rotation.ToProto(),
                     SideType = body.GetSideTypeProto(),
                     Centroid = body.Centroid.ToProto(),
-                    Name = body.Name
+                    Name = body.Name ?? string.Empty
                 };
                 foreach (var point in body.Points)
                 {

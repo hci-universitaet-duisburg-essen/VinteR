@@ -15,6 +15,9 @@ namespace VinteR.Datamerge
     {
         private const string NameDivider = "_";
         private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private static readonly Quaternion LeapMotionOptiTrackAdjustment =
+            Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180f.ToRadians());
         private readonly IAdapterTracker _adapterTracker;
         private readonly ITransformator _transformator;
 
@@ -55,6 +58,7 @@ namespace VinteR.Datamerge
             };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
+            leapMotionPosition.Rotation = Quaternion.Multiply(leapMotionPosition.Rotation, LeapMotionOptiTrackAdjustment);
             Logger.Debug("Leap motion position: {0}", leapMotionPosition);
 
             // Convert all joints to points (each position only once!)
