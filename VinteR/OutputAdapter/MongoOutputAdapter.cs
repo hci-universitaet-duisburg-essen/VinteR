@@ -35,25 +35,20 @@ namespace VinteR.OutputAdapter
             if (this._configurationService.GetConfiguration().Mongo.Enabled)
             {
                 Logger.Debug("Data Received for MongoDB");
-                if (mocapFrame.Bodies.Count > 0) // for debug
+
+                if ( (this.frameCollection != null) && (this.bodyCollection != null) )
                 {
-
-                    Logger.Debug("Frame with Body");
-
-                    if ( (this.frameCollection != null) && (this.bodyCollection != null) )
+                    foreach (Body body in mocapFrame.Bodies)
                     {
-                        foreach (Body body in mocapFrame.Bodies)
-                        {
-                            mocapFrame._referenceBodies.Add(body._id);
-                        }
-
-                        Task.Factory.StartNew(() =>
-                        {
-                            this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
-                            this.frameCollection.InsertOneAsync(mocapFrame);
-                            Logger.Debug("Frame Inserted");
-                        });
+                        mocapFrame._referenceBodies.Add(body._id);
                     }
+
+                    Task.Factory.StartNew(() =>
+                    {
+                        this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
+                        this.frameCollection.InsertOneAsync(mocapFrame);
+                        Logger.Debug("Frame Inserted");
+                    });
                 }
             }
             
@@ -85,13 +80,6 @@ namespace VinteR.OutputAdapter
 
                 try
                 {
-                    /*
-                    BsonClassMap.RegisterClassMap<MocapFrame>(cm =>
-                    {
-                        cm.AutoMap();
-                        // cm.SetIsRootClass(true);
-                    });
-                    */
                     var mongoUrl = buildMongoUrl();
                     this.client = new MongoClient(mongoUrl);
 
@@ -100,13 +88,13 @@ namespace VinteR.OutputAdapter
                     this.frameCollection = this.database.GetCollection<MocapFrame>("VinterMergedData");
                     this.bodyCollection = this.database.GetCollection<Body>("VinterMergedBody");
 
-                    Logger.Debug("Client set");
+                    Logger.Debug("MongoDB Client initialized");
                 }
                 catch (Exception e)
                 {
                     Logger.Error("Connection to MongoDB Database failed");
                     Logger.Error(e);
-                    throw new ApplicationException("Connection to MongoDB failed!");
+                    throw new ApplicationException("Connection to MongoDB Database failed!");
                 }
             } else
             {
@@ -117,7 +105,7 @@ namespace VinteR.OutputAdapter
 
         public void Stop()
         {
-            // In the currently MongoDB Driver there is no need to close and dispose connections the client shopuld do it automatically
+            // In the currently MongoDB Driver there is no need to close and dispose connections the client should do it automatically
 
         }
     }

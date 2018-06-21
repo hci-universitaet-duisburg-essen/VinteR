@@ -55,7 +55,7 @@ namespace VinteR.Model
         // [BsonElement]
         // private List<Body> _bson_bodies { get; set; }
 
-        [BsonElement]
+        
         public List<BsonObjectId> _referenceBodies;
         
        
@@ -87,7 +87,6 @@ namespace VinteR.Model
         public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
-            // this._bson_bodies = new List<Body>();
             this.SourceId = sourceId;
             this.AdapterType = adapter;
             this._id = new BsonObjectId(ObjectId.GenerateNewId());
@@ -106,7 +105,6 @@ namespace VinteR.Model
         public void AddBody(ref Body body)
         {
             this.Bodies.Add(body);
-            // this._bson_bodies.Add(body);
         }
 
         /// <summary>
