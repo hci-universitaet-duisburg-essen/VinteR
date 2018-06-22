@@ -39,7 +39,7 @@ namespace VinteR.Tests
             position = position.Round();
 
             Assert.AreEqual(Body.EBodyType.Skeleton, frame.Bodies[0].BodyType);
-            Assert.AreEqual(new Vector3(1000, 1080, 0), position);
+            Assert.AreEqual(new Vector3(-500, 1080, 1500), position);
         }
 
         [Test]
