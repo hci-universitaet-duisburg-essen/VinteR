@@ -43,7 +43,13 @@ NLogger is used for logging. This component can log different levels (e.g. INFO 
 
 # Writing tests
 
-Unit and integration tests can be written with the use of [NUnit](https://github.com/nunit/docs/wiki/). Write your tests inside the `VinteR.Tests` project. All test classes must be annotated with the `[TestFixture]` attribute. Test methods must also be annotated with the `[Test]` attribute. All tests are executed on the continuous integration system. If you want to execute your tests on your local machine open a terminal window and navigate to the `TheApplication` folder. To run all tests you have to make a copy of the `vinter.config.json` and `vinter.config.schema.json` otherwise the `TestVinterConfigurationService` failes.
+Unit and integration tests can be written with the use of [NUnit](https://github.com/nunit/docs/wiki/). Write your tests inside the `VinteR.Tests` project. All test classes must be annotated with the `[TestFixture]` attribute. Test methods must also be annotated with the `[Test]` attribute. All tests are executed on the continuous integration system. If you want to execute your tests on your local machine open a terminal window and navigate to the `TheApplication` folder. To run all tests there are two options. There is a `run_unit_tests.ps1` file inside the root of the application. Inside a powershell instance you can simply run the script. The execution policy of your computer may have to be updated:
+
+1. run a powershell instance as administrator
+2. type: `Set-ExecutionPolicy "RemoteSigned"`
+3. approve the question
+
+Otherwise you have to make a copy of the `vinter.config.json` and `vinter.config.schema.json` to the root directory. Otherwise the application is not able to load the config.
 
 ```console
 # copy configuration
@@ -51,5 +57,5 @@ xcopy VinteR\vinter.config.json .
 xcopy VinteR\vinter.config.schema.json .
 
 # run the tests
-VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Release\VinteR.Tests.dll
+VinteR\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe .\VinteR.Tests\bin\x64\Debug\VinteR.Tests.dll
 ```
