@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +18,23 @@ namespace VinteR.OutputAdapter
     {
         private readonly NLog.Logger _logger;
 
+
         public JsonFileOutputAdapter(IConfigurationService configurationService)
         {
-
             // get the out put path from the configuration
             var homeDir = configurationService.GetConfiguration().HomeDir;
-            var filePath = homeDir + "\\" +"LoggingData" + @"\${shortdate}.json";
+            string dataTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
-            // create a new target of Nlog config
+
+            //":" in Path is not possible by windows
+            // _filePath = _homeDir + "\\" +"LoggingData" + @"\${date:format=dd-MM-yyyy HH\:mm\:ss}.json";
+
+            /*
+             * Set and hold the file Path by every runing 
+             */
+             var filePath = Path.Combine(homeDir, "LoggingData", dataTime+".json");
+
+            
             var logfile = new NLog.Targets.FileTarget("JsonLogger");
 
 
@@ -50,6 +60,7 @@ namespace VinteR.OutputAdapter
             logfile.FileName = filePath;
             logfile.Layout = jsonLayout;
 
+
             // add the new target to current configuration
             NLog.LogManager.Configuration.AddTarget(logfile);
 
@@ -69,6 +80,7 @@ namespace VinteR.OutputAdapter
             // get the specified Logger
             _logger = NLog.LogManager.GetLogger("JsonLogger");
 
+
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
@@ -78,9 +90,9 @@ namespace VinteR.OutputAdapter
         }
 
         public void Start()
-        {            
-          
-            //nothing to do for now
+        {
+
+
 
         }
 
