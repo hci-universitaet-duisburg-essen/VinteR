@@ -83,13 +83,12 @@ namespace VinteR.Model
                 }
             }
         }
-
+        
         public MocapFrame(string sourceId, string adapter)
         {
             this.Bodies = new List<Body>();
             this.SourceId = sourceId;
             this.AdapterType = adapter;
-            this._id = new BsonObjectId(ObjectId.GenerateNewId());
             this._referenceBodies = new List<BsonObjectId>();
         }
 
@@ -98,7 +97,6 @@ namespace VinteR.Model
             this.Bodies = bodies;
             this.SourceId = sourceId;
             this.AdapterType = adapter;
-            this._id = new BsonObjectId(ObjectId.GenerateNewId());
             this._referenceBodies = new List<BsonObjectId>();
         }
 

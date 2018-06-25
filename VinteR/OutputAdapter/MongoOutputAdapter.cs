@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections;
@@ -22,6 +23,7 @@ namespace VinteR.OutputAdapter
         private IMongoDatabase database;
         private IMongoCollection<MocapFrame> frameCollection;
         private IMongoCollection<Body> bodyCollection;
+        private bool MongoEnabled; 
 
         public MongoOutputAdapter(IConfigurationService configurationService)
         {
@@ -32,11 +34,12 @@ namespace VinteR.OutputAdapter
             this.bodyCollection = null;
             this._buffer = new List<MocapFrame>();
             this._bufferSize = this._configurationService.GetConfiguration().Mongo.MongoBufferSize;
+            this.MongoEnabled = this._configurationService.GetConfiguration().Mongo.Enabled;
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            if (this._configurationService.GetConfiguration().Mongo.Enabled)
+            if (MongoEnabled)
             {
                 Logger.Debug("Data Received for MongoDB");
 
@@ -76,8 +79,10 @@ namespace VinteR.OutputAdapter
         {
             if ((this.frameCollection != null) && (this.bodyCollection != null))
             {
+                mocapFrame._id = new BsonObjectId(ObjectId.GenerateNewId());
                 foreach (Body body in mocapFrame.Bodies)
                 {
+                    body._id = new BsonObjectId(ObjectId.GenerateNewId());
                     mocapFrame._referenceBodies.Add(body._id);
                 }
 
@@ -94,23 +99,19 @@ namespace VinteR.OutputAdapter
         // mongodb://<dbuser>:<dbpassword>@<domain>:<port>/<database>
         private MongoUrl buildMongoUrl()
         {
-            var url =
-                "mongodb://"
-                + this._configurationService.GetConfiguration().Mongo.User // <dbuser>
-                + ":"
-                + this._configurationService.GetConfiguration().Mongo.Password // <dbpassword>
-                + "@"
-                + this._configurationService.GetConfiguration().Mongo.Domain // <domain>
-                + ":"
-                + this._configurationService.GetConfiguration().Mongo.Port // <port>
-                + "/"
-                + this._configurationService.GetConfiguration().Mongo.Database; // <database>
+            var mongoConfig = _configurationService.GetConfiguration().Mongo;
+            var url = string.Format("mongodb://{0}:{1}@{2}:{3}/{4}", 
+                mongoConfig.User, // <dbuser>
+                mongoConfig.Password, // <dbpassword>
+                mongoConfig.Domain, // <domain>
+                mongoConfig.Port, // <port>
+                mongoConfig.Database); // <database>
             return new MongoUrl(url);
         }
 
         public void Start()
         {
-            if (this._configurationService.GetConfiguration().Mongo.Enabled)
+            if (this.MongoEnabled)
             {
                 Logger.Info("MongoDB Output Enabled");
 

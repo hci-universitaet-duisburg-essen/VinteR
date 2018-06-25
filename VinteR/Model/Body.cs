@@ -65,7 +65,6 @@ namespace VinteR.Model
         public Body()
         {
             this._points = new List<Point>();
-            this._id = new BsonObjectId(ObjectId.GenerateNewId());
         }
 
         /// <summary>
