@@ -28,7 +28,7 @@ namespace VinteR.Tests
                     new UdpReceiver() {Port = 5080, Ip = "127.0.0.1"}
                 }
             };
-            _udpSender.Start();
+            _udpSender.Start(new Session("udp test"));
         }
 
         [Test]

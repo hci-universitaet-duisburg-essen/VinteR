@@ -27,7 +27,7 @@ namespace VinteR.OutputAdapter
         public UdpSender(IConfigurationService configurationService, ISerializer serializer)
         {
             UdpReceivers = configurationService.GetConfiguration().UdpReceivers;
-            Port = configurationService.GetConfiguration().Port;
+            Port = configurationService.GetConfiguration().UdpServerPort;
             _serializer = serializer;
         }
 
@@ -52,10 +52,10 @@ namespace VinteR.OutputAdapter
             }
         }
 
-        public void Start()
+        public void Start(Session session)
         {
             _udpServer = new UdpClient(Port);
-            Logger.Info("Udp server running on port {0}", Port);
+            Logger.Info("Udp server running on port {0} for session {1}", Port, session.Name);
             _endPoints = new List<IPEndPoint>();
             foreach (var udpReceiver in UdpReceivers)
             {

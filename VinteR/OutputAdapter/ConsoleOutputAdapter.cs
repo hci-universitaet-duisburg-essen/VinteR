@@ -23,7 +23,7 @@ namespace VinteR.OutputAdapter
 
         }
 
-        public void Start()
+        public void Start(Session session)
         {
             //do nothing for now
         }

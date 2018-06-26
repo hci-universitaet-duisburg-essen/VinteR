@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Ninject;
 using VinteR.MainApplication;
 
@@ -10,6 +11,8 @@ namespace VinteR
         
         public static void Main(string[] args)
         {
+            var exitEvent = new ManualResetEvent(false);
+
             // create and load dependency injection kernel
             var kernel = new StandardKernel(new VinterNinjectModule());
             
@@ -20,15 +23,17 @@ namespace VinteR
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
             {
                 e.Cancel = true;
-                application.Stop();
+                exitEvent.Set();
             };
 
             // start the program
             application.Start(kernel);
 
-            while (application.IsAvailable)
-            {
-            }
+            // wait for exit event
+            exitEvent.WaitOne();
+
+            // stop the server
+            application.Stop();
         }
     }
 }

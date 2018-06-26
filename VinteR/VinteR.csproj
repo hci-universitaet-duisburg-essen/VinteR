@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CodenameGenerator, Version=1.2.39.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CodenameGenerator.1.2.39\lib\net452\CodenameGenerator.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
@@ -97,7 +100,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
+    <Compile Include="Input\IQueryService.cs" />
+    <Compile Include="Input\JsonStorage.cs" />
+    <Compile Include="Input\MongoDbClient.cs" />
+    <Compile Include="MainApplication\ISessionNameGenerator.cs" />
+    <Compile Include="MainApplication\SessionNameGenerator.cs" />
     <Compile Include="Model\Gen\Model.cs" />
+    <Compile Include="Model\Session.cs" />
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />

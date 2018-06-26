@@ -7,23 +7,23 @@
             "default": false,
             "description": "Tell the application if the adapter is available or not"
         },
-      "name": {
-        "type": "string",
-        "description": "Used to identify the object"
-      },
-      "mongodb": {
-        "type": "object",
-        "properties": {
-          "enabled": { "$ref": "#/definitions/enabled" },
-          "domain": { "type": "string" },
-          "user": { "type": "string" },
-          "password": { "type": "string" },
-          "database": { "type": "string" },
-          "port": { "type": "integer" },
-          "bufferSize":  {"type":  "integer"}
+        "name": {
+            "type": "string",
+            "description": "Used to identify the object"
         },
-        "required": ["enabled", "domain", "user", "password", "database", "port", "bufferSize"] 
-      },
+        "mongodb": {
+            "type": "object",
+            "properties": {
+                "enabled": { "$ref": "#/definitions/enabled" },
+                "domain": { "type": "string" },
+                "user": { "type": "string" },
+                "password": { "type": "string" },
+                "database": { "type": "string" },
+                "port": { "type": "integer" },
+                "bufferSize": { "type": "integer" }
+            },
+            "required": [ "enabled", "domain", "user", "password", "database", "port", "bufferSize" ]
+        },
         "leapmotion": {
             "type": "object",
             "properties": {
@@ -92,7 +92,14 @@
                 "C:\\VinteRData"
             ]
         },
-        "port":  { "type": "integer"} ,
+        "rest": {
+            "type": "object",
+            "properties": {
+                "host": { "type": "string" },
+                "port": { "type": "integer" }
+            }
+        },
+        "udp.server.port": { "type": "integer" },
         "udp.receivers": {
             "type": "array",
             "items": {

@@ -109,7 +109,7 @@ namespace VinteR.OutputAdapter
             return new MongoUrl(url);
         }
 
-        public void Start()
+        public void Start(Session session)
         {
             if (this.MongoEnabled)
             {

@@ -8,7 +8,8 @@ namespace VinteR.OutputAdapter
         // receive the notification from Output manager.
         void OnDataReceived(MocapFrame mocapFrame);
 
-        void Start();
+        void Start(Session session);
+
         void Stop();
     }
 }

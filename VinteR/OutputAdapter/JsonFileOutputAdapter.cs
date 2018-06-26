@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
-using NLog.Targets;
 using VinteR.Configuration;
 using VinteR.Model;
 
@@ -89,11 +84,8 @@ namespace VinteR.OutputAdapter
             _logger.Info("mocapFrame {frame}", mocapFrame);
         }
 
-        public void Start()
+        public void Start(Session session)
         {
-
-
-
         }
 
         public void Stop()
