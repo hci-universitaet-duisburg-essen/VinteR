@@ -99,8 +99,8 @@
     <Compile Include="FloatExtensions.cs" />
     <Compile Include="Model\Gen\Model.cs" />
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
-    <Compile Include="OutputAdapter\FileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
+    <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\MongoOutputAdapter.cs" />
     <Compile Include="OutputAdapter\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />

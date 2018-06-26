@@ -36,8 +36,8 @@ namespace VinteR
 
             Bind<IOutputManager>().To<OutputManager.OutputManager>();
             Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
-            Bind<IOutputAdapter>().To<FileOutputAdapter>();
             Bind<IOutputAdapter>().To<UdpSender>();
+            Bind<IOutputAdapter>().To<JsonFileOutputAdapter>();
             Bind<IOutputAdapter>().To<MongoOutputAdapter>();
 
             Bind<ISerializer>().To<Serializer>();

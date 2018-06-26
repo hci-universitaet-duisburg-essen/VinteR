@@ -63,17 +63,6 @@ namespace VinteR.MainApplication
              * merger.HandleFrame(frame)?
              */
 
-             Thread.Sleep(500);
-            /*
-            for (int i = 0; i <50; i++ )
-            {
-                MocapFrame testFrame = new MocapFrame("main", "mongotester");
-                this._outputManager.ReadyToOutput(testFrame);
-            }
-            */
-
-
-
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
             {
