@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Google.Protobuf;
 using VinteR.Configuration;
 using VinteR.Model;
+using VinteR.Serialization;
 
 namespace VinteR.OutputAdapter
 {
@@ -20,15 +22,19 @@ namespace VinteR.OutputAdapter
 
         private UdpClient _udpServer;
 
-        public UdpSender(IConfigurationService configurationService)
+        private readonly ISerializer _serializer;
+
+        public UdpSender(IConfigurationService configurationService, ISerializer serializer)
         {
             UdpReceivers = configurationService.GetConfiguration().UdpReceivers;
             Port = configurationService.GetConfiguration().Port;
+            _serializer = serializer;
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            var data = mocapFrame.ToBytes();
+            _serializer.ToProtoBuf(mocapFrame, out var frame);
+            var data = frame.ToByteArray();
             foreach (var ipEndPoint in _endPoints)
             {
                 Task.Factory.StartNew(() =>

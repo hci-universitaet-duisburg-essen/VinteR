@@ -8,6 +8,7 @@ using VinteR.Datamerge;
 using VinteR.MainApplication;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
+using VinteR.Serialization;
 using VinteR.Tracking;
 using VinteR.Transform;
 
@@ -38,6 +39,8 @@ namespace VinteR
             Bind<IOutputAdapter>().To<FileOutputAdapter>();
             Bind<IOutputAdapter>().To<UdpSender>();
             Bind<IOutputAdapter>().To<MongoOutputAdapter>();
+
+            Bind<ISerializer>().To<Serializer>();
         }
     }
 }

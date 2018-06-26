@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NatNetML;
 
 namespace VinteR.Adapter.OptiTrack
@@ -57,6 +58,15 @@ namespace VinteR.Adapter.OptiTrack
         /// Disconnects from the nat net server
         /// </summary>
         void Disconnect();
+
+        /// <summary>
+        /// Returns the name of an rigid body or skeleton that is identified by given id.
+        /// Names are only given inside the data descriptors and not each single frame of mocap
+        /// data. To name these objects all names are stored with its corresponding id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The name of the rigid body, skeleton or an empty string if none exists</returns>
+        string NameById(int id);
     }
 
     public class OptiTrackClient : IOptiTrackClient
@@ -67,26 +77,28 @@ namespace VinteR.Adapter.OptiTrack
         public event OptiTrackDataDescriptionsChangedEventHandler OnDataDescriptionsChanged;
 
         public IEnumerable<RigidBody> RigidBodies => _rigidBodies;
+        public IEnumerable<Skeleton> Skeletons => _skeletons;
         public float TranslationUnitMultiplier { get; private set; }
 
-        private NatNetML.NatNetClientML _natNetClient;
+        private NatNetClientML _natNetClient;
         private bool _isConnected;
 
         private readonly List<RigidBody> _rigidBodies = new List<RigidBody>();
         private readonly List<Skeleton> _skeletons = new List<Skeleton>();
         private readonly List<MarkerSet> _markerSets = new List<MarkerSet>();
-        private List<NatNetML.DataDescriptor> _dataDescriptor = new List<NatNetML.DataDescriptor>();
+        private List<DataDescriptor> _dataDescriptor = new List<DataDescriptor>();
+        private readonly IDictionary<int, string> _nameById = new Dictionary<int, string>();
 
         public OptiTrackClient()
         {
-            this._natNetClient = new NatNetClientML();
-            this.TranslationUnitMultiplier = 1.0f;
+            _natNetClient = new NatNetClientML();
+            TranslationUnitMultiplier = 1.0f;
         }
 
         public void Connect(string clientIp, string serverIp, string connectionType)
         {
             /*  [NatNet] Instantiate the client object  */
-            _natNetClient = new NatNetML.NatNetClientML();
+            _natNetClient = new NatNetClientML();
 
             /*  [NatNet] Checking verions of the NatNet SDK library */
             var natNetVersion = _natNetClient.NatNetVersion();
@@ -114,7 +126,6 @@ namespace VinteR.Adapter.OptiTrack
             }
             else
             {
-
                 throw new ApplicationException("Could not connect to optitrack");
             }
         }
@@ -127,9 +138,16 @@ namespace VinteR.Adapter.OptiTrack
             _natNetClient.Disconnect();
         }
 
+        public string NameById(int id)
+        {
+            return _nameById.ContainsKey(id)
+                ? _nameById[id]
+                : string.Empty;
+        }
+
         private bool FetchServerDescription()
         {
-            var description = new NatNetML.ServerDescription();
+            var description = new ServerDescription();
             var errorCode = _natNetClient.GetServerDescription(description);
 
             if (errorCode == 0)
@@ -182,6 +200,7 @@ namespace VinteR.Adapter.OptiTrack
                 _markerSets.Clear();
                 _rigidBodies.Clear();
                 _skeletons.Clear();
+                _nameById.Clear();
 
                 /* [NatNet] Re-fetch the updated list of descriptors  */
                 FetchDataDescriptor();
@@ -189,7 +208,7 @@ namespace VinteR.Adapter.OptiTrack
 
                 FireDataDescriptionChanged();
             }
-            
+
             FireOnFrameReady(data);
         }
 
@@ -229,26 +248,28 @@ namespace VinteR.Adapter.OptiTrack
                 // Parse Data Descriptions for each data sets and save them in the delcared lists and hashtables for later uses.
                 switch (dataSetType)
                 {
-                    case ((int) NatNetML.DataDescriptorType.eMarkerSetData):
-                        var ms = (NatNetML.MarkerSet) description[i];
+                    case ((int) DataDescriptorType.eMarkerSetData):
+                        var ms = (MarkerSet) description[i];
                         Logger.Info("\tMarkerset ({0})", ms.Name);
 
                         // Saving Rigid Body Descriptions
                         _markerSets.Add(ms);
                         break;
-                    case ((int) NatNetML.DataDescriptorType.eRigidbodyData):
-                        var rb = (NatNetML.RigidBody) description[i];
+                    case ((int) DataDescriptorType.eRigidbodyData):
+                        var rb = (RigidBody) description[i];
                         Logger.Info("\tRigidBody ({0})", rb.Name);
 
                         // Saving Rigid Body Descriptions
                         _rigidBodies.Add(rb);
+                        _nameById.Add(rb.ID, rb.Name);
                         break;
-                    case ((int) NatNetML.DataDescriptorType.eSkeletonData):
-                        var skeleton = (NatNetML.Skeleton) description[i];
+                    case ((int) DataDescriptorType.eSkeletonData):
+                        var skeleton = (Skeleton) description[i];
                         Logger.Info("\tSkeleton ({0}), Bones:", skeleton.Name);
 
                         //Saving Skeleton Descriptions
                         _skeletons.Add(skeleton);
+                        _nameById.Add(skeleton.ID, skeleton.Name);
                         break;
 
                     default:
@@ -261,10 +282,7 @@ namespace VinteR.Adapter.OptiTrack
 
         private void FireDataDescriptionChanged()
         {
-            if (OnDataDescriptionsChanged != null)
-            {
-                OnDataDescriptionsChanged();
-            }
+            OnDataDescriptionsChanged?.Invoke();
         }
 
         public bool IsConnected()

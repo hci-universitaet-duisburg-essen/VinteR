@@ -71,6 +71,7 @@ namespace VinteR.Adapter.Kinect
 
                         // Create and append the frame
                         Body body = new KinectBody(jointList, Body.EBodyType.Skeleton);
+                        body.Name = skeleton.TrackingId.ToString();
                         frame.AddBody(ref body);
                     }
 

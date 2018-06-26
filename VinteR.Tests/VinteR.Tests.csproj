@@ -80,8 +80,10 @@
   <ItemGroup>
     <Compile Include="Adapter\OptiTrack\OptiTrackMockAdapterTracker.cs" />
     <Compile Include="Adapter\OptiTrack\OptiTrackMockClient.cs" />
+    <Compile Include="Mock.cs" />
     <Compile Include="TestAdapterTracker.cs" />
     <Compile Include="TestDataMerger.cs" />
+    <Compile Include="TestSerializer.cs" />
     <Compile Include="TestTransformator.cs" />
     <Compile Include="TestUdpSender.cs" />
     <Compile Include="TestVinterConfigurationService.cs" />
