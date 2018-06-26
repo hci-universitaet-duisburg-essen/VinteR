@@ -102,11 +102,13 @@
     <Compile Include="FloatExtensions.cs" />
     <Compile Include="Input\IQueryService.cs" />
     <Compile Include="Input\JsonStorage.cs" />
-    <Compile Include="Input\MongoDbClient.cs" />
+    <Compile Include="Input\MongoQueryService.cs" />
     <Compile Include="MainApplication\ISessionNameGenerator.cs" />
     <Compile Include="MainApplication\SessionNameGenerator.cs" />
     <Compile Include="Model\Gen\Model.cs" />
     <Compile Include="Model\Session.cs" />
+    <Compile Include="Mongo\IVinterMongoDBClient.cs" />
+    <Compile Include="Mongo\VinterMongoDBClient.cs" />
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />

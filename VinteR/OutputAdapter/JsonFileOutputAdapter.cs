@@ -81,7 +81,7 @@ namespace VinteR.OutputAdapter
         public void OnDataReceived(MocapFrame mocapFrame)
         {
             // logging the mocapFrame into JsonFile. 
-            _logger.Info("mocapFrame {frame}", mocapFrame);
+            // _logger.Info("mocapFrame {frame}", mocapFrame);
         }
 
         public void Start(Session session)

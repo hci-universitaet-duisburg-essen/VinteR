@@ -40,7 +40,7 @@ namespace VinteR
             Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
             Bind<IOutputAdapter>().To<UdpSender>();
             Bind<IOutputAdapter>().To<JsonFileOutputAdapter>();
-            Bind<IOutputAdapter>().To<MongoOutputAdapter>();
+            Bind<IOutputAdapter>().To<MongoOutputAdapter>().InSingletonScope();
 
             Bind<ISerializer>().To<Serializer>();
 

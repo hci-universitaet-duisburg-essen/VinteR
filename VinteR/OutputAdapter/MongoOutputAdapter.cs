@@ -22,9 +22,11 @@ namespace VinteR.OutputAdapter
         private readonly int _bufferSize;
         private IList _buffer;
         private IMongoClient client;
+        private IVinterMongoDBClient dbClient;
         private IMongoDatabase database;
         private IMongoCollection<MocapFrame> frameCollection;
         private IMongoCollection<Body> bodyCollection;
+        private IMongoCollection<Session> documentCollection;
         private Session _session;
         private bool Enabled;
         private bool Write; 
@@ -32,7 +34,7 @@ namespace VinteR.OutputAdapter
         public MongoOutputAdapter(IConfigurationService configurationService, IVinterMongoDBClient dbClient)
         {
             this._configurationService = configurationService;
-            this.client = dbClient.getMongoClient();
+            this.dbClient = dbClient;
             this.database = null;
             this.frameCollection = null;
             this.bodyCollection = null;
@@ -91,8 +93,8 @@ namespace VinteR.OutputAdapter
 
                 Task.Factory.StartNew(() =>
                 {
-                    this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
-                    this.frameCollection.InsertOneAsync(mocapFrame);
+                    this.bodyCollection.InsertMany(mocapFrame.Bodies);
+                    this.frameCollection.InsertOne(mocapFrame);
                     Logger.Debug("Frame Inserted");
                 });
             }
@@ -107,14 +109,16 @@ namespace VinteR.OutputAdapter
                 this._session = session;
                 try
                 {
-                    var frameCollectionForSession = string.Format("Vinter-{0}-Frames", this._session.Name);
-                    var bodyCollectionForSession = string.Format("Vinter-{0}-Bodies", this._session.Name);
+                    this.dbClient.connect();
+                    this.client = this.dbClient.getMongoClient();
+                    //var frameCollectionForSession = string.Format("Vinter-{0}-Frames", this._session.Name);
+                    //var bodyCollectionForSession = string.Format("Vinter-{0}-Bodies", this._session.Name);
 
                     // Setup Database
                     this.database = this.client.GetDatabase(this._configurationService.GetConfiguration().Mongo.Database);
-                    this.frameCollection = this.database.GetCollection<MocapFrame>(frameCollectionForSession);
-                    this.bodyCollection = this.database.GetCollection<Body>(bodyCollectionForSession);
-
+                    this.frameCollection = this.database.GetCollection<MocapFrame>("frames");
+                    this.bodyCollection = this.database.GetCollection<Body>("bodies");
+                    this.documentCollection = this.database.GetCollection<Session>("Sessions");
                     Logger.Debug("MongoDB Client initialized");
                 }
                 catch (Exception e)
@@ -132,9 +136,15 @@ namespace VinteR.OutputAdapter
 
         public void Stop()
         {
-            // Serialize Session Meta in the database
-            var documentCollection = this.database.GetCollection<Session>("Session");
-            documentCollection.InsertOne(this._session);
+            try
+            {
+                // Serialize Session Meta in the database
+                //this.documentCollection.InsertOne(this._session);
+            } catch (Exception e)
+            {
+               // Logger.Error("Could not serialize session in database due to: {0}", e.ToString());
+            }
+            
         }
     }
 }

@@ -12,7 +12,7 @@
         }
     ],
     "mongodb": {
-        "enabled": false,
+        "enabled": true,
         "write":  true,
         "domain": "ds161710.mlab.com",
         "user": "dbvinter",
@@ -46,7 +46,7 @@
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "server.ip": "10.23.112.35",
