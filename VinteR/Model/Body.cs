@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace VinteR.Model
 {
@@ -25,8 +24,11 @@ namespace VinteR.Model
             Hand
         }
 
+        [BsonId]
+        public BsonObjectId _id;
+
         public EBodyType BodyType { get; set; }
- 
+
         /// <summary>
         /// Contains the side of a body if one exists, for example "left" hand
         /// </summary>
@@ -38,6 +40,7 @@ namespace VinteR.Model
         /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
+        
         public IList<Point> Points
         {
             get => _points;
@@ -49,15 +52,28 @@ namespace VinteR.Model
         }
 
         /// <summary>
+        /// Contains the center of this body inside the global
+        /// coordinate system.
+        /// </summary>
+        public Vector3 Centroid { get; set; }
+
+        /// <summary>
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
+        
         public Quaternion Rotation { get; set; }
+
+        /// <summary>
+        /// Contains the name of a body. This may be used for later
+        /// identification of bodies
+        /// </summary>
+        public string Name { get; set; }
 
         // The Body Type of the Body object
         public Body()
         {
-            this._points = new List<Point>();
+            _points = new List<Point>();
         }
 
         /// <summary>
@@ -67,9 +83,12 @@ namespace VinteR.Model
         /// <param name="source"></param>
         public void Load(Body source)
         {
-            this.BodyType = source.BodyType;
-            this.Points = source.Points;
-            this.Rotation = source.Rotation;
+            BodyType = source.BodyType;
+            Points = source.Points;
+            Rotation = source.Rotation;
+            Centroid = source.Centroid;
+            Side = source.Side;
+            Name = source.Name;
         }
 
         public Gen.MocapFrame.Types.Body.Types.EBodyType GetBodyTypeProto()

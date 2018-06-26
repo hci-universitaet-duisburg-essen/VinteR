@@ -1,43 +1,52 @@
 ﻿{
-    "home.dir": "C:\\VinteRData",
-    "port":  5060, 
-    "udp.receivers":  [
-        {
-            "ip": "127.0.0.1",
-            "port": 5080
-        }
-    ], 
+  "home.dir": "C:\\VinteRData",
+  "port": 5060,
+  "udp.receivers": [
+      {
+        "ip": "127.0.0.1",
+        "port": 5080
+      }
+  ],
+  "mongodb": {
+    "enabled": true,
+    "domain": "ds161710.mlab.com",
+    "user": "dbvinter",
+    "password": "dbvinter18",
+    "database": "vinter",
+    "port": 61710,
+    "bufferSize":  5000
+  },
     "adapters": [
-        {
-            "enabled": true,
-            "name": "kinect",
-            "adaptertype": "kinect",
-            "skeleton.TrackingFilter.enabled":  true,
-            "data.dir": "KinectData",
-            "colorStream.enabled": false,
-            "colorStream.flush": true,
-            "colorStream.flushSize":  60,
-            "colorStream.flush.dirname": "colorStreamData.json",
-            "depthStream.enabled": false,
-            "depthStream.flush": false,
-            "depthStream.flushSize":  15,
-            "depthStream.flush.dirname": "DepthStreamData.json",
-            "skeletonStream.flush": true,
-            "skeletonStream.flushSize":  200,
-            "skeletonStream.flush.dirname": "skeletonStreamData.json"
-        },
-        {
-            "enabled": false,
-            "name": "leapmotion",
-            "adaptertype": "leapmotion"
-        },
-        {
-            "enabled": true,
-            "name": "optitrack",
-            "adaptertype": "optitrack",
-            "server.ip": "10.23.112.35",
-            "client.ip": "10.23.112.25",
-            "connection.type": "multicast"
-        }
+      {
+        "enabled": false,
+        "name": "kinect",
+        "adaptertype": "kinect",
+        "skeleton.TrackingFilter.enabled": true,
+        "data.dir": "KinectData",
+        "colorStream.enabled": false,
+        "colorStream.flush": true,
+        "colorStream.flushSize": 60,
+        "colorStream.flush.dirname": "colorStreamData.json",
+        "depthStream.enabled": false,
+        "depthStream.flush": false,
+        "depthStream.flushSize": 15,
+        "depthStream.flush.dirname": "DepthStreamData.json",
+        "skeletonStream.flush": true,
+        "skeletonStream.flushSize": 200,
+        "skeletonStream.flush.dirname": "skeletonStreamData.json"
+      },
+      {
+        "enabled": false,
+        "name": "leapmotion",
+        "adaptertype": "leapmotion"
+      },
+      {
+        "enabled": true,
+        "name": "optitrack",
+        "adaptertype": "optitrack",
+        "server.ip": "10.23.112.35",
+        "client.ip": "10.23.112.25",
+        "connection.type": "multicast"
+      }
     ]
-}
+  }

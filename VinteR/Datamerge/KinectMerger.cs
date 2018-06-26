@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using NLog;
+﻿using NLog;
 using VinteR.Model;
 using VinteR.Model.Kinect;
 using VinteR.Tracking;
@@ -14,16 +9,15 @@ namespace VinteR.Datamerge
 {
     public class KinectMerger : IDataMerger
     {
-        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly Quaternion KinectOptiTrackRotationAdjustment = Quaternion.CreateFromAxisAngle(Vector3.UnitY, -90f.ToRadians());
         private readonly IAdapterTracker _adapterTracker;
         private readonly ITransformator _transformator;
 
         public KinectMerger(IAdapterTracker adapterTracker, ITransformator transformator)
         {
-            this._adapterTracker = adapterTracker;
-            this._transformator = transformator;
+            _adapterTracker = adapterTracker;
+            _transformator = transformator;
         }
 
         public MocapFrame HandleFrame(MocapFrame frame)
@@ -47,21 +41,20 @@ namespace VinteR.Datamerge
         {
             var result = new Body { BodyType = Body.EBodyType.Skeleton};
             
-
             var kinectPosition = _adapterTracker.Locate(sourceId);
 
             Logger.Debug("OptiTrack KinectPos X: {0}", kinectPosition.Location.X );
             Logger.Debug("OptiTrack KinectPos Y: {0}", kinectPosition.Location.Y );
             Logger.Debug("OptiTrack KinectPos Z: {0}", kinectPosition.Location.Z );
             
-            foreach (Point point in body.Points)
+            foreach (var point in body.Points)
             {
-                kinectPosition.Rotation = Quaternion.Multiply(kinectPosition.Rotation, KinectOptiTrackRotationAdjustment);
                 var globalPosition = _transformator.GetGlobalPosition(kinectPosition, point.Position);
-                var localPosition = point.Position;
-                Point resultPoint = new Point(point.Position);
-                resultPoint.Name = point.Name;
-                resultPoint.State = point.State;
+                var resultPoint = new Point(globalPosition)
+                {
+                    Name = point.Name,
+                    State = point.State
+                };
                 result.Points.Add(resultPoint);
             }
 

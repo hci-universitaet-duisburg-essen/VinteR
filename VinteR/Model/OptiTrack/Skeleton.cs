@@ -11,7 +11,7 @@ namespace VinteR.Model.OptiTrack
         /// <summary>
         /// Collection of rigid bodies this skeleton consists of.
         /// </summary>
-        public IList<RigidBody> RigidBodies {
+        public IList<OptiTrackBody> RigidBodies {
             get => _rigidBodies;
             set
             {
@@ -20,11 +20,11 @@ namespace VinteR.Model.OptiTrack
             }
         }
 
-        private IList<RigidBody> _rigidBodies;
+        private IList<OptiTrackBody> _rigidBodies;
 
         public Skeleton(string id) : base(id)
         {
-            this._rigidBodies = new List<RigidBody>();
+            this._rigidBodies = new List<OptiTrackBody>();
             this.Type = EBodyType.Skeleton;
         }
     }

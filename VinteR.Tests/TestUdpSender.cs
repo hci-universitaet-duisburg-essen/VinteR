@@ -7,6 +7,7 @@ using NUnit.Framework;
 using VinteR.Configuration;
 using VinteR.Model;
 using VinteR.OutputAdapter;
+using VinteR.Serialization;
 
 namespace VinteR.Tests
 {
@@ -20,7 +21,7 @@ namespace VinteR.Tests
         public void OnSetupFixture()
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
-            _udpSender = new UdpSender(ninjectKernel.Get<IConfigurationService>())
+            _udpSender = new UdpSender(ninjectKernel.Get<IConfigurationService>(), ninjectKernel.Get<ISerializer>())
             {
                 UdpReceivers = new List<UdpReceiver>()
                 {
@@ -52,6 +53,7 @@ namespace VinteR.Tests
                     {
                         BodyType = Body.EBodyType.Marker,
                         Rotation = Quaternion.Identity,
+                        Centroid = Vector3.One,
                         Points = new List<Point>()
                         {
                             new Point(-3.2f, 4.0f, 5.657f)
@@ -59,14 +61,20 @@ namespace VinteR.Tests
                                 Name = "",
                                 State = ""
                             }
-                        }
+                        },
+                        Name = "dynamite"
                     }
                 }
             });
             var received = client.Receive(ref serverAddress);
 
-            var frame = VinteR.Model.Gen.MocapFrame.Parser.ParseFrom(received);
+            var frame = Model.Gen.MocapFrame.Parser.ParseFrom(received);
             Assert.AreEqual(5.3f, frame.Latency);
+
+            var centroid = frame.Bodies[0].Centroid;
+            Assert.AreEqual(Vector3.One, new Vector3(centroid.X, centroid.Y, centroid.Z));
+
+            Assert.AreEqual("dynamite", frame.Bodies[0].Name);
         }
     }
 }
