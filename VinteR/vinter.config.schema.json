@@ -15,6 +15,7 @@
             "type": "object",
             "properties": {
                 "enabled": { "$ref": "#/definitions/enabled" },
+                "write": { "type": "boolean" },
                 "domain": { "type": "string" },
                 "user": { "type": "string" },
                 "password": { "type": "string" },
@@ -22,7 +23,7 @@
                 "port": { "type": "integer" },
                 "bufferSize": { "type": "integer" }
             },
-            "required": [ "enabled", "domain", "user", "password", "database", "port", "bufferSize" ]
+            "required": [ "enabled", "write", "domain", "user", "password", "database", "port", "bufferSize" ]
         },
         "leapmotion": {
             "type": "object",

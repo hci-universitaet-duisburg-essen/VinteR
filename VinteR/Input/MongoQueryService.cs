@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using MongoDB.Driver;
+using System.Collections.Generic;
 using VinteR.Model;
 using VinteR.Mongo;
 
 namespace VinteR.Input
 {
-    public class MongoDbClient : IQueryService
+    public class MongoQueryService : IQueryService
     {
+        private IMongoClient client;
 
         public IList<Session> GetSessions()
         {
@@ -17,9 +19,9 @@ namespace VinteR.Input
             throw new System.NotImplementedException();
         }
 
-        public MongoDbClient(IVinterMongoDBClient client)
+        public MongoQueryService(IVinterMongoDBClient client)
         {
-            this.client = client;
+            this.client = client.getMongoClient();
         }
     }
 }

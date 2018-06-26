@@ -46,10 +46,10 @@ namespace VinteR
 
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
 
-            Bind<IQueryService>().To<MongoDbClient>();
+            Bind<IQueryService>().To<MongoQueryService>();
             Bind<IQueryService>().To<JsonStorage>();
 
-            Bind<IVinterMongoDBClient>().To<VInterMongoDBClient>().InSingletonScope();
+            Bind<IVinterMongoDBClient>().To<VinterMongoDBClient>().InSingletonScope();
         }
     }
 }

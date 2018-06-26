@@ -28,6 +28,7 @@ namespace VinteR.Configuration
     public class MongoDB
     {
         [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("write")] public bool Write { get; set; }
         [JsonProperty("domain")] public string Domain { get; set; }
         [JsonProperty("user")] public string User { get; set; }
         [JsonProperty("password")] public string Password { get; set; }

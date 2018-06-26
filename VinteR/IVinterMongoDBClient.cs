@@ -10,6 +10,5 @@ namespace VinteR.Mongo
     public interface IVinterMongoDBClient
     {
         IMongoClient getMongoClient();
-        void connect();
     }
 }
