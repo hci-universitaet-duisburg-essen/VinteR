@@ -1,6 +1,10 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
-    "port":  5060, 
+    "rest": {
+        "host": "localhost",
+        "port": 80
+    },
+    "udp.server.port": 5060,
     "udp.receivers":  [
         {
             "ip": "127.0.0.1",
@@ -27,12 +31,12 @@
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "server.ip": "10.23.112.35",

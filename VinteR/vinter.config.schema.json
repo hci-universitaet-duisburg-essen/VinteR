@@ -80,7 +80,14 @@
                 "C:\\VinteRData"
             ]
         },
-        "port":  { "type": "integer"} ,
+        "rest": {
+            "type": "object",
+            "properties": {
+                "host": { "type": "string" },
+                "port": {"type": "integer" } 
+            }
+        },
+        "udp.server.port": { "type": "integer" },
         "udp.receivers": {
             "type": "array",
             "items": {

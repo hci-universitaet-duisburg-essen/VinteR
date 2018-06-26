@@ -29,7 +29,10 @@ namespace VinteR.MainApplication
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
 
-        private OutputManager.IOutputManager _outputManager;
+        private IOutputManager _outputManager;
+
+        private Session _session;
+
         /*
          * kernel must be an attribute to this class. I tired to reach it by using
          * Bind<IMainApplication>().To<MainApplication>().WithPropertyValue("kernel", kernel);
@@ -39,31 +42,29 @@ namespace VinteR.MainApplication
 
         public void Start(StandardKernel kernel)
         {
-            this.IsAvailable = true;
-            this._kernel = kernel;
-            this._inputAdapters = new List<IInputAdapter>();
+            IsAvailable = true;
+            _kernel = kernel;
+            _inputAdapters = new List<IInputAdapter>();
             var configService = kernel.Get<IConfigurationService>();
 
 
             // Get current output adapter.
-            this._outputAdapters = kernel.GetAll<IOutputAdapter>();
+            _outputAdapters = kernel.GetAll<IOutputAdapter>();
 
             //Get output manager
-            this._outputManager = kernel.Get<IOutputManager>();
+            _outputManager = kernel.Get<IOutputManager>();
+
+            // session name generator
+            var sessionNameGenerator = kernel.Get<ISessionNameGenerator>();
+            _session = new Session(sessionNameGenerator.Generate());
 
             //assign event handler
             foreach (var outputAdapter in _outputAdapters)
             {
                 _outputManager.OutputNotification += outputAdapter.OnDataReceived;
-                new Thread(outputAdapter.Start).Start();
+                var t = new Thread(() => outputAdapter.Start(_session));
+                t.Start();
             }
-            /*
-             * outputManager.ReadyToOutput(new MocapFrame("1","abc")); waiting called by datamerger.
-             * Not sure which is the output or result of datamerger.
-             * merger.HandleFrame(frame)?
-             */
-
-
 
 
             // for each json object inside inside the adapters array inside the config
@@ -135,6 +136,7 @@ namespace VinteR.MainApplication
             lock (StopwatchLock)
             {
                 frame.ElapsedMillis = _applicationWatch.ElapsedMilliseconds;
+                _session.Duration = _applicationWatch.ElapsedMilliseconds;
             }
 
             /* get a data merger specific to the type of input adapter,
@@ -143,17 +145,17 @@ namespace VinteR.MainApplication
              */
             var merger = _kernel.Get<IDataMerger>(source.Config.AdapterType);
             Logger.Debug("{Frame #{0} available from {1}", frame.ElapsedMillis, source.Config.AdapterType);
-            //merger.HandleFrame(frame);
+            var mergedFrame = merger.HandleFrame(frame);
 
             //get the output from datamerger to output manager
-            _outputManager.ReadyToOutput(merger.HandleFrame(frame));
+            _outputManager.ReadyToOutput(mergedFrame);
 
         }
 
         private void HandleErrorEvent(IInputAdapter source, Exception e)
         {
             Logger.Error("Adapter: {0}, has severe problems: {1}", source.Name, e.Message);
-            this.Stop();
+            Stop();
 
             // keep console open until key is pressed
             if (Logger.IsDebugEnabled)

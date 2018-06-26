@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,11 +9,20 @@ namespace VinteR.Configuration
     public class Configuration
     {
         [JsonProperty("home.dir")] public string HomeDir { get; set; }
-        [JsonProperty("port")] public int Port { get; set; }
+
+        [JsonProperty("rest")] public Rest Rest { get; set; }
+
+        [JsonProperty("udp.server.port")] public int UdpServerPort { get; set; }
 
         [JsonProperty("udp.receivers")] public IList<UdpReceiver> UdpReceivers { get; set; }
 
         [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
+    }
+
+    public class Rest
+    {
+        [JsonProperty("host")] public string Host { get; set; }
+        [JsonProperty("port")] public int Port { get; set; }
     }
 
     public class UdpReceiver

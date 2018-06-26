@@ -55,7 +55,7 @@ namespace VinteR.OutputAdapter
          * Start Method to this thread, to execute output.
          * 
          */
-        public void Start()
+        public void Start(Session session)
         {
         }
 

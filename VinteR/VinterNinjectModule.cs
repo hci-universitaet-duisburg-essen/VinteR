@@ -5,6 +5,7 @@ using VinteR.Adapter.LeapMotion;
 using VinteR.Adapter.OptiTrack;
 using VinteR.Configuration;
 using VinteR.Datamerge;
+using VinteR.Input;
 using VinteR.MainApplication;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
@@ -40,6 +41,11 @@ namespace VinteR
             Bind<IOutputAdapter>().To<UdpSender>();
 
             Bind<ISerializer>().To<Serializer>();
+
+            Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
+
+            Bind<IQueryService>().To<MongoDbClient>();
+            Bind<IQueryService>().To<JsonStorage>();
         }
     }
 }
