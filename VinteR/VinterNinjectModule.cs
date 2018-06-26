@@ -7,6 +7,7 @@ using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Input;
 using VinteR.MainApplication;
+using VinteR.Mongo;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 using VinteR.Serialization;
@@ -47,6 +48,8 @@ namespace VinteR
 
             Bind<IQueryService>().To<MongoDbClient>();
             Bind<IQueryService>().To<JsonStorage>();
+
+            Bind<IVinterMongoDBClient>().To<VInterMongoDBClient>().InSingletonScope();
         }
     }
 }
