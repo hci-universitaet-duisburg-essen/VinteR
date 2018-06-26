@@ -26,7 +26,7 @@ namespace VinteR.OutputAdapter
         private IMongoDatabase database;
         private IMongoCollection<MocapFrame> frameCollection;
         private IMongoCollection<Body> bodyCollection;
-        private IMongoCollection<Session> documentCollection;
+        private IMongoCollection<Session> sessionCollection;
         private Session _session;
         private bool Enabled;
         private bool Write; 
@@ -119,7 +119,7 @@ namespace VinteR.OutputAdapter
                     this.database = this.client.GetDatabase(this._configurationService.GetConfiguration().Mongo.Database);
                     this.frameCollection = this.database.GetCollection<MocapFrame>(frameCollectionForSession);
                     this.bodyCollection = this.database.GetCollection<Body>(bodyCollectionForSession);
-                    this.documentCollection = this.database.GetCollection<Session>("Sessions");
+                    this.sessionCollection = this.database.GetCollection<Session>("Sessions");
                     Logger.Debug("MongoDB Client initialized");
                 }
                 catch (Exception e)
@@ -140,7 +140,7 @@ namespace VinteR.OutputAdapter
             try
             {
                 // Serialize Session Meta in the database
-                this.documentCollection.InsertOne(this._session);
+                this.sessionCollection.InsertOne(this._session);
             } catch (Exception e)
             {
                 Logger.Error("Could not serialize session in database due to: {0}", e.ToString());
