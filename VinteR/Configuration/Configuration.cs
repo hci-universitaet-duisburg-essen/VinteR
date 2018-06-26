@@ -21,6 +21,7 @@ namespace VinteR.Configuration
 
     public class Rest
     {
+        [JsonProperty("enabled")] public bool Enabled { get; set; }
         [JsonProperty("host")] public string Host { get; set; }
         [JsonProperty("port")] public int Port { get; set; }
     }

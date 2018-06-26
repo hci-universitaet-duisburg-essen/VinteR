@@ -45,6 +45,9 @@
     <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="Grapevine, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Grapevine.4.1.1.0\lib\net40\Grapevine.dll</HintPath>
+    </Reference>
     <Reference Include="LeapCSharp.NET4.5">
       <HintPath>..\lib\x64\LeapCSharp.NET4.5.dll</HintPath>
     </Reference>
@@ -82,6 +85,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\portable-net45+win8+wp8+wpa81\System.Numerics.Vectors.dll</HintPath>
@@ -111,6 +115,10 @@
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\MongoOutputAdapter.cs" />
+    <Compile Include="OutputAdapter\Rest\IVinterRestRoute.cs" />
+    <Compile Include="OutputAdapter\Rest\Sessions\Get.cs" />
+    <Compile Include="OutputAdapter\Rest\Session\Get.cs" />
+    <Compile Include="OutputAdapter\Rest\VinterRestServer.cs" />
     <Compile Include="OutputAdapter\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />
     <Compile Include="OutputManager\OutputManager.cs" />
