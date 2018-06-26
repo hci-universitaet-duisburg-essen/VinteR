@@ -55,7 +55,7 @@ namespace VinteR.OutputAdapter
         public void Start(Session session)
         {
             _udpServer = new UdpClient(Port);
-            Logger.Info("Udp server running on port {0} for session {1}", Port, session.Name);
+            Logger.Info("Udp server running on port {0}", Port);
             _endPoints = new List<IPEndPoint>();
             foreach (var udpReceiver in UdpReceivers)
             {

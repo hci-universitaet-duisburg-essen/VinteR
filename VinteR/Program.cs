@@ -26,14 +26,22 @@ namespace VinteR
                 exitEvent.Set();
             };
 
-            // start the program
-            application.Start(kernel);
+            try
+            {
+                // start the program
+                application.Start(kernel);
 
-            // wait for exit event
-            exitEvent.WaitOne();
+                // wait for exit event
+                exitEvent.WaitOne();
 
-            // stop the server
-            application.Stop();
+                // stop the server
+                application.Stop();
+            }
+            catch (ApplicationException e)
+            {
+                Logger.Error("Could not start application, cause: {0}", e.Message);
+                Console.ReadKey();
+            }
         }
     }
 }
