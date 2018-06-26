@@ -5,29 +5,38 @@
         "port": 80
     },
     "udp.server.port": 5060,
-    "udp.receivers":  [
+    "udp.receivers": [
         {
             "ip": "127.0.0.1",
             "port": 5080
         }
-    ], 
+    ],
+    "mongodb": {
+        "enabled": false,
+        "domain": "ds161710.mlab.com",
+        "user": "dbvinter",
+        "password": "dbvinter18",
+        "database": "vinter",
+        "port": 61710,
+        "bufferSize": 5000
+    },
     "adapters": [
         {
             "enabled": false,
             "name": "kinect",
             "adaptertype": "kinect",
-            "skeleton.TrackingFilter.enabled":  true,
+            "skeleton.TrackingFilter.enabled": true,
             "data.dir": "KinectData",
             "colorStream.enabled": false,
             "colorStream.flush": true,
-            "colorStream.flushSize":  60,
+            "colorStream.flushSize": 60,
             "colorStream.flush.dirname": "colorStreamData.json",
             "depthStream.enabled": false,
             "depthStream.flush": false,
-            "depthStream.flushSize":  15,
+            "depthStream.flushSize": 15,
             "depthStream.flush.dirname": "DepthStreamData.json",
             "skeletonStream.flush": true,
-            "skeletonStream.flushSize":  200,
+            "skeletonStream.flushSize": 200,
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
@@ -44,4 +53,4 @@
             "connection.type": "multicast"
         }
     ]
-  }
+}
