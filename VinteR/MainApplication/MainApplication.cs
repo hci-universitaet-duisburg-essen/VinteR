@@ -65,8 +65,7 @@ namespace VinteR.MainApplication
                 var t = new Thread(() => outputAdapter.Start(_session));
                 t.Start();
             }
-
-
+            
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in configService.GetConfiguration().Adapters)
             {

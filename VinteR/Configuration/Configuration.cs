@@ -15,7 +15,7 @@ namespace VinteR.Configuration
         [JsonProperty("udp.server.port")] public int UdpServerPort { get; set; }
 
         [JsonProperty("udp.receivers")] public IList<UdpReceiver> UdpReceivers { get; set; }
-
+        [JsonProperty("mongodb")] public MongoDB Mongo { get; set;  }
         [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
     }
 
@@ -23,6 +23,17 @@ namespace VinteR.Configuration
     {
         [JsonProperty("host")] public string Host { get; set; }
         [JsonProperty("port")] public int Port { get; set; }
+    }
+    
+    public class MongoDB
+    {
+        [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("domain")] public string Domain { get; set; }
+        [JsonProperty("user")] public string User { get; set; }
+        [JsonProperty("password")] public string Password { get; set; }
+        [JsonProperty("database")] public string Database { get; set; }
+        [JsonProperty("port")] public int Port { get; set; }
+        [JsonProperty("bufferSize")] public int MongoBufferSize { get; set; }
     }
 
     public class UdpReceiver
@@ -93,10 +104,10 @@ namespace VinteR.Configuration
             setting = _additionalSettings.GetValueOrDefault("colorStream.flushSize", 60);
             ColorStreamFlushSize = (int) setting;
             setting = _additionalSettings.GetValueOrDefault("depthStream.flushSize", 30);
-            DepthStreamFlushSize = (int)setting;
-            // 
+            DepthStreamFlushSize = (int)setting; 
             setting = _additionalSettings.GetValueOrDefault("skeleton.TrackingFilter.enabled", false);
             SkeletonTrackingStateFilter = setting != null && bool.TrueString.Equals((string)setting);
+            
 
             setting = _additionalSettings.GetValueOrDefault("server.ip", null);
             ServerIp = setting != null ? (string) setting : null;

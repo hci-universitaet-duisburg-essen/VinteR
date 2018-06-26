@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace VinteR.Model
 {
@@ -22,8 +24,11 @@ namespace VinteR.Model
             Hand
         }
 
+        [BsonId]
+        public BsonObjectId _id;
+
         public EBodyType BodyType { get; set; }
- 
+
         /// <summary>
         /// Contains the side of a body if one exists, for example "left" hand
         /// </summary>
@@ -35,6 +40,7 @@ namespace VinteR.Model
         /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
+        
         public IList<Point> Points
         {
             get => _points;
@@ -55,6 +61,7 @@ namespace VinteR.Model
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
+        
         public Quaternion Rotation { get; set; }
 
         /// <summary>
