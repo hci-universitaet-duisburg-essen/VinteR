@@ -63,6 +63,14 @@ namespace VinteR.MainApplication
              * merger.HandleFrame(frame)?
              */
 
+             Thread.Sleep(500);
+            /*
+            for (int i = 0; i <50; i++ )
+            {
+                MocapFrame testFrame = new MocapFrame("main", "mongotester");
+                this._outputManager.ReadyToOutput(testFrame);
+            }
+            */
 
 
 
