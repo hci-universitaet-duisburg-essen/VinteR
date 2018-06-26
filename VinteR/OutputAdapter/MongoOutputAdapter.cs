@@ -90,13 +90,14 @@ namespace VinteR.OutputAdapter
                     body._id = new BsonObjectId(ObjectId.GenerateNewId());
                     mocapFrame._referenceBodies.Add(body._id);
                 }
-
-                Task.Factory.StartNew(() =>
+                if (mocapFrame.Bodies.Count > 0)
                 {
-                    this.bodyCollection.InsertMany(mocapFrame.Bodies);
-                    this.frameCollection.InsertOne(mocapFrame);
-                    Logger.Debug("Frame Inserted");
-                });
+                    // Do only serialize Bodies if there are Bodies in the frame.
+                    this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
+                }
+                this.frameCollection.InsertOneAsync(mocapFrame);
+                Logger.Debug("Frame Async Insert started");
+
             }
         }
 
@@ -111,13 +112,13 @@ namespace VinteR.OutputAdapter
                 {
                     this.dbClient.connect();
                     this.client = this.dbClient.getMongoClient();
-                    //var frameCollectionForSession = string.Format("Vinter-{0}-Frames", this._session.Name);
-                    //var bodyCollectionForSession = string.Format("Vinter-{0}-Bodies", this._session.Name);
+                    var frameCollectionForSession = string.Format("Vinter-{0}-Frames", this._session.Name);
+                    var bodyCollectionForSession = string.Format("Vinter-{0}-Bodies", this._session.Name);
 
                     // Setup Database
                     this.database = this.client.GetDatabase(this._configurationService.GetConfiguration().Mongo.Database);
-                    this.frameCollection = this.database.GetCollection<MocapFrame>("frames");
-                    this.bodyCollection = this.database.GetCollection<Body>("bodies");
+                    this.frameCollection = this.database.GetCollection<MocapFrame>(frameCollectionForSession);
+                    this.bodyCollection = this.database.GetCollection<Body>(bodyCollectionForSession);
                     this.documentCollection = this.database.GetCollection<Session>("Sessions");
                     Logger.Debug("MongoDB Client initialized");
                 }
@@ -139,10 +140,10 @@ namespace VinteR.OutputAdapter
             try
             {
                 // Serialize Session Meta in the database
-                //this.documentCollection.InsertOne(this._session);
+                this.documentCollection.InsertOne(this._session);
             } catch (Exception e)
             {
-               // Logger.Error("Could not serialize session in database due to: {0}", e.ToString());
+                Logger.Error("Could not serialize session in database due to: {0}", e.ToString());
             }
             
         }

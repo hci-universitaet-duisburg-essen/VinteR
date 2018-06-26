@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
 
 namespace VinteR.Model
 {
@@ -12,22 +14,26 @@ namespace VinteR.Model
         /// <summary>
         /// Unique name of a session
         /// </summary>
+        [BsonElement]
         public string Name { get; }
 
         /// <summary>
         /// Datetime when the session was created
         /// </summary>
+        [BsonElement]
         public DateTime Datetime { get; }
 
         /// <summary>
         /// Time in millis how long the session lasts
         /// </summary>
+        [BsonElement]
         public long Duration { get; set; }
 
         /// <summary>
         /// Frames for the session. This MUST NOT be set during a
         /// running record as it leads to memory issues.
         /// </summary>
+        [BsonIgnore]
         public IList<MocapFrame> MocapFrames
         {
             get => _mocapFrames;
@@ -38,6 +44,7 @@ namespace VinteR.Model
             }
         }
 
+        [BsonIgnore]
         private IList<MocapFrame> _mocapFrames;
 
         /// <summary>
