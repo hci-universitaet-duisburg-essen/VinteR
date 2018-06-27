@@ -50,8 +50,9 @@ namespace VinteR
             Bind<IQueryService>().To<MongoDbClient>();
             Bind<IQueryService>().To<JsonStorage>();
 
-            Bind<IVinterRestRoute>().To<OutputAdapter.Rest.Sessions.Get>();
-            Bind<IVinterRestRoute>().To<OutputAdapter.Rest.Session.Get>();
+            Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
+            Bind<IRestRouter>().To<SessionsRouter>();
+            Bind<IRestRouter>().To<SessionRouter>();
         }
     }
 }

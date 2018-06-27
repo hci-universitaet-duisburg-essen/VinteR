@@ -25,7 +25,7 @@ namespace VinteR.MainApplication
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
         private IList<IInputAdapter> _inputAdapters;
-        private StandardKernel _kernel;
+        private IKernel _kernel;
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
 
@@ -40,7 +40,7 @@ namespace VinteR.MainApplication
          * to start function, after the kernel created.
          */
 
-        public void Start(StandardKernel kernel)
+        public void Start(IKernel kernel)
         {
             IsAvailable = true;
             _kernel = kernel;

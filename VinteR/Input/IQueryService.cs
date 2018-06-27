@@ -9,6 +9,13 @@ namespace VinteR.Input
     public interface IQueryService
     {
         /// <summary>
+        /// Returns the storage name of the query service. This name is used to differ query
+        /// services and will be shown to the user.
+        /// </summary>
+        /// <returns></returns>
+        string GetStorageName();
+
+        /// <summary>
         /// Returns a list of sessions that are stored inside the backend. Only
         /// metadata is retrieved and not the complete data from all sessions.
         /// </summary>

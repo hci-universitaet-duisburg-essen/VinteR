@@ -115,9 +115,11 @@
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\MongoOutputAdapter.cs" />
-    <Compile Include="OutputAdapter\Rest\IVinterRestRoute.cs" />
-    <Compile Include="OutputAdapter\Rest\Sessions\Get.cs" />
-    <Compile Include="OutputAdapter\Rest\Session\Get.cs" />
+    <Compile Include="OutputAdapter\Rest\IHttpResponseWriter.cs" />
+    <Compile Include="OutputAdapter\Rest\IRestRouter.cs" />
+    <Compile Include="OutputAdapter\Rest\HttpResponseWriter.cs" />
+    <Compile Include="OutputAdapter\Rest\SessionRouter.cs" />
+    <Compile Include="OutputAdapter\Rest\SessionsRouter.cs" />
     <Compile Include="OutputAdapter\Rest\VinterRestServer.cs" />
     <Compile Include="OutputAdapter\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />
@@ -168,6 +170,7 @@
     <None Include="model.proto" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
