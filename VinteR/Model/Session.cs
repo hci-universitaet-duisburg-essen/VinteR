@@ -48,7 +48,8 @@ namespace VinteR.Model
         {
             _mocapFrames = new List<MocapFrame>();
             Name = name;
-            Datetime = DateTime.Now;
+            // must be utc in order to get serialized by protobuf
+            Datetime = DateTime.Now.ToUniversalTime();
         }
     }
 }

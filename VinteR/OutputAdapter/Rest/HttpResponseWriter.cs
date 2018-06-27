@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Google.Protobuf;
 using Grapevine.Interfaces.Server;
 using Grapevine.Shared;
 using Newtonsoft.Json;
@@ -10,7 +11,14 @@ namespace VinteR.OutputAdapter.Rest
         public IHttpContext SendJsonResponse(object obj, IHttpContext context)
         {
             var bytes = Serialize(obj);
+            context.Response.ContentEncoding = Encoding.UTF8;
             SendResponse(bytes, context);
+            return context;
+        }
+        public IHttpContext SendSession(Model.Gen.Session session, IHttpContext context)
+        {
+            var bytes = session.ToByteArray();
+            SendResponse(bytes, context, ContentType.GoogleProtoBuf);
             return context;
         }
 

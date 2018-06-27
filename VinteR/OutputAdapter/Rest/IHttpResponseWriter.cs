@@ -19,6 +19,14 @@ namespace VinteR.OutputAdapter.Rest
         IHttpContext SendJsonResponse(object obj, IHttpContext context);
 
         /// <summary>
+        /// Sends given protobuf session using http content type application/vnd.google.protobuf
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        IHttpContext SendSession(Model.Gen.Session session, IHttpContext context);
+
+        /// <summary>
         /// Sends an json object with given message as value and given status code
         /// inside the http header.
         /// </summary>

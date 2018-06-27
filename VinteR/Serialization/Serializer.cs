@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Google.Protobuf;
+﻿using System.Linq;
+using Google.Protobuf.WellKnownTypes;
 using VinteR.Model;
 
 namespace VinteR.Serialization
@@ -40,6 +40,22 @@ namespace VinteR.Serialization
                 }
                 output.Bodies.Add(protoBody);
             }
+        }
+
+        public void ToProtoBuf(Session session, out Model.Gen.Session output)
+        {
+            var mocapFrames = session.MocapFrames.Select(f =>
+            {
+                ToProtoBuf(f, out var generatedFrame);
+                return generatedFrame;
+            });
+            output = new Model.Gen.Session()
+            {
+                Name = session.Name,
+                Duration = session.Duration,
+                SessionStart = Timestamp.FromDateTime(session.Datetime)
+            };
+            output.Frames.AddRange(mocapFrames);
         }
     }
 }

@@ -116,6 +116,7 @@
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\MongoOutputAdapter.cs" />
     <Compile Include="OutputAdapter\Rest\IHttpResponseWriter.cs" />
+    <Compile Include="OutputAdapter\Rest\InvalidArgumentException.cs" />
     <Compile Include="OutputAdapter\Rest\IRestRouter.cs" />
     <Compile Include="OutputAdapter\Rest\HttpResponseWriter.cs" />
     <Compile Include="OutputAdapter\Rest\SessionRouter.cs" />

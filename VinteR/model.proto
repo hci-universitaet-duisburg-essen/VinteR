@@ -1,5 +1,6 @@
 ﻿syntax = "proto3";
 option csharp_namespace = "VinteR.Model.Gen";
+import "google/protobuf/timestamp.proto";
 
 message MocapFrame {
     int64 ElapsedMillis = 1;
@@ -52,4 +53,11 @@ message MocapFrame {
         string Name = 6;
     }
     repeated Body bodies = 6;
+}
+
+message Session {
+    string Name = 1;
+    int64 Duration = 2;
+    google.protobuf.Timestamp SessionStart = 3;
+    repeated MocapFrame frames = 4;
 }

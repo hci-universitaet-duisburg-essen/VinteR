@@ -24,29 +24,33 @@ namespace VinteR.Model.Gen {
     static ModelReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgttb2RlbC5wcm90byK5BQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
-            "GAEgASgDEhAKCFNvdXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJ",
-            "Eg8KB0dlc3R1cmUYBCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMY",
-            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHkaqAQKBEJvZHkSLAoIQm9keVR5cGUY",
-            "ASABKA4yGi5Nb2NhcEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBl",
-            "GAIgASgOMhouTW9jYXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMY",
-            "AyADKAsyFi5Nb2NhcEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCAB",
-            "KAsyGy5Nb2NhcEZyYW1lLkJvZHkuUXVhdGVybmlvbhIqCghDZW50cm9pZBgF",
-            "IAEoCzIYLk1vY2FwRnJhbWUuQm9keS5WZWN0b3IzEgwKBE5hbWUYBiABKAka",
-            "KgoHVmVjdG9yMxIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhpQ",
-            "CgVQb2ludBIMCgROYW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEioKCFBvc2l0",
-            "aW9uGAMgASgLMhguTW9jYXBGcmFtZS5Cb2R5LlZlY3RvcjMaOAoKUXVhdGVy",
-            "bmlvbhIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQg",
-            "ASgCIk0KCUVCb2R5VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARIN",
-            "CglSaWdpZEJvZHkQAhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lk",
-            "ZVR5cGUSCAoETGVmdBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAJCE6oCEFZp",
-            "bnRlUi5Nb2RlbC5HZW5iBnByb3RvMw=="));
+            "Cgttb2RlbC5wcm90bxofZ29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90",
+            "byK5BQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlzGAEgASgDEhAKCFNv",
+            "dXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJEg8KB0dlc3R1cmUY",
+            "BCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMYBiADKAsyEC5Nb2Nh",
+            "cEZyYW1lLkJvZHkaqAQKBEJvZHkSLAoIQm9keVR5cGUYASABKA4yGi5Nb2Nh",
+            "cEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBlGAIgASgOMhouTW9j",
+            "YXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMYAyADKAsyFi5Nb2Nh",
+            "cEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCABKAsyGy5Nb2NhcEZy",
+            "YW1lLkJvZHkuUXVhdGVybmlvbhIqCghDZW50cm9pZBgFIAEoCzIYLk1vY2Fw",
+            "RnJhbWUuQm9keS5WZWN0b3IzEgwKBE5hbWUYBiABKAkaKgoHVmVjdG9yMxIJ",
+            "CgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhpQCgVQb2ludBIMCgRO",
+            "YW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEioKCFBvc2l0aW9uGAMgASgLMhgu",
+            "TW9jYXBGcmFtZS5Cb2R5LlZlY3RvcjMaOAoKUXVhdGVybmlvbhIJCgFYGAEg",
+            "ASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQgASgCIk0KCUVCb2R5",
+            "VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARINCglSaWdpZEJvZHkQ",
+            "AhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lkZVR5cGUSCAoETGVm",
+            "dBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAIieAoHU2Vzc2lvbhIMCgROYW1l",
+            "GAEgASgJEhAKCER1cmF0aW9uGAIgASgDEjAKDFNlc3Npb25TdGFydBgDIAEo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASGwoGZnJhbWVzGAQgAygL",
+            "MgsuTW9jYXBGcmFtZUITqgIQVmludGVSLk1vZGVsLkdlbmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "SideType", "Points", "Rotation", "Centroid", "Name" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType), typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser, new[]{ "Name", "State", "Position" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null)})})
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null)})}),
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.Session), global::VinteR.Model.Gen.Session.Parser, new[]{ "Name", "Duration", "SessionStart", "Frames" }, null, null, null)
           }));
     }
     #endregion
@@ -1201,6 +1205,217 @@ namespace VinteR.Model.Gen {
 
     }
     #endregion
+
+  }
+
+  public sealed partial class Session : pb::IMessage<Session> {
+    private static readonly pb::MessageParser<Session> _parser = new pb::MessageParser<Session>(() => new Session());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Session> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::VinteR.Model.Gen.ModelReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session(Session other) : this() {
+      name_ = other.name_;
+      duration_ = other.duration_;
+      SessionStart = other.sessionStart_ != null ? other.SessionStart.Clone() : null;
+      frames_ = other.frames_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session Clone() {
+      return new Session(this);
+    }
+
+    /// <summary>Field number for the "Name" field.</summary>
+    public const int NameFieldNumber = 1;
+    private string name_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Name {
+      get { return name_; }
+      set {
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Duration" field.</summary>
+    public const int DurationFieldNumber = 2;
+    private long duration_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long Duration {
+      get { return duration_; }
+      set {
+        duration_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "SessionStart" field.</summary>
+    public const int SessionStartFieldNumber = 3;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp sessionStart_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp SessionStart {
+      get { return sessionStart_; }
+      set {
+        sessionStart_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "frames" field.</summary>
+    public const int FramesFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::VinteR.Model.Gen.MocapFrame> _repeated_frames_codec
+        = pb::FieldCodec.ForMessage(34, global::VinteR.Model.Gen.MocapFrame.Parser);
+    private readonly pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> frames_ = new pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> Frames {
+      get { return frames_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Session);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Session other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Name != other.Name) return false;
+      if (Duration != other.Duration) return false;
+      if (!object.Equals(SessionStart, other.SessionStart)) return false;
+      if(!frames_.Equals(other.frames_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (Duration != 0L) hash ^= Duration.GetHashCode();
+      if (sessionStart_ != null) hash ^= SessionStart.GetHashCode();
+      hash ^= frames_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Name.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Name);
+      }
+      if (Duration != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(Duration);
+      }
+      if (sessionStart_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(SessionStart);
+      }
+      frames_.WriteTo(output, _repeated_frames_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (Duration != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Duration);
+      }
+      if (sessionStart_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SessionStart);
+      }
+      size += frames_.CalculateSize(_repeated_frames_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Session other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Name.Length != 0) {
+        Name = other.Name;
+      }
+      if (other.Duration != 0L) {
+        Duration = other.Duration;
+      }
+      if (other.sessionStart_ != null) {
+        if (sessionStart_ == null) {
+          sessionStart_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        SessionStart.MergeFrom(other.SessionStart);
+      }
+      frames_.Add(other.frames_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Name = input.ReadString();
+            break;
+          }
+          case 16: {
+            Duration = input.ReadInt64();
+            break;
+          }
+          case 26: {
+            if (sessionStart_ == null) {
+              sessionStart_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(sessionStart_);
+            break;
+          }
+          case 34: {
+            frames_.AddEntriesFrom(input, _repeated_frames_codec);
+            break;
+          }
+        }
+      }
+    }
 
   }
 
