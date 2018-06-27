@@ -9,39 +9,43 @@ namespace VinteR.OutputAdapter.Rest
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly Configuration.Rest _config;
-        private readonly IVinterRestRoute[] _routes;
+        private readonly IRestRouter[] _routers;
         private bool _isRunning;
         private RestServer _restServer;
 
-        public VinterRestServer(IConfigurationService configurationService, IVinterRestRoute[] routes)
+        public VinterRestServer(IConfigurationService configurationService, IRestRouter[] routers)
         {
             _config = configurationService.GetConfiguration().Rest;
-            _routes = routes;
+            _routers = routers;
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
         }
 
-        public void Start(Model.Session session)
+        public void Start(Session session)
         {
+            // do not start if not enabled
             if (!_config.Enabled) return;
 
             try
             {
+                // create server instance
                 _restServer = new RestServer
                 {
                     Host = _config.Host,
                     Port = _config.Port.ToString()
                 };
 
+                // bind all registered routes to router (see constructor for bindings)
                 IRouter router = new Router();
-                foreach (var route in _routes)
+                foreach (var route in _routers)
                 {
-                    router.Register(route.Handler, route.HttpMethod, route.PathInfo);
+                    route.Register(router);
                 }
-
                 _restServer.Router = router;
+
+                // start the server
                 _restServer.Start();
                 _isRunning = true;
                 Logger.Info("REST server running on {0}:{1}", _config.Host, _config.Port);
