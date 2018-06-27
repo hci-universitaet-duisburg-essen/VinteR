@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Grapevine.Interfaces.Server;
 using Grapevine.Server;
 using Grapevine.Shared;
@@ -35,20 +34,13 @@ namespace VinteR.OutputAdapter.Rest
 
         private IHttpContext HandleGetSessions(IHttpContext context)
         {
-            var result = _queryServices.Select(queryService => new SessionsBySource()
-                {
-                    Source = queryService.GetStorageName(),
-                    Sessions = queryService.GetSessions()
-                })
-                .ToList();
+            IDictionary<string, IEnumerable<Session>> result = new Dictionary<string, IEnumerable<Session>>();
+            foreach (var queryService in _queryServices)
+            {
+                result.Add(queryService.GetStorageName(), queryService.GetSessions());
+            }
             _responseWriter.SendJsonResponse(result, context);
             return context;
-        }
-
-        private class SessionsBySource
-        {
-            public string Source { get; set; }
-            public IEnumerable<Session> Sessions { get; set; }
         }
     }
 }
