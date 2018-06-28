@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Grapevine.Interfaces.Server;
 using Grapevine.Server;
 using Grapevine.Shared;
 using NLog;
 using VinteR.Input;
-using VinteR.Model;
+using VinteR.Model.Gen;
+using VinteR.Serialization;
+using Session = VinteR.Model.Session;
 
 namespace VinteR.OutputAdapter.Rest
 {
@@ -14,11 +16,13 @@ namespace VinteR.OutputAdapter.Rest
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IQueryService[] _queryServices;
         private readonly IHttpResponseWriter _responseWriter;
+        private readonly ISerializer _serializer;
 
-        public SessionsRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter)
+        public SessionsRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter, ISerializer serializer)
         {
             _queryServices = queryServices;
             _responseWriter = responseWriter;
+            _serializer = serializer;
         }
 
         public void Register(IRouter router)
@@ -29,17 +33,30 @@ namespace VinteR.OutputAdapter.Rest
         private void Register(Func<IHttpContext, IHttpContext> func, HttpMethod method, string pathInfo, IRouter router)
         {
             router.Register(func, method, pathInfo);
-            Logger.Info("Registered path {0,-15} to {1,15}.{2}#{3}", pathInfo, GetType().Name, func.Method.Name, method);
+            Logger.Info("Registered path {0,-15} to {1,15}.{2}#{3}", pathInfo, GetType().Name, func.Method.Name,
+                method);
         }
 
         private IHttpContext HandleGetSessions(IHttpContext context)
         {
-            IDictionary<string, IEnumerable<Session>> result = new Dictionary<string, IEnumerable<Session>>();
+            var sessionsMetadata = new SessionsMetadata();
             foreach (var queryService in _queryServices)
             {
-                result.Add(queryService.GetStorageName(), queryService.GetSessions());
+                Logger.Debug(queryService.GetStorageName);
+                var inputSourceMetadata =
+                    new SessionsMetadata.Types.InputSourceMetadata {SourceId = queryService.GetStorageName()};
+
+                var sessions = queryService.GetSessions().Select(s =>
+                {
+                    _serializer.ToProtoBuf(s, out SessionMetadata meta);
+                    var sessionMetadata = meta;
+                    return sessionMetadata;
+                });
+                inputSourceMetadata.SessionMeta.AddRange(sessions);
+                sessionsMetadata.InputSourceMeta.Add(inputSourceMetadata);
             }
-            _responseWriter.SendJsonResponse(result, context);
+
+            _responseWriter.SendProtobufMessage(sessionsMetadata, context);
             return context;
         }
     }

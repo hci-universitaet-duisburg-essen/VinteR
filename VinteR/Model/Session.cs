@@ -17,7 +17,7 @@ namespace VinteR.Model
         /// <summary>
         /// Datetime when the session was created
         /// </summary>
-        public DateTime Datetime { get; }
+        public DateTime Datetime { get; set; }
 
         /// <summary>
         /// Time in millis how long the session lasts
@@ -48,7 +48,8 @@ namespace VinteR.Model
         {
             _mocapFrames = new List<MocapFrame>();
             Name = name;
-            Datetime = DateTime.Now;
+            // must be utc in order to get serialized by protobuf
+            Datetime = DateTime.Now.ToUniversalTime();
         }
     }
 }
