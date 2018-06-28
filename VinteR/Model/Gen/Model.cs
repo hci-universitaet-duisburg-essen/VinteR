@@ -24,33 +24,39 @@ namespace VinteR.Model.Gen {
     static ModelReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgttb2RlbC5wcm90bxofZ29vZ2xlL3Byb3RvYnVmL3RpbWVzdGFtcC5wcm90",
-            "byK5BQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlzGAEgASgDEhAKCFNv",
-            "dXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJEg8KB0dlc3R1cmUY",
-            "BCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMYBiADKAsyEC5Nb2Nh",
-            "cEZyYW1lLkJvZHkaqAQKBEJvZHkSLAoIQm9keVR5cGUYASABKA4yGi5Nb2Nh",
-            "cEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBlGAIgASgOMhouTW9j",
-            "YXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMYAyADKAsyFi5Nb2Nh",
-            "cEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCABKAsyGy5Nb2NhcEZy",
-            "YW1lLkJvZHkuUXVhdGVybmlvbhIqCghDZW50cm9pZBgFIAEoCzIYLk1vY2Fw",
-            "RnJhbWUuQm9keS5WZWN0b3IzEgwKBE5hbWUYBiABKAkaKgoHVmVjdG9yMxIJ",
-            "CgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhpQCgVQb2ludBIMCgRO",
-            "YW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEioKCFBvc2l0aW9uGAMgASgLMhgu",
-            "TW9jYXBGcmFtZS5Cb2R5LlZlY3RvcjMaOAoKUXVhdGVybmlvbhIJCgFYGAEg",
-            "ASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQgASgCIk0KCUVCb2R5",
-            "VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARINCglSaWdpZEJvZHkQ",
-            "AhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lkZVR5cGUSCAoETGVm",
-            "dBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAIieAoHU2Vzc2lvbhIMCgROYW1l",
-            "GAEgASgJEhAKCER1cmF0aW9uGAIgASgDEjAKDFNlc3Npb25TdGFydBgDIAEo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASGwoGZnJhbWVzGAQgAygL",
-            "MgsuTW9jYXBGcmFtZUITqgIQVmludGVSLk1vZGVsLkdlbmIGcHJvdG8z"));
+            "Cgttb2RlbC5wcm90byK5BQoKTW9jYXBGcmFtZRIVCg1FbGFwc2VkTWlsbGlz",
+            "GAEgASgDEhAKCFNvdXJjZUlkGAIgASgJEhMKC0FkYXB0ZXJUeXBlGAMgASgJ",
+            "Eg8KB0dlc3R1cmUYBCABKAkSDwoHTGF0ZW5jeRgFIAEoAhIgCgZib2RpZXMY",
+            "BiADKAsyEC5Nb2NhcEZyYW1lLkJvZHkaqAQKBEJvZHkSLAoIQm9keVR5cGUY",
+            "ASABKA4yGi5Nb2NhcEZyYW1lLkJvZHkuRUJvZHlUeXBlEiwKCFNpZGVUeXBl",
+            "GAIgASgOMhouTW9jYXBGcmFtZS5Cb2R5LkVTaWRlVHlwZRImCgZQb2ludHMY",
+            "AyADKAsyFi5Nb2NhcEZyYW1lLkJvZHkuUG9pbnQSLQoIUm90YXRpb24YBCAB",
+            "KAsyGy5Nb2NhcEZyYW1lLkJvZHkuUXVhdGVybmlvbhIqCghDZW50cm9pZBgF",
+            "IAEoCzIYLk1vY2FwRnJhbWUuQm9keS5WZWN0b3IzEgwKBE5hbWUYBiABKAka",
+            "KgoHVmVjdG9yMxIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhpQ",
+            "CgVQb2ludBIMCgROYW1lGAEgASgJEg0KBVN0YXRlGAIgASgJEioKCFBvc2l0",
+            "aW9uGAMgASgLMhguTW9jYXBGcmFtZS5Cb2R5LlZlY3RvcjMaOAoKUXVhdGVy",
+            "bmlvbhIJCgFYGAEgASgCEgkKAVkYAiABKAISCQoBWhgDIAEoAhIJCgFXGAQg",
+            "ASgCIk0KCUVCb2R5VHlwZRIKCgZNYXJrZXIQABINCglNYXJrZXJTZXQQARIN",
+            "CglSaWdpZEJvZHkQAhIMCghTa2VsZXRvbhADEggKBEhhbmQQBCIsCglFU2lk",
+            "ZVR5cGUSCAoETGVmdBAAEgkKBVJpZ2h0EAESCgoGTm9TaWRlEAIiTQoPU2Vz",
+            "c2lvbk1ldGFkYXRhEgwKBE5hbWUYASABKAkSEAoIRHVyYXRpb24YAiABKAMS",
+            "GgoSU2Vzc2lvblN0YXJ0TWlsbGlzGAMgASgDIkYKB1Nlc3Npb24SHgoEbWV0",
+            "YRgBIAEoCzIQLlNlc3Npb25NZXRhZGF0YRIbCgZmcmFtZXMYAiADKAsyCy5N",
+            "b2NhcEZyYW1lIqIBChBTZXNzaW9uc01ldGFkYXRhEj4KD2lucHV0U291cmNl",
+            "TWV0YRgBIAMoCzIlLlNlc3Npb25zTWV0YWRhdGEuSW5wdXRTb3VyY2VNZXRh",
+            "ZGF0YRpOChNJbnB1dFNvdXJjZU1ldGFkYXRhEhAKCFNvdXJjZUlkGAEgASgJ",
+            "EiUKC3Nlc3Npb25NZXRhGAIgAygLMhAuU2Vzc2lvbk1ldGFkYXRhQhOqAhBW",
+            "aW50ZVIuTW9kZWwuR2VuYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
+          new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame), global::VinteR.Model.Gen.MocapFrame.Parser, new[]{ "ElapsedMillis", "SourceId", "AdapterType", "Gesture", "Latency", "Bodies" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body), global::VinteR.Model.Gen.MocapFrame.Types.Body.Parser, new[]{ "BodyType", "SideType", "Points", "Rotation", "Centroid", "Name" }, null, new[]{ typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.EBodyType), typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.ESideType) }, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Point.Parser, new[]{ "Name", "State", "Position" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion), global::VinteR.Model.Gen.MocapFrame.Types.Body.Types.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null)})}),
-            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.Session), global::VinteR.Model.Gen.Session.Parser, new[]{ "Name", "Duration", "SessionStart", "Frames" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.SessionMetadata), global::VinteR.Model.Gen.SessionMetadata.Parser, new[]{ "Name", "Duration", "SessionStartMillis" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.Session), global::VinteR.Model.Gen.Session.Parser, new[]{ "Meta", "Frames" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.SessionsMetadata), global::VinteR.Model.Gen.SessionsMetadata.Parser, new[]{ "InputSourceMeta" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata), global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata.Parser, new[]{ "SourceId", "SessionMeta" }, null, null, null)})
           }));
     }
     #endregion
@@ -1208,11 +1214,11 @@ namespace VinteR.Model.Gen {
 
   }
 
-  public sealed partial class Session : pb::IMessage<Session> {
-    private static readonly pb::MessageParser<Session> _parser = new pb::MessageParser<Session>(() => new Session());
+  public sealed partial class SessionMetadata : pb::IMessage<SessionMetadata> {
+    private static readonly pb::MessageParser<SessionMetadata> _parser = new pb::MessageParser<SessionMetadata>(() => new SessionMetadata());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Session> Parser { get { return _parser; } }
+    public static pb::MessageParser<SessionMetadata> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -1225,24 +1231,23 @@ namespace VinteR.Model.Gen {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Session() {
+    public SessionMetadata() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Session(Session other) : this() {
+    public SessionMetadata(SessionMetadata other) : this() {
       name_ = other.name_;
       duration_ = other.duration_;
-      SessionStart = other.sessionStart_ != null ? other.SessionStart.Clone() : null;
-      frames_ = other.frames_.Clone();
+      sessionStartMillis_ = other.sessionStartMillis_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Session Clone() {
-      return new Session(this);
+    public SessionMetadata Clone() {
+      return new SessionMetadata(this);
     }
 
     /// <summary>Field number for the "Name" field.</summary>
@@ -1267,34 +1272,24 @@ namespace VinteR.Model.Gen {
       }
     }
 
-    /// <summary>Field number for the "SessionStart" field.</summary>
-    public const int SessionStartFieldNumber = 3;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp sessionStart_;
+    /// <summary>Field number for the "SessionStartMillis" field.</summary>
+    public const int SessionStartMillisFieldNumber = 3;
+    private long sessionStartMillis_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp SessionStart {
-      get { return sessionStart_; }
+    public long SessionStartMillis {
+      get { return sessionStartMillis_; }
       set {
-        sessionStart_ = value;
+        sessionStartMillis_ = value;
       }
-    }
-
-    /// <summary>Field number for the "frames" field.</summary>
-    public const int FramesFieldNumber = 4;
-    private static readonly pb::FieldCodec<global::VinteR.Model.Gen.MocapFrame> _repeated_frames_codec
-        = pb::FieldCodec.ForMessage(34, global::VinteR.Model.Gen.MocapFrame.Parser);
-    private readonly pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> frames_ = new pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> Frames {
-      get { return frames_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Session);
+      return Equals(other as SessionMetadata);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Session other) {
+    public bool Equals(SessionMetadata other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1303,8 +1298,7 @@ namespace VinteR.Model.Gen {
       }
       if (Name != other.Name) return false;
       if (Duration != other.Duration) return false;
-      if (!object.Equals(SessionStart, other.SessionStart)) return false;
-      if(!frames_.Equals(other.frames_)) return false;
+      if (SessionStartMillis != other.SessionStartMillis) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1313,8 +1307,7 @@ namespace VinteR.Model.Gen {
       int hash = 1;
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Duration != 0L) hash ^= Duration.GetHashCode();
-      if (sessionStart_ != null) hash ^= SessionStart.GetHashCode();
-      hash ^= frames_.GetHashCode();
+      if (SessionStartMillis != 0L) hash ^= SessionStartMillis.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1336,11 +1329,10 @@ namespace VinteR.Model.Gen {
         output.WriteRawTag(16);
         output.WriteInt64(Duration);
       }
-      if (sessionStart_ != null) {
-        output.WriteRawTag(26);
-        output.WriteMessage(SessionStart);
+      if (SessionStartMillis != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(SessionStartMillis);
       }
-      frames_.WriteTo(output, _repeated_frames_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1355,10 +1347,9 @@ namespace VinteR.Model.Gen {
       if (Duration != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(Duration);
       }
-      if (sessionStart_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SessionStart);
+      if (SessionStartMillis != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(SessionStartMillis);
       }
-      size += frames_.CalculateSize(_repeated_frames_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1366,7 +1357,7 @@ namespace VinteR.Model.Gen {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Session other) {
+    public void MergeFrom(SessionMetadata other) {
       if (other == null) {
         return;
       }
@@ -1376,13 +1367,9 @@ namespace VinteR.Model.Gen {
       if (other.Duration != 0L) {
         Duration = other.Duration;
       }
-      if (other.sessionStart_ != null) {
-        if (sessionStart_ == null) {
-          sessionStart_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        SessionStart.MergeFrom(other.SessionStart);
+      if (other.SessionStartMillis != 0L) {
+        SessionStartMillis = other.SessionStartMillis;
       }
-      frames_.Add(other.frames_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1402,20 +1389,445 @@ namespace VinteR.Model.Gen {
             Duration = input.ReadInt64();
             break;
           }
-          case 26: {
-            if (sessionStart_ == null) {
-              sessionStart_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(sessionStart_);
+          case 24: {
+            SessionStartMillis = input.ReadInt64();
             break;
           }
-          case 34: {
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Session : pb::IMessage<Session> {
+    private static readonly pb::MessageParser<Session> _parser = new pb::MessageParser<Session>(() => new Session());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Session> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::VinteR.Model.Gen.ModelReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session(Session other) : this() {
+      Meta = other.meta_ != null ? other.Meta.Clone() : null;
+      frames_ = other.frames_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Session Clone() {
+      return new Session(this);
+    }
+
+    /// <summary>Field number for the "meta" field.</summary>
+    public const int MetaFieldNumber = 1;
+    private global::VinteR.Model.Gen.SessionMetadata meta_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::VinteR.Model.Gen.SessionMetadata Meta {
+      get { return meta_; }
+      set {
+        meta_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "frames" field.</summary>
+    public const int FramesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::VinteR.Model.Gen.MocapFrame> _repeated_frames_codec
+        = pb::FieldCodec.ForMessage(18, global::VinteR.Model.Gen.MocapFrame.Parser);
+    private readonly pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> frames_ = new pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::VinteR.Model.Gen.MocapFrame> Frames {
+      get { return frames_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Session);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Session other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Meta, other.Meta)) return false;
+      if(!frames_.Equals(other.frames_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (meta_ != null) hash ^= Meta.GetHashCode();
+      hash ^= frames_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (meta_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Meta);
+      }
+      frames_.WriteTo(output, _repeated_frames_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (meta_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Meta);
+      }
+      size += frames_.CalculateSize(_repeated_frames_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Session other) {
+      if (other == null) {
+        return;
+      }
+      if (other.meta_ != null) {
+        if (meta_ == null) {
+          meta_ = new global::VinteR.Model.Gen.SessionMetadata();
+        }
+        Meta.MergeFrom(other.Meta);
+      }
+      frames_.Add(other.frames_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (meta_ == null) {
+              meta_ = new global::VinteR.Model.Gen.SessionMetadata();
+            }
+            input.ReadMessage(meta_);
+            break;
+          }
+          case 18: {
             frames_.AddEntriesFrom(input, _repeated_frames_codec);
             break;
           }
         }
       }
     }
+
+  }
+
+  public sealed partial class SessionsMetadata : pb::IMessage<SessionsMetadata> {
+    private static readonly pb::MessageParser<SessionsMetadata> _parser = new pb::MessageParser<SessionsMetadata>(() => new SessionsMetadata());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SessionsMetadata> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::VinteR.Model.Gen.ModelReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionsMetadata() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionsMetadata(SessionsMetadata other) : this() {
+      inputSourceMeta_ = other.inputSourceMeta_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionsMetadata Clone() {
+      return new SessionsMetadata(this);
+    }
+
+    /// <summary>Field number for the "inputSourceMeta" field.</summary>
+    public const int InputSourceMetaFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata> _repeated_inputSourceMeta_codec
+        = pb::FieldCodec.ForMessage(10, global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata.Parser);
+    private readonly pbc::RepeatedField<global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata> inputSourceMeta_ = new pbc::RepeatedField<global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::VinteR.Model.Gen.SessionsMetadata.Types.InputSourceMetadata> InputSourceMeta {
+      get { return inputSourceMeta_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as SessionsMetadata);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SessionsMetadata other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!inputSourceMeta_.Equals(other.inputSourceMeta_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= inputSourceMeta_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      inputSourceMeta_.WriteTo(output, _repeated_inputSourceMeta_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += inputSourceMeta_.CalculateSize(_repeated_inputSourceMeta_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SessionsMetadata other) {
+      if (other == null) {
+        return;
+      }
+      inputSourceMeta_.Add(other.inputSourceMeta_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            inputSourceMeta_.AddEntriesFrom(input, _repeated_inputSourceMeta_codec);
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the SessionsMetadata message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public sealed partial class InputSourceMetadata : pb::IMessage<InputSourceMetadata> {
+        private static readonly pb::MessageParser<InputSourceMetadata> _parser = new pb::MessageParser<InputSourceMetadata>(() => new InputSourceMetadata());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public static pb::MessageParser<InputSourceMetadata> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::VinteR.Model.Gen.SessionsMetadata.Descriptor.NestedTypes[0]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public InputSourceMetadata() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public InputSourceMetadata(InputSourceMetadata other) : this() {
+          sourceId_ = other.sourceId_;
+          sessionMeta_ = other.sessionMeta_.Clone();
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public InputSourceMetadata Clone() {
+          return new InputSourceMetadata(this);
+        }
+
+        /// <summary>Field number for the "SourceId" field.</summary>
+        public const int SourceIdFieldNumber = 1;
+        private string sourceId_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public string SourceId {
+          get { return sourceId_; }
+          set {
+            sourceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "sessionMeta" field.</summary>
+        public const int SessionMetaFieldNumber = 2;
+        private static readonly pb::FieldCodec<global::VinteR.Model.Gen.SessionMetadata> _repeated_sessionMeta_codec
+            = pb::FieldCodec.ForMessage(18, global::VinteR.Model.Gen.SessionMetadata.Parser);
+        private readonly pbc::RepeatedField<global::VinteR.Model.Gen.SessionMetadata> sessionMeta_ = new pbc::RepeatedField<global::VinteR.Model.Gen.SessionMetadata>();
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public pbc::RepeatedField<global::VinteR.Model.Gen.SessionMetadata> SessionMeta {
+          get { return sessionMeta_; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public override bool Equals(object other) {
+          return Equals(other as InputSourceMetadata);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public bool Equals(InputSourceMetadata other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (SourceId != other.SourceId) return false;
+          if(!sessionMeta_.Equals(other.sessionMeta_)) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (SourceId.Length != 0) hash ^= SourceId.GetHashCode();
+          hash ^= sessionMeta_.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public void WriteTo(pb::CodedOutputStream output) {
+          if (SourceId.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(SourceId);
+          }
+          sessionMeta_.WriteTo(output, _repeated_sessionMeta_codec);
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public int CalculateSize() {
+          int size = 0;
+          if (SourceId.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(SourceId);
+          }
+          size += sessionMeta_.CalculateSize(_repeated_sessionMeta_codec);
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public void MergeFrom(InputSourceMetadata other) {
+          if (other == null) {
+            return;
+          }
+          if (other.SourceId.Length != 0) {
+            SourceId = other.SourceId;
+          }
+          sessionMeta_.Add(other.sessionMeta_);
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        public void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                SourceId = input.ReadString();
+                break;
+              }
+              case 18: {
+                sessionMeta_.AddEntriesFrom(input, _repeated_sessionMeta_codec);
+                break;
+              }
+            }
+          }
+        }
+
+      }
+
+    }
+    #endregion
 
   }
 

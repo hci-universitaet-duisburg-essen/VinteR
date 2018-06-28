@@ -1,6 +1,7 @@
 ﻿using System.Linq;
-using Google.Protobuf.WellKnownTypes;
-using VinteR.Model;
+using VinteR.Model.Gen;
+using MocapFrame = VinteR.Model.MocapFrame;
+using Session = VinteR.Model.Session;
 
 namespace VinteR.Serialization
 {
@@ -38,6 +39,7 @@ namespace VinteR.Serialization
                     };
                     protoBody.Points.Add(protoPoint);
                 }
+
                 output.Bodies.Add(protoBody);
             }
         }
@@ -49,13 +51,19 @@ namespace VinteR.Serialization
                 ToProtoBuf(f, out var generatedFrame);
                 return generatedFrame;
             });
-            output = new Model.Gen.Session()
+            ToProtoBuf(session, out SessionMetadata meta);
+            output = new Model.Gen.Session {Meta = meta};
+            output.Frames.AddRange(mocapFrames);
+        }
+
+        public void ToProtoBuf(Session session, out SessionMetadata output)
+        {
+            output = new SessionMetadata()
             {
                 Name = session.Name,
                 Duration = session.Duration,
-                SessionStart = Timestamp.FromDateTime(session.Datetime)
+                SessionStartMillis = session.Datetime.ToBinary()
             };
-            output.Frames.AddRange(mocapFrames);
         }
     }
 }

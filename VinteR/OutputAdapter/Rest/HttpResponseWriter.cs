@@ -8,16 +8,9 @@ namespace VinteR.OutputAdapter.Rest
 {
     public class HttpResponseWriter : IHttpResponseWriter
     {
-        public IHttpContext SendJsonResponse(object obj, IHttpContext context)
+        public IHttpContext SendProtobufMessage(IMessage message, IHttpContext context)
         {
-            var bytes = Serialize(obj);
-            context.Response.ContentEncoding = Encoding.UTF8;
-            SendResponse(bytes, context);
-            return context;
-        }
-        public IHttpContext SendSession(Model.Gen.Session session, IHttpContext context)
-        {
-            var bytes = session.ToByteArray();
+            var bytes = message.ToByteArray();
             SendResponse(bytes, context, ContentType.GoogleProtoBuf);
             return context;
         }
@@ -28,6 +21,12 @@ namespace VinteR.OutputAdapter.Rest
             var response = new ErrorMessage() {Error = message};
             SendJsonResponse(response, context);
             return context;
+        }
+        private static void SendJsonResponse(object obj, IHttpContext context)
+        {
+            var bytes = Serialize(obj);
+            context.Response.ContentEncoding = Encoding.UTF8;
+            SendResponse(bytes, context);
         }
 
         private static byte[] Serialize(object obj)
@@ -42,7 +41,6 @@ namespace VinteR.OutputAdapter.Rest
         {
             context.Response.ContentType = contentType;
             context.Response.ContentLength64 = data.Length;
-            context.Response.ContentEncoding = Encoding.UTF8;
             context.Response.SendResponse(data);
         }
 

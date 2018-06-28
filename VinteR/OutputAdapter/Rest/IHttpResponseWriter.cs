@@ -1,4 +1,5 @@
-﻿using Grapevine.Interfaces.Server;
+﻿using Google.Protobuf;
+using Grapevine.Interfaces.Server;
 using Grapevine.Shared;
 
 namespace VinteR.OutputAdapter.Rest
@@ -11,20 +12,12 @@ namespace VinteR.OutputAdapter.Rest
     public interface IHttpResponseWriter
     {
         /// <summary>
-        /// Serializes given object into a json object that is returned to the client.
+        /// Sends given protobuf message using http content type application/vnd.google.protobuf
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="context"></param>
-        /// <returns>The context from the request</returns>
-        IHttpContext SendJsonResponse(object obj, IHttpContext context);
-
-        /// <summary>
-        /// Sends given protobuf session using http content type application/vnd.google.protobuf
-        /// </summary>
-        /// <param name="session"></param>
+        /// <param name="message"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        IHttpContext SendSession(Model.Gen.Session session, IHttpContext context);
+        IHttpContext SendProtobufMessage(IMessage message, IHttpContext context);
 
         /// <summary>
         /// Sends an json object with given message as value and given status code

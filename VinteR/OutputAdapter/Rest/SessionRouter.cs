@@ -15,7 +15,7 @@ namespace VinteR.OutputAdapter.Rest
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IQueryService[] _queryServices;
         private readonly IHttpResponseWriter _responseWriter;
-        private ISerializer _serializer;
+        private readonly ISerializer _serializer;
 
         public SessionRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter, ISerializer serializer)
         {
@@ -55,8 +55,8 @@ namespace VinteR.OutputAdapter.Rest
             try
             {
                 var session = GetSession(context);
-                _serializer.ToProtoBuf(session, out var protoSession);
-                return _responseWriter.SendSession(protoSession, context);
+                _serializer.ToProtoBuf(session, out Model.Gen.Session protoSession);
+                return _responseWriter.SendProtobufMessage(protoSession, context);
             }
             catch (InvalidArgumentException e)
             {
