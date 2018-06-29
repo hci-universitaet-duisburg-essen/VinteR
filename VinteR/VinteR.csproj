@@ -128,6 +128,9 @@
     <Compile Include="QuaternionExtensions.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Serialization\Serializer.cs" />
+    <Compile Include="SessionPlayer\HighResolutionTimer.cs" />
+    <Compile Include="SessionPlayer\ISessionPlayer.cs" />
+    <Compile Include="SessionPlayer\SessionPlayer.cs" />
     <Compile Include="Tracking\IAdapterTracker.cs" />
     <Compile Include="Adapter\IInputAdapter.cs" />
     <Compile Include="Adapter\Kinect\KinectAdapter.cs" />

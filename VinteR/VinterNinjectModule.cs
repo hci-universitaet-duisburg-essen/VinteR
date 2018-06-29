@@ -11,6 +11,7 @@ using VinteR.OutputAdapter;
 using VinteR.OutputAdapter.Rest;
 using VinteR.OutputManager;
 using VinteR.Serialization;
+using VinteR.SessionPlayer;
 using VinteR.Tracking;
 using VinteR.Transform;
 
@@ -53,6 +54,8 @@ namespace VinteR
             Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
             Bind<IRestRouter>().To<SessionsRouter>();
             Bind<IRestRouter>().To<SessionRouter>();
+
+            Bind<ISessionPlayer>().To<SessionPlayer.SessionPlayer>();
         }
     }
 }
