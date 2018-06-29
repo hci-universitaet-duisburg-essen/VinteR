@@ -107,11 +107,18 @@ namespace VinteR.Adapter.Kinect
                     List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
                     // Serialize 
                     string flushPath = this.SkeletonStreamPath + "\\" + this.skeletonFlushCount.ToString() + ".json";
-                    using (StreamWriter sw = new StreamWriter(flushPath))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    try
                     {
-                        serializer.Serialize(writer, serializeList);
+                        using (StreamWriter sw = new StreamWriter(flushPath))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
+                        {
+                            serializer.Serialize(writer, serializeList);
+                        }
+                    } catch(Exception e)
+                    {
+                        Logger.Error("Error occurred during flushing frames: {0}", e.ToString());
                     }
+                    
                     this.skeletonFlushCount += 1;
 
                     // Clear the List
@@ -131,11 +138,18 @@ namespace VinteR.Adapter.Kinect
                     // freeze to serialize
                     List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
                     string flushPath = this.DepthStreamPath + "\\" + this.depthFlushCount.ToString() + ".json";
-                    using (StreamWriter sw = new StreamWriter(flushPath))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    try
                     {
-                        serializer.Serialize(writer, serializeList);
+                        using (StreamWriter sw = new StreamWriter(flushPath))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
+                            {
+                                serializer.Serialize(writer, serializeList);
+                            }
+                    } catch (Exception e)
+                    {
+                        Logger.Error("Error occured during flushing Depth: {0}", e.ToString());
                     }
+
                     this.depthFlushCount += 1;
                     // Clear the List
                     this.depthList.Clear();
@@ -154,11 +168,18 @@ namespace VinteR.Adapter.Kinect
                 {
                     List<byte[]> serializeList = new List<byte[]>(colorPixelList);
                     string flushPath = this.ColorStreamPath + "\\" + this.colorFlushCount.ToString() + ".json";
-                    using (StreamWriter sw = new StreamWriter(flushPath))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    try
                     {
-                        serializer.Serialize(writer, serializeList);
+                        using (StreamWriter sw = new StreamWriter(flushPath))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
+                        {
+                            serializer.Serialize(writer, serializeList);
+                        }
+                    } catch (Exception e)
+                    {
+                        Logger.Error("Error occured during flushing Color: {0}", e.ToString());
                     }
+                    
                     this.colorFlushCount += 1;
                     // Clear List
                     this.colorPixelList.Clear();

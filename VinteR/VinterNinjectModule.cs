@@ -9,8 +9,10 @@ using VinteR.Input;
 using VinteR.MainApplication;
 using VinteR.Mongo;
 using VinteR.OutputAdapter;
+using VinteR.OutputAdapter.Rest;
 using VinteR.OutputManager;
 using VinteR.Serialization;
+using VinteR.SessionPlayer;
 using VinteR.Tracking;
 using VinteR.Transform;
 
@@ -21,7 +23,7 @@ namespace VinteR
 
         public override void Load()
         {
-            Bind<IMainApplication>().To<MainApplication.MainApplication>();
+            Bind<IMainApplication>().To<MainApplication.MainApplication>().InSingletonScope();
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
 
             Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(LeapMotionAdapter.AdapterTypeName);
@@ -36,19 +38,25 @@ namespace VinteR
             Bind<IDataMerger>().To<KinectMerger>().Named(KinectAdapter.AdapterTypeName);
             Bind<IDataMerger>().To<OptiTrackMerger>().Named(OptiTrackAdapter.AdapterTypeName);
 
-            Bind<IOutputManager>().To<OutputManager.OutputManager>();
-            Bind<IOutputAdapter>().To<ConsoleOutputAdapter>();
-            Bind<IOutputAdapter>().To<UdpSender>();
-            Bind<IOutputAdapter>().To<JsonFileOutputAdapter>();
+            Bind<IOutputManager>().To<OutputManager.OutputManager>().InThreadScope();
+            Bind<IOutputAdapter>().To<ConsoleOutputAdapter>().InThreadScope();
+            Bind<IOutputAdapter>().To<JsonFileOutputAdapter>().InSingletonScope();
             Bind<IOutputAdapter>().To<MongoOutputAdapter>().InSingletonScope();
+            // bind network servers in singleton as they use specific ports
+            Bind<IOutputAdapter>().To<UdpSender>().InSingletonScope();
+            Bind<IOutputAdapter>().To<VinterRestServer>().InSingletonScope();
 
             Bind<ISerializer>().To<Serializer>();
-
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
 
             Bind<IQueryService>().To<MongoQueryService>();
             Bind<IQueryService>().To<JsonStorage>();
 
+            Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
+            Bind<IRestRouter>().To<SessionsRouter>();
+            Bind<IRestRouter>().To<SessionRouter>();
+
+            Bind<ISessionPlayer>().To<SessionPlayer.SessionPlayer>();
             Bind<IVinterMongoDBClient>().To<VinterMongoDBClient>().InSingletonScope();
         }
     }

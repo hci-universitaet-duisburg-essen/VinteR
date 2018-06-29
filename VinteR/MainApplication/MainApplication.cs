@@ -25,7 +25,7 @@ namespace VinteR.MainApplication
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
         private IList<IInputAdapter> _inputAdapters;
-        private StandardKernel _kernel;
+        private IKernel _kernel;
 
         private IEnumerable<IOutputAdapter> _outputAdapters;
 
@@ -40,13 +40,12 @@ namespace VinteR.MainApplication
          * to start function, after the kernel created.
          */
 
-        public void Start(StandardKernel kernel)
+        public void Start(IKernel kernel)
         {
             IsAvailable = true;
             _kernel = kernel;
             _inputAdapters = new List<IInputAdapter>();
             var configService = kernel.Get<IConfigurationService>();
-
 
             // Get current output adapter.
             _outputAdapters = kernel.GetAll<IOutputAdapter>();
@@ -64,6 +63,7 @@ namespace VinteR.MainApplication
                 _outputManager.OutputNotification += outputAdapter.OnDataReceived;
                 var t = new Thread(() => outputAdapter.Start(_session));
                 t.Start();
+                Logger.Info("Output adapter {0,30} started", outputAdapter.GetType().Name);
             }
             
             // for each json object inside inside the adapters array inside the config
@@ -102,7 +102,7 @@ namespace VinteR.MainApplication
                 // start each adapter
                 var thread = new Thread(adapter.Run);
                 thread.Start();
-                Logger.Info("Adapter {0,20} started", adapter.GetType().Name);
+                Logger.Info("Input adapter {0,30} started", adapter.GetType().Name);
             }
 
             Logger.Info("VinteR server started");
@@ -111,12 +111,13 @@ namespace VinteR.MainApplication
 
         public void Stop()
         {
-            Logger.Info("Stopping started adapters");
+            Logger.Info("Stopping input adapters");
             foreach (var adapter in _inputAdapters)
             {
                 adapter.FrameAvailable -= HandleFrameAvailable;
                 adapter.Stop();
             }
+            Logger.Info("Stopping output adapters");
             foreach (var outputAdapter in _outputAdapters)
             {
                 _outputManager.OutputNotification -= outputAdapter.OnDataReceived;

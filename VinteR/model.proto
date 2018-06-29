@@ -53,3 +53,24 @@ message MocapFrame {
     }
     repeated Body bodies = 6;
 }
+
+message SessionMetadata {
+    
+    string Name = 1;
+    int64 Duration = 2;
+    int64 SessionStartMillis = 3;
+}
+
+message Session {
+    SessionMetadata meta = 1;
+    repeated MocapFrame frames = 2;
+}
+
+message SessionsMetadata
+{
+    message InputSourceMetadata {
+        string SourceId = 1;
+        repeated SessionMetadata sessionMeta = 2;
+    }
+    repeated InputSourceMetadata inputSourceMeta = 1;
+}

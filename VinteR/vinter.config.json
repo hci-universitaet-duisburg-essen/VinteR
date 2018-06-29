@@ -1,8 +1,9 @@
 ﻿{
     "home.dir": "C:\\VinteRData",
     "rest": {
+        "enabled": true,
         "host": "localhost",
-        "port": 80
+        "port": 8010
     },
     "udp.server.port": 5060,
     "udp.receivers": [
