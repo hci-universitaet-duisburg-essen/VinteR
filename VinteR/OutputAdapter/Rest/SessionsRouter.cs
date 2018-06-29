@@ -42,7 +42,6 @@ namespace VinteR.OutputAdapter.Rest
             var sessionsMetadata = new SessionsMetadata();
             foreach (var queryService in _queryServices)
             {
-                Logger.Debug(queryService.GetStorageName);
                 var inputSourceMetadata =
                     new SessionsMetadata.Types.InputSourceMetadata {SourceId = queryService.GetStorageName()};
 
