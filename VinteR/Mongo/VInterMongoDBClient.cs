@@ -54,9 +54,13 @@ namespace VinteR.Mongo
                     Logger.Error("Connection to the MongoDB Client failed because of: {0}", e.ToString());
                     throw new ApplicationException("MongoDB client can't establish a connection");
                 }
+            } else if(this.client != null)
+            {
+                // If connect() was already called, beforehand
+                // -> do nothing
             } else
             {
-                throw new ApplicationException("MongoDB is disabled");
+                throw new ApplicationException("MongoDB is disabled or the client has problems");
             }
             
         }
