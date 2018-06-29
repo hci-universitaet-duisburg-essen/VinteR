@@ -2,7 +2,7 @@
 using Grapevine.Interfaces.Server;
 using Grapevine.Shared;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     /// <summary>
     /// An <code>IHttpResponseWriter</code> is able to send data

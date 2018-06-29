@@ -8,9 +8,9 @@ using VinteR.Configuration;
 using VinteR.Model;
 using VinteR.Serialization;
 
-namespace VinteR.OutputAdapter
+namespace VinteR.Net
 {
-    public class UdpSender : IOutputAdapter
+    public class UdpSender : IStreamingServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -31,7 +31,7 @@ namespace VinteR.OutputAdapter
             _serializer = serializer;
         }
 
-        public void OnDataReceived(MocapFrame mocapFrame)
+        public void Send(MocapFrame mocapFrame)
         {
             _serializer.ToProtoBuf(mocapFrame, out var frame);
             var data = frame.ToByteArray();
@@ -52,7 +52,7 @@ namespace VinteR.OutputAdapter
             }
         }
 
-        public void Start(Session session)
+        public void Start()
         {
             _udpServer = new UdpClient(Port);
             Logger.Info("Udp server running on port {0}", Port);

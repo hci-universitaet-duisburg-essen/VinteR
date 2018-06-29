@@ -6,9 +6,11 @@ using Grapevine.Shared;
 using NLog;
 using VinteR.Input;
 using VinteR.Model;
+using VinteR.Net;
 using VinteR.Serialization;
+using VinteR.SessionPlayer;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     public class SessionRouter : IRestRouter
     {
@@ -16,12 +18,17 @@ namespace VinteR.OutputAdapter.Rest
         private readonly IQueryService[] _queryServices;
         private readonly IHttpResponseWriter _responseWriter;
         private readonly ISerializer _serializer;
+        private readonly ISessionPlayer _sessionPlayer;
+        private readonly IStreamingServer _streamingServer;
 
-        public SessionRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter, ISerializer serializer)
+        public SessionRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter, ISerializer serializer,
+            ISessionPlayer sessionPlayer, IStreamingServer streamingServer)
         {
             _queryServices = queryServices;
             _responseWriter = responseWriter;
             _serializer = serializer;
+            _sessionPlayer = sessionPlayer;
+            _streamingServer = streamingServer;
         }
 
         public void Register(IRouter router)
@@ -42,6 +49,9 @@ namespace VinteR.OutputAdapter.Rest
             try
             {
                 var session = GetSession(context);
+                _sessionPlayer.FrameAvailable += _streamingServer.Send;
+                _sessionPlayer.Session = session;
+                _sessionPlayer.Play();
                 return null;
             }
             catch (InvalidArgumentException e)
@@ -83,12 +93,14 @@ namespace VinteR.OutputAdapter.Rest
             // validate start time
             var startTime = context.Request.QueryString["start"] ?? "0";
             if (!int.TryParse(startTime, out var start))
-                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter 'start' contains no number >= 0");
+                throw new InvalidArgumentException(HttpStatusCode.BadRequest,
+                    "Parameter 'start' contains no number >= 0");
 
             // validate end time
             var endTime = context.Request.QueryString["end"] ?? "-1";
             if (!int.TryParse(endTime, out var end))
-                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter 'end' contains no number >= -1");
+                throw new InvalidArgumentException(HttpStatusCode.BadRequest,
+                    "Parameter 'end' contains no number >= -1");
 
             var queryService = _queryServices.Where(qs => qs.GetStorageName() == source)
                 .Select(qs => qs)

@@ -5,8 +5,6 @@ namespace VinteR.Adapter.OptiTrack
 {
     public class OptiTrackAdapter : IInputAdapter
     {
-        public const string AdapterTypeName = "optitrack";
-
         private readonly IOptiTrackClient _otClient;
         private OptiTrackEventHandler _listener;
 
@@ -19,12 +17,14 @@ namespace VinteR.Adapter.OptiTrack
 
         private Configuration.Adapter _config;
 
+        public string AdapterType => HardwareSystems.OptiTrack;
+
         public Configuration.Adapter Config
         {
             get => _config;
             set
             {
-                if (value.AdapterType.Equals(AdapterTypeName))
+                if (value.AdapterType.Equals(AdapterType))
                     _config = value;
                 else
                     OnError(new ApplicationException("Accepting only opti track configuration"));

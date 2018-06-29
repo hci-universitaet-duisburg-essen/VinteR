@@ -49,6 +49,11 @@ namespace VinteR.Adapter
         string Name { get; set; }
 
         /// <summary>
+        /// Type of the adapter, primary used to get components related to this instance.
+        /// </summary>
+        string AdapterType { get; }
+
+        /// <summary>
         /// Configuration of the adapter. This is one json object given in the array
         /// of "adapters" inside the vinter.config.json.
         /// </summary>

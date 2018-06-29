@@ -1,7 +1,7 @@
 ﻿using System;
 using Grapevine.Shared;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     public class InvalidArgumentException : Exception
     {

@@ -4,7 +4,7 @@ using Grapevine.Interfaces.Server;
 using Grapevine.Shared;
 using Newtonsoft.Json;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     public class HttpResponseWriter : IHttpResponseWriter
     {

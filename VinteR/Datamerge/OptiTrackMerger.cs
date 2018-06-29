@@ -10,6 +10,8 @@ namespace VinteR.Datamerge
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public string MergerType => HardwareSystems.OptiTrack;
+
         public MocapFrame HandleFrame(MocapFrame frame)
         {
             foreach (var body in frame.Bodies)

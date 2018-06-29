@@ -1,11 +1,10 @@
 ﻿using System;
 using Grapevine.Server;
 using VinteR.Configuration;
-using VinteR.Model;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
-    public class VinterRestServer : IOutputAdapter
+    public class VinterRestServer : IServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly Configuration.Rest _config;
@@ -19,11 +18,7 @@ namespace VinteR.OutputAdapter.Rest
             _routers = routers;
         }
 
-        public void OnDataReceived(MocapFrame mocapFrame)
-        {
-        }
-
-        public void Start(Session session)
+        public void Start()
         {
             // do not start if not enabled
             if (!_config.Enabled) return;

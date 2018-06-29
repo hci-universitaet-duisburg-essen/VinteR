@@ -104,9 +104,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
+    <Compile Include="HardwareSystems.cs" />
     <Compile Include="Input\IQueryService.cs" />
     <Compile Include="Input\JsonStorage.cs" />
     <Compile Include="Input\MongoDbClient.cs" />
+    <Compile Include="MainApplication\IPlaybackService.cs" />
+    <Compile Include="MainApplication\IRecordService.cs" />
+    <Compile Include="MainApplication\PlaybackService.cs" />
+    <Compile Include="MainApplication\RecordService.cs" />
+    <Compile Include="Net\IStreamingServer.cs" />
     <Compile Include="MainApplication\ISessionNameGenerator.cs" />
     <Compile Include="MainApplication\SessionNameGenerator.cs" />
     <Compile Include="Model\Gen\Model.cs" />
@@ -115,14 +121,15 @@
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
     <Compile Include="OutputAdapter\JsonFileOutputAdapter.cs" />
     <Compile Include="OutputAdapter\MongoOutputAdapter.cs" />
-    <Compile Include="OutputAdapter\Rest\IHttpResponseWriter.cs" />
-    <Compile Include="OutputAdapter\Rest\InvalidArgumentException.cs" />
-    <Compile Include="OutputAdapter\Rest\IRestRouter.cs" />
-    <Compile Include="OutputAdapter\Rest\HttpResponseWriter.cs" />
-    <Compile Include="OutputAdapter\Rest\SessionRouter.cs" />
-    <Compile Include="OutputAdapter\Rest\SessionsRouter.cs" />
-    <Compile Include="OutputAdapter\Rest\VinterRestServer.cs" />
-    <Compile Include="OutputAdapter\UdpSender.cs" />
+    <Compile Include="Rest\IHttpResponseWriter.cs" />
+    <Compile Include="Rest\InvalidArgumentException.cs" />
+    <Compile Include="Rest\IRestRouter.cs" />
+    <Compile Include="Rest\HttpResponseWriter.cs" />
+    <Compile Include="Net\IServer.cs" />
+    <Compile Include="Rest\SessionRouter.cs" />
+    <Compile Include="Rest\SessionsRouter.cs" />
+    <Compile Include="Rest\VinterRestServer.cs" />
+    <Compile Include="Net\UdpSender.cs" />
     <Compile Include="OutputManager\IOutputManager.cs" />
     <Compile Include="OutputManager\OutputManager.cs" />
     <Compile Include="QuaternionExtensions.cs" />
