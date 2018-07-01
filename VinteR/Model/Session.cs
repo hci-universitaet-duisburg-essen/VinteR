@@ -17,7 +17,7 @@ namespace VinteR.Model
         /// <summary>
         /// Datetime when the session was created
         /// </summary>
-        public DateTime Datetime { get; }
+        public DateTime Datetime { get; set; }
 
         /// <summary>
         /// Time in millis how long the session lasts

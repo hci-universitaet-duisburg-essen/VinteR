@@ -46,7 +46,7 @@ namespace VinteR
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
 
             Bind<IQueryService>().To<MongoDbClient>();
-            Bind<IQueryService>().To<JsonStorage>();
+            Bind<IQueryService>().To<JsonStorage>().Named("JsonStorage");
         }
     }
 }
