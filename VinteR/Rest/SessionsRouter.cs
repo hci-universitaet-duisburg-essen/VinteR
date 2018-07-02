@@ -7,9 +7,8 @@ using NLog;
 using VinteR.Input;
 using VinteR.Model.Gen;
 using VinteR.Serialization;
-using Session = VinteR.Model.Session;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     public class SessionsRouter : IRestRouter
     {

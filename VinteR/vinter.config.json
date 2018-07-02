@@ -1,4 +1,5 @@
 ﻿{
+    "start.mode": "record",
     "home.dir": "C:\\VinteRData",
     "rest": {
         "enabled": true,
@@ -41,7 +42,7 @@
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },

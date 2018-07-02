@@ -8,6 +8,7 @@ namespace VinteR.Configuration
     [JsonObject]
     public class Configuration
     {
+        [JsonProperty("start.mode")] public string StartMode { get; set; }
         [JsonProperty("home.dir")] public string HomeDir { get; set; }
 
         [JsonProperty("rest")] public Rest Rest { get; set; }

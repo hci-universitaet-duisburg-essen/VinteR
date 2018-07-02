@@ -38,7 +38,7 @@ namespace VinteR.Tracking
             if (!_client.IsConnected())
             {
                 var config = _configService.GetConfiguration().Adapters
-                    .Where(a => a.AdapterType.Equals(OptiTrackAdapter.AdapterTypeName))
+                    .Where(a => a.AdapterType.Equals(HardwareSystems.OptiTrack))
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
                 if (config == null)

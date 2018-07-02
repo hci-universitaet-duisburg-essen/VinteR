@@ -1,6 +1,6 @@
 ﻿using Grapevine.Server;
 
-namespace VinteR.OutputAdapter.Rest
+namespace VinteR.Rest
 {
     /// <summary>
     /// A rest router is able to handle http rest requests. All registered routes

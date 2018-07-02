@@ -7,9 +7,10 @@ using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Input;
 using VinteR.MainApplication;
+using VinteR.Net;
 using VinteR.OutputAdapter;
-using VinteR.OutputAdapter.Rest;
 using VinteR.OutputManager;
+using VinteR.Rest;
 using VinteR.Serialization;
 using VinteR.SessionPlayer;
 using VinteR.Tracking;
@@ -23,27 +24,30 @@ namespace VinteR
         public override void Load()
         {
             Bind<IMainApplication>().To<MainApplication.MainApplication>().InSingletonScope();
+            Bind<IRecordService>().To<RecordService>().InSingletonScope();
+            Bind<IPlaybackService>().To<PlaybackService>().InSingletonScope();
             Bind<IConfigurationService>().To<VinterConfigurationService>().InSingletonScope();
 
-            Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(LeapMotionAdapter.AdapterTypeName);
-            Bind<IInputAdapter>().To<KinectAdapter>().Named(KinectAdapter.AdapterTypeName);
-            Bind<IInputAdapter>().To<OptiTrackAdapter>().Named(OptiTrackAdapter.AdapterTypeName);
+            Bind<IInputAdapter>().To<LeapMotionAdapter>().Named(HardwareSystems.LeapMotion);
+            Bind<IInputAdapter>().To<KinectAdapter>().Named(HardwareSystems.Kinect);
+            Bind<IInputAdapter>().To<OptiTrackAdapter>().Named(HardwareSystems.OptiTrack);
 
             Bind<ITransformator>().To<Transformator>();
             Bind<IAdapterTracker>().To<OptiTrackAdapterTracker>().InSingletonScope();
             Bind<IOptiTrackClient>().To<OptiTrackClient>().InSingletonScope();
 
-            Bind<IDataMerger>().To<LeapMotionMerger>().Named(LeapMotionAdapter.AdapterTypeName);
-            Bind<IDataMerger>().To<KinectMerger>().Named(KinectAdapter.AdapterTypeName);
-            Bind<IDataMerger>().To<OptiTrackMerger>().Named(OptiTrackAdapter.AdapterTypeName);
+            Bind<IDataMerger>().To<LeapMotionMerger>().Named(HardwareSystems.LeapMotion);
+            Bind<IDataMerger>().To<KinectMerger>().Named(HardwareSystems.Kinect);
+            Bind<IDataMerger>().To<OptiTrackMerger>().Named(HardwareSystems.OptiTrack);
 
             Bind<IOutputManager>().To<OutputManager.OutputManager>().InThreadScope();
             Bind<IOutputAdapter>().To<ConsoleOutputAdapter>().InThreadScope();
             Bind<IOutputAdapter>().To<JsonFileOutputAdapter>().InSingletonScope();
             Bind<IOutputAdapter>().To<MongoOutputAdapter>().InSingletonScope();
-            // bind network servers in singleton as they use specific ports
-            Bind<IOutputAdapter>().To<UdpSender>().InSingletonScope();
-            Bind<IOutputAdapter>().To<VinterRestServer>().InSingletonScope();
+
+            // bind network servers as singleton as multiple port bindings lead to application errors
+            Bind<IStreamingServer>().To<UdpSender>().InSingletonScope();
+            Bind<IServer>().To<VinterRestServer>().InSingletonScope();
 
             Bind<ISerializer>().To<Serializer>();
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
@@ -55,7 +59,7 @@ namespace VinteR
             Bind<IRestRouter>().To<SessionsRouter>();
             Bind<IRestRouter>().To<SessionRouter>();
 
-            Bind<ISessionPlayer>().To<SessionPlayer.SessionPlayer>();
+            Bind<ISessionPlayer>().To<SessionPlayer.SessionPlayer>().InSingletonScope();
         }
     }
 }

@@ -18,6 +18,9 @@ namespace VinteR.Datamerge
 
         private static readonly Quaternion LeapMotionOptiTrackAdjustment =
             Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180f.ToRadians());
+
+        public string MergerType => HardwareSystems.LeapMotion;
+
         private readonly IAdapterTracker _adapterTracker;
         private readonly ITransformator _transformator;
 
