@@ -14,6 +14,12 @@ using VinteR.Configuration;
 
 namespace VinteR.Input
 {
+    /*
+     * Deserialization from Json to Object on VinteR.Model
+     * 4 Type Converter implemented to Session, Mocapframe, Body, Point;
+     * Trivial work, may cause some data to be incorrect
+     * Continuous testing required
+     */
     public class JsonStorage : IQueryService
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();

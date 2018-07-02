@@ -31,7 +31,7 @@ namespace VinteR.OutputAdapter
         public void OnDataReceived(MocapFrame mocapFrame)
         {
             // logging the mocapFrame into JsonFile. 
-            _logger.Info("mocapFrame {MocapFrame}", mocapFrame);
+            _logger.Trace("mocapFrame {MocapFrame}", mocapFrame);
         }
 
         public void Start(Session session)
@@ -73,7 +73,7 @@ namespace VinteR.OutputAdapter
             };
             LogManager.ReconfigExistingLoggers();
 
-            _logger?.Info(DateTime.Now.ToString);
+            _logger?.Trace(DateTime.Now.ToString);
 
             _currentSession = null;
         }
@@ -90,7 +90,6 @@ namespace VinteR.OutputAdapter
             /*
              * Set and hold the file Path by every runing 
              */
-           // var filePath = Path.Combine(_homeDir, "LoggingData", dataTime + ".json");
 
             var filePath = Path.Combine(_homeDir, "LoggingData", session.Name + ".json");
             var logfile = new NLog.Targets.FileTarget("JsonLogger");
@@ -124,7 +123,7 @@ namespace VinteR.OutputAdapter
             NLog.LogManager.Configuration.AddTarget(logfile);
 
             // create new rule
-            var rule = new LoggingRule("JsonLogger", LogLevel.Info, logfile);
+            var rule = new LoggingRule("JsonLogger", LogLevel.Trace, logfile);
             NLog.LogManager.Configuration.LoggingRules.Add(rule);
 
             /*
