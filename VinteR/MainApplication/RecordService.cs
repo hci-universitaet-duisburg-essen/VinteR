@@ -24,9 +24,9 @@ namespace VinteR.MainApplication
         /// </summary>
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
-        private readonly IEnumerable<IInputAdapter> _inputAdapters;
-        private readonly IEnumerable<IOutputAdapter> _outputAdapters;
-        private readonly IEnumerable<IDataMerger> _dataMergers;
+        private readonly IInputAdapter[] _inputAdapters;
+        private readonly IOutputAdapter[] _outputAdapters;
+        private readonly IDataMerger[] _dataMergers;
         private readonly IOutputManager _outputManager;
         private readonly IConfigurationService _configurationService;
         private readonly ISessionNameGenerator _sessionNameGenerator;
@@ -37,9 +37,9 @@ namespace VinteR.MainApplication
         private Session _session;
 
         public RecordService(IConfigurationService configurationService,
-            IEnumerable<IInputAdapter> inputAdapters,
-            IEnumerable<IOutputAdapter> outputAdapters, 
-            IEnumerable<IDataMerger> dataMergers,
+            IInputAdapter[] inputAdapters,
+            IOutputAdapter[] outputAdapters, 
+            IDataMerger[] dataMergers,
             IStreamingServer streamingServer,
             IOutputManager outputManager,
             ISessionNameGenerator sessionNameGenerator)
