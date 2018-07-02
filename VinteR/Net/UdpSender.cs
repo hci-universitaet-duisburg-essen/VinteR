@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -18,7 +19,7 @@ namespace VinteR.Net
 
         public int Port { get; }
 
-        private IList<IPEndPoint> _endPoints;
+        private ConcurrentQueue<IPEndPoint> _endPoints;
 
         private UdpClient _udpServer;
 
@@ -52,18 +53,28 @@ namespace VinteR.Net
             }
         }
 
+        public void AddReceiver(IPEndPoint receiverEndPoint)
+        {
+            _endPoints.Enqueue(receiverEndPoint);
+        }
+
+        public int GetStreamingPort()
+        {
+            return Port;
+        }
+
         public void Start()
         {
             _udpServer = new UdpClient(Port);
             Logger.Info("Udp server running on port {0}", Port);
-            _endPoints = new List<IPEndPoint>();
+            _endPoints = new ConcurrentQueue<IPEndPoint>();
             foreach (var udpReceiver in UdpReceivers)
             {
                 var ip = udpReceiver.Ip;
                 var port = udpReceiver.Port;
                 try
                 {
-                    _endPoints.Add(new IPEndPoint(IPAddress.Parse(ip), port));
+                    _endPoints.Enqueue(new IPEndPoint(IPAddress.Parse(ip), port));
                 }
                 catch (Exception e)
                 {

@@ -12,6 +12,14 @@ namespace VinteR.Rest
     public interface IHttpResponseWriter
     {
         /// <summary>
+        /// Serializes given object into a json object that is returned to the client.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="context"></param>
+        /// <returns>The context from the request</returns>
+        IHttpContext SendJsonResponse(object obj, IHttpContext context);
+
+        /// <summary>
         /// Sends given protobuf message using http content type application/vnd.google.protobuf
         /// </summary>
         /// <param name="message"></param>

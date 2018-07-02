@@ -22,11 +22,13 @@ namespace VinteR.Rest
             SendJsonResponse(response, context);
             return context;
         }
-        private static void SendJsonResponse(object obj, IHttpContext context)
+
+        public IHttpContext SendJsonResponse(object obj, IHttpContext context)
         {
             var bytes = Serialize(obj);
             context.Response.ContentEncoding = Encoding.UTF8;
             SendResponse(bytes, context);
+            return context;
         }
 
         private static byte[] Serialize(object obj)

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Grapevine.Interfaces.Server;
 using Grapevine.Server;
 using Grapevine.Shared;
 using NLog;
 using VinteR.Input;
+using VinteR.MainApplication;
 using VinteR.Model;
 using VinteR.Net;
 using VinteR.Serialization;
 using VinteR.SessionPlayer;
+using HttpStatusCode = Grapevine.Shared.HttpStatusCode;
 
 namespace VinteR.Rest
 {
@@ -18,16 +21,16 @@ namespace VinteR.Rest
         private readonly IQueryService[] _queryServices;
         private readonly IHttpResponseWriter _responseWriter;
         private readonly ISerializer _serializer;
-        private readonly ISessionPlayer _sessionPlayer;
         private readonly IStreamingServer _streamingServer;
+        private readonly IMainApplication _application;
 
         public SessionRouter(IQueryService[] queryServices, IHttpResponseWriter responseWriter, ISerializer serializer,
-            ISessionPlayer sessionPlayer, IStreamingServer streamingServer)
+            IMainApplication application, IStreamingServer streamingServer)
         {
             _queryServices = queryServices;
             _responseWriter = responseWriter;
             _serializer = serializer;
-            _sessionPlayer = sessionPlayer;
+            _application = application;
             _streamingServer = streamingServer;
         }
 
@@ -49,10 +52,20 @@ namespace VinteR.Rest
             try
             {
                 var session = GetSession(context);
-                _sessionPlayer.FrameAvailable += _streamingServer.Send;
-                _sessionPlayer.Session = session;
-                _sessionPlayer.Play();
-                return null;
+                _application.StartPlayback(session);
+
+                var hostParam = context.Request.QueryString["host"] ?? string.Empty;
+                var portParam = context.Request.QueryString["port"] ?? string.Empty;
+                if (hostParam != string.Empty && portParam != string.Empty)
+                {
+                    var ipAddress = IPAddress.Parse(hostParam);
+                    int.TryParse(portParam, out var port);
+                    _streamingServer.AddReceiver(new IPEndPoint(ipAddress, port));
+                }
+
+                var response = "{\"udp.streaming.port\": \"" + _streamingServer.Port + "\"}";
+                _responseWriter.SendJsonResponse(response, context);
+                return context;
             }
             catch (InvalidArgumentException e)
             {

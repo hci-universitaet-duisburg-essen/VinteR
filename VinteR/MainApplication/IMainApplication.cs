@@ -8,7 +8,7 @@ namespace VinteR.MainApplication
 
         void StartRecord();
 
-        void StartPlayback();
+        void StartPlayback(Session session);
 
         void Stop();
     }

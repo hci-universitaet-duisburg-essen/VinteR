@@ -37,7 +37,7 @@ namespace VinteR.MainApplication
                     StartRecord();
                     break;
                 case "playback":
-                    StartPlayback();
+                    // do nothing as a session is needed for playback
                     break;
             }
         }
@@ -62,19 +62,19 @@ namespace VinteR.MainApplication
             _currentMode = ApplicationMode.Record;
         }
 
-        public void StartPlayback()
+        public void StartPlayback(Session session)
         {
             switch (_currentMode)
             {
                 case ApplicationMode.Record:
                     Stop();
-                    _playbackService.Start();
+                    _playbackService.Start(session);
                     break;
                 case ApplicationMode.Playback:
                     Logger.Warn("Playback already running");
                     break;
                 case ApplicationMode.Waiting:
-                    _playbackService.Start();
+                    _playbackService.Start(session);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
