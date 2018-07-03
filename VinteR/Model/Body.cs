@@ -40,7 +40,8 @@ namespace VinteR.Model
         [BsonElement]
         public ESideType Side { get; set; } = ESideType.NoSide;
 
-        [BsonIgnore]
+         
+        [BsonIgnore] // attribute not necessary needed
         private IList<Point> _points;
 
         /// <summary>
