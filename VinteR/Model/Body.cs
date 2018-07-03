@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using VinteR.Mongo;
 
 namespace VinteR.Model
 {
@@ -12,9 +13,12 @@ namespace VinteR.Model
     /// body may have a more specific type. In addition a body has
     /// a rotation based on the global coordinate system.
     /// </summary>
+    
+    [BsonIgnoreExtraElements]
     public class Body
-    {   
+    {
         // This just defines a BodyType Enum we need a separate of type BodyType to hold the information
+
         public enum EBodyType
         {
             Marker,
@@ -27,20 +31,23 @@ namespace VinteR.Model
         [BsonId]
         public BsonObjectId _id;
 
+        [BsonElement]
         public EBodyType BodyType { get; set; }
 
         /// <summary>
         /// Contains the side of a body if one exists, for example "left" hand
         /// </summary>
+        [BsonElement]
         public ESideType Side { get; set; } = ESideType.NoSide;
 
+        [BsonIgnore]
         private IList<Point> _points;
 
         /// <summary>
         /// Collection of points that may be connected or are
         /// loose coupled and define the structure of this body.
         /// </summary>
-        
+        [BsonElement]
         public IList<Point> Points
         {
             get => _points;
@@ -55,19 +62,23 @@ namespace VinteR.Model
         /// Contains the center of this body inside the global
         /// coordinate system.
         /// </summary>
+        [BsonElement]
+        [BsonSerializer(typeof(VectorSerializer))]
         public Vector3 Centroid { get; set; }
 
         /// <summary>
         /// Contains the rotation of this body inside the global
         /// coordinate system.
         /// </summary>
-        
+        [BsonElement]
+        [BsonSerializer(typeof(QuaternionSerializer))]
         public Quaternion Rotation { get; set; }
 
         /// <summary>
         /// Contains the name of a body. This may be used for later
         /// identification of bodies
         /// </summary>
+        [BsonElement]
         public string Name { get; set; }
 
         // The Body Type of the Body object

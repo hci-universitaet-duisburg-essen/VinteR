@@ -112,6 +112,9 @@
     <Compile Include="Model\Gen\Model.cs" />
     <Compile Include="Model\Session.cs" />
     <Compile Include="Mongo\IVinterMongoDBClient.cs" />
+    <Compile Include="Mongo\PointSerializer.cs" />
+    <Compile Include="Mongo\QuaternionSerializer.cs" />
+    <Compile Include="Mongo\VectorSerializer.cs" />
     <Compile Include="Mongo\VinterMongoDBClient.cs" />
     <Compile Include="OutputAdapter\ConsoleOutputAdapter.cs" />
     <Compile Include="OutputAdapter\IOutputAdapter.cs" />
