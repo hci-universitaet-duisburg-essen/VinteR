@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Grapevine.Interfaces.Server;
 using Grapevine.Server;
@@ -7,12 +8,24 @@ using NLog;
 using VinteR.Input;
 using VinteR.Model.Gen;
 using VinteR.Serialization;
+using Session = VinteR.Model.Session;
 
 namespace VinteR.Rest
 {
+
     public class SessionsRouter : IRestRouter
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public event RecordCalledEventHandler OnRecordSessionCalled;
+        public event RecordCalledEventHandler OnStopRecordCalled;
+
+        // ignored as they are threaded in the SessionRouter
+        public event EventHandler<Session> OnPlayCalled;
+        public event EventHandler OnPausePlaybackCalled;
+        public event EventHandler OnStopPlaybackCalled;
+        public event EventHandler<uint> OnJumpPlaybackCalled;
+
         private readonly IQueryService[] _queryServices;
         private readonly IHttpResponseWriter _responseWriter;
         private readonly ISerializer _serializer;
@@ -27,6 +40,8 @@ namespace VinteR.Rest
         public void Register(IRouter router)
         {
             Register(HandleGetSessions, HttpMethod.GET, "/sessions", router);
+            Register(HandleRecordSessions, HttpMethod.POST, "/sessions/record", router);
+            Register(HandleStopRecord, HttpMethod.GET, "/sessions/record/stop", router);
         }
 
         private void Register(Func<IHttpContext, IHttpContext> func, HttpMethod method, string pathInfo, IRouter router)
@@ -55,6 +70,32 @@ namespace VinteR.Rest
             }
 
             _responseWriter.SendProtobufMessage(sessionsMetadata, context);
+            return context;
+        }
+
+        private IHttpContext HandleRecordSessions(IHttpContext context)
+        {
+            var session = OnRecordSessionCalled?.Invoke();
+            _serializer.ToProtoBuf(session, out SessionMetadata meta);
+            _responseWriter.SendProtobufMessage(meta, context);
+            return context;
+        }
+
+        private IHttpContext HandleStopRecord(IHttpContext context)
+        {
+            var session = OnStopRecordCalled?.Invoke();
+            if (session == null)
+            {
+                context.Response.StatusCode = HttpStatusCode.NotModified;
+                var msg = new Dictionary<string, string> {{"msg", "No record to stop"}};
+                _responseWriter.SendJsonResponse(msg, context);
+            }
+            else
+            {
+                context.Response.StatusCode = HttpStatusCode.Accepted;
+                _serializer.ToProtoBuf(session, out SessionMetadata meta);
+                _responseWriter.SendProtobufMessage(meta, context);
+            }
             return context;
         }
     }

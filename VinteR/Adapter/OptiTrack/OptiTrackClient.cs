@@ -164,7 +164,6 @@ namespace VinteR.Adapter.OptiTrack
             else
             {
                 Logger.Error("Error: Failed to connect. Check the connection settings.");
-                Logger.Error("Program terminated (Enter ESC to exit)");
                 return false;
             }
         }

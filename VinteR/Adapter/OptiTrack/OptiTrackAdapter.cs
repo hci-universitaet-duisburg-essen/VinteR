@@ -13,7 +13,7 @@ namespace VinteR.Adapter.OptiTrack
 
         public bool Enabled => Config.Enabled;
 
-        public string Name { get; set; }
+        public string Name => Config?.Name;
 
         private Configuration.Adapter _config;
 

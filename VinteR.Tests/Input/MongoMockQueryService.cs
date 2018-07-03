@@ -25,7 +25,7 @@ namespace VinteR.Tests.Input
             };
         }
 
-        public Session GetSession(string name, int startTimestamp = 0, int endTimestamp = -1)
+        public Session GetSession(string name, uint startTimestamp = 0, int endTimestamp = -1)
         {
             return new Session("testsession")
             {

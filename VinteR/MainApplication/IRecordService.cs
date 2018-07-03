@@ -1,12 +1,13 @@
 ﻿using Ninject;
+using VinteR.Model;
 
 namespace VinteR.MainApplication
 {
     public interface IRecordService
     {
-        bool IsRecording { get; }
+        Session Session { get; }
 
-        void Start();
+        Session Start();
 
         void Stop();
     }

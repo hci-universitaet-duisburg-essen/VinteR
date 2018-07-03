@@ -17,7 +17,7 @@ namespace VinteR.Input
             return new List<Session>();
         }
 
-        public Session GetSession(string name, int startTimestamp = 0, int endTimestamp = -1)
+        public Session GetSession(string name, uint startTimestamp = 0, int endTimestamp = -1)
         {
             throw new System.NotImplementedException();
         }

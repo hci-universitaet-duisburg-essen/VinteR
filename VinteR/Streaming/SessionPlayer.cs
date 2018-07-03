@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VinteR.Model;
 
-namespace VinteR.SessionPlayer
+namespace VinteR.Streaming
 {
     public delegate void PlayMocapFrameEventHandler(MocapFrame frame);
 
@@ -161,6 +161,8 @@ namespace VinteR.SessionPlayer
 
         private void StopTimer()
         {
+            if (_timer == null) return;
+
             _timer.Elapsed -= OnTimerElapsed;
             _timer.Stop();
         }

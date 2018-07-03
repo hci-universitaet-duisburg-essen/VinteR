@@ -4,11 +4,11 @@ namespace VinteR.MainApplication
 {
     public class SessionNameGenerator : ISessionNameGenerator
     {
-        private Generator _generator;
+        private readonly Generator _generator;
 
         public SessionNameGenerator()
         {
-            _generator = new Generator();
+            _generator = new Generator {Separator = "-"};
         }
 
         public string Generate()

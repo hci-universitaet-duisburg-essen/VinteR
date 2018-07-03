@@ -7,12 +7,11 @@ using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Input;
 using VinteR.MainApplication;
-using VinteR.Net;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 using VinteR.Rest;
 using VinteR.Serialization;
-using VinteR.SessionPlayer;
+using VinteR.Streaming;
 using VinteR.Tracking;
 using VinteR.Transform;
 
@@ -47,7 +46,7 @@ namespace VinteR
 
             // bind network servers as singleton as multiple port bindings lead to application errors
             Bind<IStreamingServer>().To<UdpSender>().InSingletonScope();
-            Bind<IServer>().To<VinterRestServer>().InSingletonScope();
+            Bind<IRestServer>().To<VinterRestServer>().InSingletonScope();
 
             Bind<ISerializer>().To<Serializer>();
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
@@ -56,10 +55,10 @@ namespace VinteR
             Bind<IQueryService>().To<JsonStorage>();
 
             Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
-            Bind<IRestRouter>().To<SessionsRouter>();
-            Bind<IRestRouter>().To<SessionRouter>();
+            Bind<IRestRouter>().To<SessionsRouter>().InSingletonScope();
+            Bind<IRestRouter>().To<SessionRouter>().InSingletonScope();
 
-            Bind<ISessionPlayer>().To<SessionPlayer.SessionPlayer>().InSingletonScope();
+            Bind<ISessionPlayer>().To<SessionPlayer>().InSingletonScope();
         }
     }
 }
