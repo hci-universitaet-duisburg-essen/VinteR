@@ -28,14 +28,14 @@ namespace VinteR
 
             try
             {
-                // start the program
-                application.Start(kernel);
+                // start the application based upon config start.mode
+                application.Start();
 
                 // wait for exit event
                 exitEvent.WaitOne();
 
                 // stop the server
-                application.Stop();
+                application.Exit();
             }
             catch (ApplicationException e)
             {

@@ -28,9 +28,9 @@ namespace VinteR.Tests
         [Test]
         public void TestMergeKinectBody()
         {
-            var merger = _ninjectKernel.Get<IDataMerger>(KinectAdapter.AdapterTypeName);
+            var merger = _ninjectKernel.Get<IDataMerger>(HardwareSystems.Kinect);
             var kinectBody = new KinectBody(new List<Point> {new Point(0f, 1000f, 1500f)}, Body.EBodyType.Skeleton);
-            var frame = new MocapFrame("kinect", KinectAdapter.AdapterTypeName)
+            var frame = new MocapFrame("kinect", HardwareSystems.Kinect)
             {
                 Bodies = new List<Body>() {kinectBody}
             };
@@ -45,8 +45,8 @@ namespace VinteR.Tests
         [Test]
         public void TestMergeLeapMotionBody()
         {
-            var merger = _ninjectKernel.Get<IDataMerger>(LeapMotionAdapter.AdapterTypeName);
-            var frame = new MocapFrame("leapmotion", LeapMotionAdapter.AdapterTypeName)
+            var merger = _ninjectKernel.Get<IDataMerger>(HardwareSystems.LeapMotion);
+            var frame = new MocapFrame("leapmotion", HardwareSystems.LeapMotion)
             {
                 Bodies = new List<Body> {Mock.MockHand(new Vector3(-20, 300, 0), false)}
             };
@@ -61,13 +61,13 @@ namespace VinteR.Tests
         [Test]
         public void TestMergeOptiTrackBody()
         {
-            var merger = _ninjectKernel.Get<IDataMerger>(OptiTrackAdapter.AdapterTypeName);
+            var merger = _ninjectKernel.Get<IDataMerger>(HardwareSystems.OptiTrack);
             var optiTrackBody = new OptiTrackBody("testbody")
             {
                 Points = new List<Point>() {new Point(Vector3.One)},
                 BodyType = Body.EBodyType.Marker
             };
-            var frame = new MocapFrame("optitrack", OptiTrackAdapter.AdapterTypeName)
+            var frame = new MocapFrame("optitrack", HardwareSystems.OptiTrack)
             {
                 Bodies = new List<Body>() {optiTrackBody}
             };

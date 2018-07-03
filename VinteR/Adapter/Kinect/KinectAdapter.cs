@@ -11,8 +11,6 @@ namespace VinteR.Adapter.Kinect
 {
     public class KinectAdapter : IInputAdapter
     {
-        public const string AdapterTypeName = "kinect";
-
         // Logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -50,14 +48,16 @@ namespace VinteR.Adapter.Kinect
 
         public bool Enabled => _config.Enabled;
 
-        public string Name { get; set; }
+        public string Name => _config?.Name;
+
+        public string AdapterType => HardwareSystems.Kinect;
 
         private Configuration.Adapter _config;
 
         public Configuration.Adapter Config
         {
             get => _config;
-            set => _config = value.AdapterType.Equals(AdapterTypeName)
+            set => _config = value.AdapterType.Equals(AdapterType)
                 ? value
                 : throw new ApplicationException("Accepting only kinect configuration");
         }

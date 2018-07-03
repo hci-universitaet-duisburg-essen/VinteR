@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Google.Protobuf;
-using Grapevine.Client;
 using Ninject;
 using NUnit.Framework;
 using VinteR.Configuration;
-using VinteR.Model;
-using VinteR.OutputAdapter.Rest;
-using HttpMethod = Grapevine.Shared.HttpMethod;
+using VinteR.Rest;
 
 namespace VinteR.Tests
 {
@@ -30,7 +24,7 @@ namespace VinteR.Tests
             config.GetConfiguration().Rest.Port = 9001;
             var restRouters = ninjectKernel.GetAll<IRestRouter>().Select(r => r).ToArray();
             _restServer = new VinterRestServer(config, restRouters);
-            _restServer.Start(new Session("testsession"));
+            _restServer.Start();
             _httpClient = new HttpClient();
         }
 

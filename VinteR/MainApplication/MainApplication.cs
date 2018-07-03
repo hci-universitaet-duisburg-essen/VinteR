@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using Ninject;
-using VinteR.Adapter;
 using VinteR.Configuration;
-using VinteR.Datamerge;
 using VinteR.Model;
-using VinteR.OutputAdapter;
 using VinteR.OutputManager;
+using VinteR.Rest;
+using VinteR.Streaming;
 
 namespace VinteR.MainApplication
 {
@@ -16,150 +11,220 @@ namespace VinteR.MainApplication
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly object StopwatchLock = new object();
-        public bool IsAvailable { get; set; }
-
-        /// <summary>
-        /// contains the stopwatch for the program that will be used to add elapsed millis inside mocap frames
-        /// </summary>
-        private readonly Stopwatch _applicationWatch = new Stopwatch();
-
-        private IList<IInputAdapter> _inputAdapters;
-        private IKernel _kernel;
-
-        private IEnumerable<IOutputAdapter> _outputAdapters;
-
-        private IOutputManager _outputManager;
-
-        private Session _session;
-
-        /*
-         * kernel must be an attribute to this class. I tired to reach it by using
-         * Bind<IMainApplication>().To<MainApplication>().WithPropertyValue("kernel", kernel);
-         * But consider our load function, it doesn't work here. So I pass the variable
-         * to start function, after the kernel created.
-         */
-
-        public void Start(IKernel kernel)
+        private enum ApplicationMode
         {
-            IsAvailable = true;
-            _kernel = kernel;
-            _inputAdapters = new List<IInputAdapter>();
-            var configService = kernel.Get<IConfigurationService>();
-
-            // Get current output adapter.
-            _outputAdapters = kernel.GetAll<IOutputAdapter>();
-
-            //Get output manager
-            _outputManager = kernel.Get<IOutputManager>();
-
-            // session name generator
-            var sessionNameGenerator = kernel.Get<ISessionNameGenerator>();
-            _session = new Session(sessionNameGenerator.Generate());
-
-            //assign event handler
-            foreach (var outputAdapter in _outputAdapters)
-            {
-                _outputManager.OutputNotification += outputAdapter.OnDataReceived;
-                var t = new Thread(() => outputAdapter.Start(_session));
-                t.Start();
-                Logger.Info("Output adapter {0,30} started", outputAdapter.GetType().Name);
-            }
-            
-            // for each json object inside inside the adapters array inside the config
-            foreach (var adapterItem in configService.GetConfiguration().Adapters)
-            {
-                if (!adapterItem.Enabled) continue;
-
-                /* create an input adapter based on the adapter type given
-                 * Example: "adaptertype": "kinect" -> KinectAdapter
-                 * See VinterDependencyModule for named bindings
-                 */
-                var inputAdapter = kernel.Get<IInputAdapter>(adapterItem.AdapterType);
-
-                // set the specific config into the adapter
-                inputAdapter.Config = adapterItem;
-
-                // add the adapter to the list that will be run
-                _inputAdapters.Add(inputAdapter);
-            }
-
-            lock (StopwatchLock)
-            {
-                _applicationWatch.Start();
-            }
-
-            foreach (var adapter in _inputAdapters)
-            {
-                // Add delegate to frame available event
-                adapter.FrameAvailable += HandleFrameAvailable;
-
-                /* add delegate to error events. the application shuts down
-                 * when a error occures from one of the adapters
-                 */
-                adapter.ErrorEvent += HandleErrorEvent;
-
-                // start each adapter
-                var thread = new Thread(adapter.Run);
-                thread.Start();
-                Logger.Info("Input adapter {0,30} started", adapter.GetType().Name);
-            }
-
-            Logger.Info("VinteR server started");
-
+            Live,
+            Play,
+            Waiting
         }
 
-        public void Stop()
-        {
-            Logger.Info("Stopping input adapters");
-            foreach (var adapter in _inputAdapters)
-            {
-                adapter.FrameAvailable -= HandleFrameAvailable;
-                adapter.Stop();
-            }
-            Logger.Info("Stopping output adapters");
-            foreach (var outputAdapter in _outputAdapters)
-            {
-                _outputManager.OutputNotification -= outputAdapter.OnDataReceived;
-                outputAdapter.Stop();
-            }
+        private readonly string _startMode;
+        private readonly IRecordService _recordService;
+        private readonly IPlaybackService _playbackService;
+        private readonly IRestRouter[] _restRouters;
+        private readonly IRestServer _restServer;
+        private readonly IStreamingServer _streamingServer;
+        private readonly IOutputManager _outputManager;
+        private ApplicationMode _currentMode;
 
-            IsAvailable = false;
-            Logger.Info("Exited gracefully");
+        public MainApplication(IConfigurationService configurationService, 
+            IRecordService recordService,
+            IPlaybackService playbackService, 
+            IRestServer restServer,
+            IRestRouter[] routers,
+            IStreamingServer streamingServer,
+            IOutputManager outputManager)
+        {
+            _startMode = configurationService.GetConfiguration().StartMode;
+            _recordService = recordService;
+            _playbackService = playbackService;
+            _streamingServer = streamingServer;
+            _restServer = restServer;
+            _restRouters = routers;
+            _outputManager = outputManager;
+            _currentMode = ApplicationMode.Waiting;
         }
 
-        private void HandleFrameAvailable(IInputAdapter source, MocapFrame frame)
+        public void Start()
         {
-            /* frame available occurs inside adapter thread
-             * so synchronize access to the stopwatch
-             */
-            lock (StopwatchLock)
+            _restServer.Start();
+
+            // start streaming server
+            _streamingServer.Start();
+            _outputManager.OutputNotification += _streamingServer.Send;
+
+            foreach (var restRouter in _restRouters)
             {
-                frame.ElapsedMillis = _applicationWatch.ElapsedMilliseconds;
-                _session.Duration = _applicationWatch.ElapsedMilliseconds;
+                restRouter.OnPlayCalled += HandleOnPlayCalled;
+                restRouter.OnPausePlaybackCalled += HandleOnPausePlaybackCalled;
+                restRouter.OnStopPlaybackCalled += HandleOnStopPlaybackCalled;
+                restRouter.OnJumpPlaybackCalled += HandleOnJumpPlaybackCalled;
+                restRouter.OnRecordSessionCalled += HandleOnRecordSessionCalled;
+                restRouter.OnStopRecordCalled += HandleOnStopRecordCalled;
             }
 
-            /* get a data merger specific to the type of input adapter,
-             * so only a optitrack merger gets frames from an optitrack
-             * input adapter and so forth.
-             */
-            var merger = _kernel.Get<IDataMerger>(source.Config.AdapterType);
-            Logger.Debug("{Frame #{0} available from {1}", frame.ElapsedMillis, source.Config.AdapterType);
-            var mergedFrame = merger.HandleFrame(frame);
-
-            //get the output from datamerger to output manager
-            _outputManager.ReadyToOutput(mergedFrame);
-
+            switch (_startMode)
+            {
+                case "record":
+                    StartRecord();
+                    break;
+                case "playback":
+                    StartPlayback();
+                    break;
+            }
         }
 
-        private void HandleErrorEvent(IInputAdapter source, Exception e)
+        private Session HandleOnStopRecordCalled()
         {
-            Logger.Error("Adapter: {0}, has severe problems: {1}", source.Name, e.Message);
-            Stop();
+            return StopRecord();
+        }
 
-            // keep console open until key is pressed
-            if (Logger.IsDebugEnabled)
-                Console.ReadKey();
+        private Session HandleOnRecordSessionCalled()
+        {
+            return StartRecord();
+        }
+
+        private void HandleOnJumpPlaybackCalled(object sender, uint millis)
+        {
+            JumpPlayback(millis);
+        }
+
+        private void HandleOnStopPlaybackCalled(object sender, EventArgs e)
+        {
+            StopPlayback();
+        }
+
+        private void HandleOnPausePlaybackCalled(object sender, EventArgs e)
+        {
+            PausePlayback();
+        }
+
+        private void HandleOnPlayCalled(object sender, Session session)
+        {
+            StartPlayback(session);
+        }
+
+        public Session StartRecord()
+        {
+            switch (_currentMode)
+            {
+                case ApplicationMode.Live:
+                    Logger.Warn("Already recording");
+                    break;
+                case ApplicationMode.Play:
+                    StopPlayback();
+                    _recordService.Start();
+                    break;
+                case ApplicationMode.Waiting:
+                    _recordService.Start();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _currentMode = ApplicationMode.Live;
+            return _recordService.Session;
+        }
+
+        public Session StopRecord()
+        {
+            if (_currentMode == ApplicationMode.Live)
+            {
+                _recordService.Stop();
+                _currentMode = ApplicationMode.Waiting;
+                return _recordService.Session;
+            }
+            else
+            {
+                Logger.Warn("Application not in record");
+                return null;
+            }
+        }
+
+        public void StartPlayback(Session session = null)
+        {
+            switch (_currentMode)
+            {
+                case ApplicationMode.Live:
+                    StopRecord();
+                    if (session == null) _playbackService.Start();
+                    else _playbackService.Start(session);
+                    break;
+                case ApplicationMode.Play:
+                    Logger.Warn("Playback already running");
+                    break;
+                case ApplicationMode.Waiting:
+                    if (session == null) _playbackService.Start();
+                    else _playbackService.Start(session);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _currentMode = ApplicationMode.Play;
+        }
+
+        public void PausePlayback()
+        {
+            if (_currentMode == ApplicationMode.Play)
+            {
+                _playbackService.Stop();
+            }
+            else
+            {
+                Logger.Warn("Application not in playback");
+            }
+        }
+
+        public void StopPlayback()
+        {
+            if (_currentMode == ApplicationMode.Play)
+            {
+                _playbackService.Pause();
+                _currentMode = ApplicationMode.Waiting;
+            }
+            else
+            {
+                Logger.Warn("Application not in playback");
+            }
+        }
+
+        public void JumpPlayback(uint millis)
+        {
+            if (_currentMode == ApplicationMode.Play)
+            {
+                _playbackService.Jump(millis);
+            }
+            else
+            {
+                Logger.Warn("Application not in playback");
+            }
+        }
+
+        public void Exit()
+        {
+            switch (_currentMode)
+            {
+                case ApplicationMode.Live:
+                    _recordService.Stop();
+                    break;
+                case ApplicationMode.Play:
+                    _playbackService.Stop();
+                    break;
+                case ApplicationMode.Waiting:
+                    Logger.Info("All modes already stopped");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _restServer.Stop();
+
+            _streamingServer.Stop();
+            _outputManager.OutputNotification -= _streamingServer.Send;
+            _streamingServer.Stop();
+
+            Logger.Info("Application exited");
         }
     }
 }

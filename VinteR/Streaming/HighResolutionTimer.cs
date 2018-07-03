@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace VinteR.SessionPlayer
+namespace VinteR.Streaming
 {
     /// <summary>
     /// Hight precision non overlapping timer

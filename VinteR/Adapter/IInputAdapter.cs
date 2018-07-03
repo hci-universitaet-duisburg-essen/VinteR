@@ -46,7 +46,12 @@ namespace VinteR.Adapter
         /// Unique identifier of the input adapter. This is espacially used to
         /// track input sources inside this application
         /// </summary>
-        string Name { get; set; }
+        string Name { get; }
+
+        /// <summary>
+        /// Type of the adapter, primary used to get components related to this instance.
+        /// </summary>
+        string AdapterType { get; }
 
         /// <summary>
         /// Configuration of the adapter. This is one json object given in the array

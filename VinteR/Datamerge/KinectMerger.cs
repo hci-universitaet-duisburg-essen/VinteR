@@ -11,6 +11,8 @@ namespace VinteR.Datamerge
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public string MergerType => HardwareSystems.Kinect;
+
         private readonly IAdapterTracker _adapterTracker;
         private readonly ITransformator _transformator;
 

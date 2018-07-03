@@ -29,7 +29,7 @@ namespace VinteR.Input
             
         }
 
-        public Session GetSession(string name, int startTimestamp = 0, int endTimestamp = -1)
+        public Session GetSession(string name, uint startTimestamp = 0, int endTimestamp = -1)
         {
             var collectionNameFrames = string.Format("Vinter-{0}-Frames", name);
             var collectionNameBodies = string.Format("Vinter-{0}-Bodies", name);
@@ -58,7 +58,7 @@ namespace VinteR.Input
             }
         }
 
-        public Session getSlice(int startTimestamp, int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        public Session getSlice(uint startTimestamp, int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var gtFilter = Builders<MocapFrame>.Filter.Gt("ElapsedMillis", startTimestamp);
             var ltFilter = Builders<MocapFrame>.Filter.Lt("ElapsedMillis", endTimestamp);
@@ -76,7 +76,7 @@ namespace VinteR.Input
         }
 
 
-        public Session getStartTilDataEnd(int startTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        public Session getStartTilDataEnd(uint startTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var gtFilter = Builders<MocapFrame>.Filter.Gt("ElapsedMillis", startTimestamp);
             var frames = framesCollection.Find<MocapFrame>(gtFilter).ToList();

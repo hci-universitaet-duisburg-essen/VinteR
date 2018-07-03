@@ -5,8 +5,6 @@ namespace VinteR.Adapter.LeapMotion
 {
     public class LeapMotionAdapter : IInputAdapter
     {
-        public const string AdapterTypeName = "leapmotion";
-
         public event MocapFrameAvailableEventHandler FrameAvailable;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -19,7 +17,10 @@ namespace VinteR.Adapter.LeapMotion
 
         public bool Enabled => Config.Enabled;
 
-        public string Name { get; set; }
+        public string Name => Config?.Name;
+
+        public string AdapterType => HardwareSystems.LeapMotion;
+
         public Configuration.Adapter Config { get; set; }       
         
         /**

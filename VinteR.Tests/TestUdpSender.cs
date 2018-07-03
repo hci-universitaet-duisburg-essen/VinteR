@@ -6,8 +6,8 @@ using Ninject;
 using NUnit.Framework;
 using VinteR.Configuration;
 using VinteR.Model;
-using VinteR.OutputAdapter;
 using VinteR.Serialization;
+using VinteR.Streaming;
 
 namespace VinteR.Tests
 {
@@ -28,7 +28,7 @@ namespace VinteR.Tests
                     new UdpReceiver() {Port = 5080, Ip = "127.0.0.1"}
                 }
             };
-            _udpSender.Start(new Session("udp test"));
+            _udpSender.Start();
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace VinteR.Tests
             var client = new UdpClient(5080);
             var serverAddress = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5060);
 
-            _udpSender.OnDataReceived(new MocapFrame("root", "optitrack")
+            _udpSender.Send(new MocapFrame("root", "optitrack")
             {
                 ElapsedMillis = 30,
                 Latency = 5.3f,

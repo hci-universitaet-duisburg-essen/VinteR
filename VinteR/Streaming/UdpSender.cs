@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -8,17 +9,23 @@ using VinteR.Configuration;
 using VinteR.Model;
 using VinteR.Serialization;
 
-namespace VinteR.OutputAdapter
+namespace VinteR.Streaming
 {
-    public class UdpSender : IOutputAdapter
+    public class UdpSender : IStreamingServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public event EventHandler OnRecordCalled;
+        public event EventHandler<Session> OnPlayCalled;
+        public event EventHandler OnPauseCalled;
+        public event EventHandler OnStopCalled;
+        public event EventHandler<uint> OnJumpCalled;
 
         public IList<UdpReceiver> UdpReceivers { get; set; }
 
         public int Port { get; }
 
-        private IList<IPEndPoint> _endPoints;
+        private ConcurrentQueue<IPEndPoint> _endPoints;
 
         private UdpClient _udpServer;
 
@@ -31,7 +38,7 @@ namespace VinteR.OutputAdapter
             _serializer = serializer;
         }
 
-        public void OnDataReceived(MocapFrame mocapFrame)
+        public void Send(MocapFrame mocapFrame)
         {
             _serializer.ToProtoBuf(mocapFrame, out var frame);
             var data = frame.ToByteArray();
@@ -52,18 +59,23 @@ namespace VinteR.OutputAdapter
             }
         }
 
-        public void Start(Session session)
+        public void AddReceiver(IPEndPoint receiverEndPoint)
+        {
+            _endPoints.Enqueue(receiverEndPoint);
+        }
+
+        public void Start()
         {
             _udpServer = new UdpClient(Port);
             Logger.Info("Udp server running on port {0}", Port);
-            _endPoints = new List<IPEndPoint>();
+            _endPoints = new ConcurrentQueue<IPEndPoint>();
             foreach (var udpReceiver in UdpReceivers)
             {
                 var ip = udpReceiver.Ip;
                 var port = udpReceiver.Port;
                 try
                 {
-                    _endPoints.Add(new IPEndPoint(IPAddress.Parse(ip), port));
+                    _endPoints.Enqueue(new IPEndPoint(IPAddress.Parse(ip), port));
                 }
                 catch (Exception e)
                 {

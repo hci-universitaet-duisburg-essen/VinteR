@@ -37,7 +37,7 @@ namespace VinteR.Model
         /// Time in millis how long the session lasts
         /// </summary>
         [BsonElement]
-        public long Duration { get; set; }
+        public uint Duration { get; set; }
 
         /// <summary>
         /// Frames for the session. This MUST NOT be set during a
