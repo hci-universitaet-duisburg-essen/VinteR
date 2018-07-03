@@ -26,6 +26,8 @@ namespace VinteR.Tests
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
             var config = ninjectKernel.Get<IConfigurationService>();
+
+            config.GetConfiguration().Rest.Port = 9001;
             var restRouters = ninjectKernel.GetAll<IRestRouter>().Select(r => r).ToArray();
             _restServer = new VinterRestServer(config, restRouters);
             _restServer.Start(new Session("testsession"));
