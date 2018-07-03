@@ -7,6 +7,7 @@ using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Input;
 using VinteR.MainApplication;
+using VinteR.Mongo;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 using VinteR.Rest;
@@ -51,7 +52,7 @@ namespace VinteR
             Bind<ISerializer>().To<Serializer>();
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
 
-            Bind<IQueryService>().To<MongoDbClient>();
+            Bind<IQueryService>().To<MongoQueryService>();
             Bind<IQueryService>().To<JsonStorage>();
 
             Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
@@ -59,6 +60,7 @@ namespace VinteR
             Bind<IRestRouter>().To<SessionRouter>().InSingletonScope();
 
             Bind<ISessionPlayer>().To<SessionPlayer>().InSingletonScope();
+            Bind<IVinterMongoDBClient>().To<VinterMongoDBClient>().InSingletonScope();
         }
     }
 }

@@ -65,6 +65,7 @@ namespace VinteR.Datamerge
                 Points = body.Points,
                 Centroid = body.Centroid,
                 Rotation = body.Rotation,
+                Name = body.Name,
                 Side = body.Side
             };
             if (result.Points?.Count == 1 && result.BodyType.Equals(Body.EBodyType.MarkerSet))

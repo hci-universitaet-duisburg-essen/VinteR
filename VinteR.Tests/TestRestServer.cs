@@ -20,6 +20,8 @@ namespace VinteR.Tests
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
             var config = ninjectKernel.Get<IConfigurationService>();
+
+            config.GetConfiguration().Rest.Port = 9001;
             var restRouters = ninjectKernel.GetAll<IRestRouter>().Select(r => r).ToArray();
             _restServer = new VinterRestServer(config, restRouters);
             _restServer.Start();
@@ -35,7 +37,7 @@ namespace VinteR.Tests
         [Test]
         public void TestGetSession()
         {
-            var uri = new Uri("http://localhost:8010/session?name=testsession&source=MongoDB");
+            var uri = new Uri("http://localhost:9001/session?name=testsession&source=MongoDB");
             var bytes = _httpClient.GetByteArrayAsync(uri).Result;
             var session = Model.Gen.Session.Parser.ParseFrom(bytes);
 
@@ -49,7 +51,7 @@ namespace VinteR.Tests
         [Test]
         public void TestGetSessions()
         {
-            var uri = new Uri("http://localhost:8010/sessions");
+            var uri = new Uri("http://localhost:9001/sessions");
             var bytes = _httpClient.GetByteArrayAsync(uri).Result;
             var meta = Model.Gen.SessionsMetadata.Parser.ParseFrom(bytes);
 

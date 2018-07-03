@@ -66,7 +66,7 @@ namespace VinteR.Model
         /// Contains a list of bodies that the input adapter has
         /// detected.
         /// </summary>
-        
+
         [BsonIgnore]
         public IList<Body> Bodies
         {

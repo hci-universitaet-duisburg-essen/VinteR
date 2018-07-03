@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Numerics;
+using VinteR.Mongo;
 
 namespace VinteR.Model
 {
@@ -7,6 +9,7 @@ namespace VinteR.Model
     /// where it is located inside the world. It may have a name
     /// to get specific information what this üoint represents.
     /// </summary>
+    
     public class Point
     {
         /// <summary>
@@ -25,6 +28,8 @@ namespace VinteR.Model
         /// <summary>
         /// Global position of this point.
         /// </summary>
+        
+        [BsonSerializer(typeof(VectorSerializer))]
         public Vector3 Position { get; set; }
 
         public Point(float x, float y, float z)
