@@ -35,7 +35,7 @@ namespace VinteR
                 exitEvent.WaitOne();
 
                 // stop the server
-                application.Stop();
+                application.Exit();
             }
             catch (ApplicationException e)
             {

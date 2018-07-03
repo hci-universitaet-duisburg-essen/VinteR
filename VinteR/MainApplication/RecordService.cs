@@ -7,7 +7,6 @@ using VinteR.Adapter;
 using VinteR.Configuration;
 using VinteR.Datamerge;
 using VinteR.Model;
-using VinteR.Net;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
 
@@ -19,28 +18,26 @@ namespace VinteR.MainApplication
         private static readonly object StopwatchLock = new object();
         public bool IsRecording { get; set; }
 
+        public Session Session { get; private set; }
+
         /// <summary>
         /// contains the stopwatch for the program that will be used to add elapsed millis inside mocap frames
         /// </summary>
         private readonly Stopwatch _applicationWatch = new Stopwatch();
 
-        private readonly IEnumerable<IInputAdapter> _inputAdapters;
-        private readonly IEnumerable<IOutputAdapter> _outputAdapters;
-        private readonly IEnumerable<IDataMerger> _dataMergers;
+        private readonly IInputAdapter[] _inputAdapters;
+        private readonly IOutputAdapter[] _outputAdapters;
+        private readonly IDataMerger[] _dataMergers;
         private readonly IOutputManager _outputManager;
         private readonly IConfigurationService _configurationService;
         private readonly ISessionNameGenerator _sessionNameGenerator;
-        private readonly IStreamingServer _streamingServer;
 
         private IList<IInputAdapter> _runningInputAdapters;
 
-        private Session _session;
-
         public RecordService(IConfigurationService configurationService,
-            IEnumerable<IInputAdapter> inputAdapters,
-            IEnumerable<IOutputAdapter> outputAdapters, 
-            IEnumerable<IDataMerger> dataMergers,
-            IStreamingServer streamingServer,
+            IInputAdapter[] inputAdapters,
+            IOutputAdapter[] outputAdapters, 
+            IDataMerger[] dataMergers,
             IOutputManager outputManager,
             ISessionNameGenerator sessionNameGenerator)
         {
@@ -48,17 +45,16 @@ namespace VinteR.MainApplication
             _inputAdapters = inputAdapters;
             _outputAdapters = outputAdapters;
             _dataMergers = dataMergers;
-            _streamingServer = streamingServer;
             _outputManager = outputManager;
             _sessionNameGenerator = sessionNameGenerator;
         }
 
-        public void Start()
+        public Session Start()
         {
             IsRecording = true;
 
             // session name generator
-            _session = new Session(_sessionNameGenerator.Generate());
+            Session = new Session(_sessionNameGenerator.Generate());
 
             _runningInputAdapters = new List<IInputAdapter>();
 
@@ -66,14 +62,10 @@ namespace VinteR.MainApplication
             foreach (var outputAdapter in _outputAdapters)
             {
                 _outputManager.OutputNotification += outputAdapter.OnDataReceived;
-                var t = new Thread(() => outputAdapter.Start(_session));
+                var t = new Thread(() => outputAdapter.Start(Session));
                 t.Start();
                 Logger.Info("Output adapter {0,30} started", outputAdapter.GetType().Name);
             }
-
-            // start streaming server
-            _outputManager.OutputNotification += _streamingServer.Send;
-            _streamingServer.Start();
 
             // for each json object inside inside the adapters array inside the config
             foreach (var adapterItem in _configurationService.GetConfiguration().Adapters)
@@ -113,7 +105,8 @@ namespace VinteR.MainApplication
                 Logger.Info("Input adapter {0,30} started", adapter.GetType().Name);
             }
 
-            Logger.Info("Started record of session {0}", _session.Name);
+            Logger.Info("Started record of session {0}", Session.Name);
+            return Session;
         }
 
         private void HandleFrameAvailable(IInputAdapter source, MocapFrame frame)
@@ -124,7 +117,7 @@ namespace VinteR.MainApplication
             lock (StopwatchLock)
             {
                 frame.ElapsedMillis = _applicationWatch.ElapsedMilliseconds;
-                _session.Duration = _applicationWatch.ElapsedMilliseconds;
+                Session.Duration = Convert.ToUInt32(_applicationWatch.ElapsedMilliseconds);
             }
 
             /* get a data merger specific to the type of input adapter,
@@ -164,9 +157,6 @@ namespace VinteR.MainApplication
                 _outputManager.OutputNotification -= outputAdapter.OnDataReceived;
                 outputAdapter.Stop();
             }
-            Logger.Info("Stopping streaming server");
-            _outputManager.OutputNotification -= _streamingServer.Send;
-            _streamingServer.Stop();
 
             IsRecording = false;
             Logger.Info("Record stopped");

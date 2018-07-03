@@ -6,8 +6,8 @@ using Ninject;
 using NUnit.Framework;
 using VinteR.Configuration;
 using VinteR.Model;
-using VinteR.Net;
 using VinteR.Serialization;
+using VinteR.Streaming;
 
 namespace VinteR.Tests
 {

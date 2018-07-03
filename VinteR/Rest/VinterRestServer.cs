@@ -4,11 +4,13 @@ using VinteR.Configuration;
 
 namespace VinteR.Rest
 {
-    public class VinterRestServer : IServer
+    public class VinterRestServer : IRestServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        
         private readonly Configuration.Rest _config;
         private readonly IRestRouter[] _routers;
+
         private bool _isRunning;
         private RestServer _restServer;
 
@@ -22,6 +24,12 @@ namespace VinteR.Rest
         {
             // do not start if not enabled
             if (!_config.Enabled) return;
+
+            if (_isRunning)
+            {
+                Logger.Warn("Ignoring start(). REST server already running");
+                return;
+            }
 
             try
             {

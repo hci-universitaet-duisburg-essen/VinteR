@@ -17,7 +17,8 @@ namespace VinteR.Adapter.LeapMotion
 
         public bool Enabled => Config.Enabled;
 
-        public string Name { get; set; }
+        public string Name => Config?.Name;
+
         public string AdapterType => HardwareSystems.LeapMotion;
 
         public Configuration.Adapter Config { get; set; }       

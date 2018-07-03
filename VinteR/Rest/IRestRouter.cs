@@ -1,7 +1,11 @@
-﻿using Grapevine.Server;
+﻿using System;
+using Grapevine.Server;
+using VinteR.Model;
 
 namespace VinteR.Rest
 {
+    public delegate Session RecordCalledEventHandler();
+
     /// <summary>
     /// A rest router is able to handle http rest requests. All registered routes
     /// must be given inside the dependency injection kernel, otherwise the
@@ -9,6 +13,16 @@ namespace VinteR.Rest
     /// </summary>
     public interface IRestRouter
     {
+        // sessions event handler
+        event RecordCalledEventHandler OnRecordSessionCalled;
+        event RecordCalledEventHandler OnStopRecordCalled;
+
+        // session event handler
+        event EventHandler<Session> OnPlayCalled;
+        event EventHandler OnPausePlaybackCalled;
+        event EventHandler OnStopPlaybackCalled;
+        event EventHandler<uint> OnJumpPlaybackCalled;
+
         /// <summary>
         /// Register all handler methods of this router to target router.
         /// </summary>

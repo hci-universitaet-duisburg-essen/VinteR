@@ -42,12 +42,12 @@
             "skeletonStream.flush.dirname": "skeletonStreamData.json"
         },
         {
-            "enabled": true,
+            "enabled": false,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "server.ip": "10.23.112.35",

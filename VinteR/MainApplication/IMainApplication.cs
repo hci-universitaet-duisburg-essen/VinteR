@@ -6,10 +6,6 @@ namespace VinteR.MainApplication
     {
         void Start();
 
-        void StartRecord();
-
-        void StartPlayback(Session session);
-
-        void Stop();
+        void Exit();
     }
 }

@@ -33,6 +33,6 @@ namespace VinteR.Input
         /// <param name="endTimestamp">End time in millis from session start. Minus one for the end
         /// of the session</param>
         /// <returns>The session with all specified data or <code>null</code> id it does not exist.</returns>
-        Session GetSession(string name, int startTimestamp = 0, int endTimestamp = -1);
+        Session GetSession(string name, uint startTimestamp = 0, int endTimestamp = -1);
     }
 }

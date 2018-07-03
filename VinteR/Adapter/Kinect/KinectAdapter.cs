@@ -48,7 +48,8 @@ namespace VinteR.Adapter.Kinect
 
         public bool Enabled => _config.Enabled;
 
-        public string Name { get; set; }
+        public string Name => _config?.Name;
+
         public string AdapterType => HardwareSystems.Kinect;
 
         private Configuration.Adapter _config;

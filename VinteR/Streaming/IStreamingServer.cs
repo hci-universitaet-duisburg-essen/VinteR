@@ -1,9 +1,10 @@
 ﻿using System.Net;
 using VinteR.Model;
+using VinteR.Rest;
 
-namespace VinteR.Net
+namespace VinteR.Streaming
 {
-    public interface IStreamingServer : IServer
+    public interface IStreamingServer : IRestServer
     {
         void Send(MocapFrame mocapFrame);
 

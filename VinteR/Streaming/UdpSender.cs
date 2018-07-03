@@ -9,11 +9,17 @@ using VinteR.Configuration;
 using VinteR.Model;
 using VinteR.Serialization;
 
-namespace VinteR.Net
+namespace VinteR.Streaming
 {
     public class UdpSender : IStreamingServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public event EventHandler OnRecordCalled;
+        public event EventHandler<Session> OnPlayCalled;
+        public event EventHandler OnPauseCalled;
+        public event EventHandler OnStopCalled;
+        public event EventHandler<uint> OnJumpCalled;
 
         public IList<UdpReceiver> UdpReceivers { get; set; }
 
@@ -56,11 +62,6 @@ namespace VinteR.Net
         public void AddReceiver(IPEndPoint receiverEndPoint)
         {
             _endPoints.Enqueue(receiverEndPoint);
-        }
-
-        public int GetStreamingPort()
-        {
-            return Port;
         }
 
         public void Start()

@@ -1,6 +1,6 @@
 ﻿using VinteR.Model;
 
-namespace VinteR.SessionPlayer
+namespace VinteR.Streaming
 {
     /// <summary>
     /// A session player is able to replay a recorded session by the times
