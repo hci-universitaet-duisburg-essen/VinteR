@@ -112,6 +112,7 @@
     <Compile Include="MainApplication\IRecordService.cs" />
     <Compile Include="MainApplication\PlaybackService.cs" />
     <Compile Include="MainApplication\RecordService.cs" />
+    <Compile Include="Rest\DefaultRouter.cs" />
     <Compile Include="Streaming\IStreamingServer.cs" />
     <Compile Include="MainApplication\ISessionNameGenerator.cs" />
     <Compile Include="MainApplication\SessionNameGenerator.cs" />

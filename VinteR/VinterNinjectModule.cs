@@ -56,6 +56,7 @@ namespace VinteR
             Bind<IQueryService>().To<JsonStorage>();
 
             Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
+            Bind<IRestRouter>().To<DefaultRouter>().InSingletonScope();
             Bind<IRestRouter>().To<SessionsRouter>().InSingletonScope();
             Bind<IRestRouter>().To<SessionRouter>().InSingletonScope();
 

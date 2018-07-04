@@ -5,6 +5,7 @@ using VinteR.Model;
 namespace VinteR.Rest
 {
     public delegate Session RecordCalledEventHandler();
+    public delegate Session SessionPlayEventHandler(string source, string sessionName);
 
     /// <summary>
     /// A rest router is able to handle http rest requests. All registered routes
@@ -18,7 +19,7 @@ namespace VinteR.Rest
         event RecordCalledEventHandler OnStopRecordCalled;
 
         // session event handler
-        event EventHandler<Session> OnPlayCalled;
+        event SessionPlayEventHandler OnPlayCalled;
         event EventHandler OnPausePlaybackCalled;
         event EventHandler OnStopPlaybackCalled;
         event EventHandler<uint> OnJumpPlaybackCalled;

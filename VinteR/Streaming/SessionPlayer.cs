@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using VinteR.Model;
 
 namespace VinteR.Streaming
 {
-    public delegate void PlayMocapFrameEventHandler(MocapFrame frame);
-
     public class SessionPlayer : ISessionPlayer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -18,16 +17,9 @@ namespace VinteR.Streaming
             get => _session;
             set
             {
-                if (_hasStarted)
-                {
-                    Stop();
-                    _session = value;
-                    Start();
-                }
-                else
-                {
-                    _session = value;
-                }
+                Stop();
+                _session = value;
+                _playbackDataLoaded = false;
             }
         }
 
@@ -38,19 +30,30 @@ namespace VinteR.Streaming
         public long Duration { get; private set; }
 
         private Session _session;
+
         private IEnumerable<IGrouping<long, MocapFrame>> _groupedFrames;
 
         /// <summary>
-        /// Current position which frames should be played. Use a double here
-        /// regarding unprecise clock calculation that may lead to no moving
-        /// position in the worst case.
+        /// Stopwatch with which the frames that should be played is
+        /// calculated.
         /// </summary>
-        private double _position;
-        private double _lastDelay;
+        private readonly Stopwatch _playStopwatch;
 
         /// <summary>
-        /// Contains the timer, with which the position is calculated
-        /// which frame has to be played
+        /// Current position which frames should be played.
+        /// </summary>
+        private long _position;
+
+        /// <summary>
+        /// Used to save the elapsed millis of the stopwatch and
+        /// increment the current position.
+        /// </summary>
+        private long _lastElapsed;
+
+        /// <summary>
+        /// Contains the timer, that is used to get high frequency callbacks.
+        /// The timer is just used to get callbacks and has nothing to do with
+        /// the calculation which frame should be played!
         /// </summary>
         private HighResolutionTimer _timer;
 
@@ -58,27 +61,34 @@ namespace VinteR.Streaming
         /// Returns true if all calculations were done to play the session
         /// and the session is currently playing.
         /// </summary>
-        private bool _hasStarted;
+        private bool _playbackDataLoaded;
+
+        public bool IsPlaying => _timer != null && _timer.IsRunning;
+
+        public SessionPlayer()
+        {
+            _playStopwatch = new Stopwatch();
+        }
 
         public void Play()
         {
-            if (!_hasStarted) Start();
+            if (!_playbackDataLoaded) Start();
             else Continue();
         }
 
         private void Start()
         {
             // validation checks
-            if (_session == null)
+            if (Session == null)
             {
                 Logger.Error("No session to play");
                 return;
             }
 
-            var frames = _session.MocapFrames;
+            var frames = Session.MocapFrames;
             if (frames.Count == 0)
             {
-                Logger.Warn("No frames to play in session {0}", _session.Name);
+                Logger.Warn("No frames to play in session {0}", Session.Name);
                 return;
             }
 
@@ -86,29 +96,27 @@ namespace VinteR.Streaming
             _groupedFrames = frames
                 .OrderBy(f => f.ElapsedMillis)
                 .GroupBy(f => f.ElapsedMillis, f => f);
-            _lastDelay = 0;
             Duration = Convert.ToInt64(_groupedFrames.Last().Key);
 
-            RunTimer();
-            _hasStarted = _timer.IsRunning;
+            Continue();
+            _playbackDataLoaded = _timer.IsRunning;
         }
 
         private void Continue()
         {
-            RunTimer();
+            StopTimer();
+            _playStopwatch.Start();
+            StartTimer();
         }
 
         private void OnTimerElapsed(object sender, HighResolutionTimerElapsedEventArgs e)
         {
-            // add some milli(s) to the current position
-            _position += e.Delay - _lastDelay;
+            _position += _playStopwatch.ElapsedMilliseconds - _lastElapsed;
+            _lastElapsed = _playStopwatch.ElapsedMilliseconds;
 
             // reset if needed
             if (_position > Duration)
                 _position = 0;
-
-            // save last delay
-            _lastDelay = e.Delay;
 
             /*
              * As frames millis are stored as long values the current position
@@ -117,7 +125,7 @@ namespace VinteR.Streaming
              * The frame groups contain all frames that occured on given
              * position.
              */
-            var frameGroups = _groupedFrames.Where(g => g.Key == Convert.ToInt64(_position));
+            var frameGroups = _groupedFrames.Where(g => g.Key == _position);
 
             // Deliver each frame on millisecond with _position
             foreach (var group in frameGroups)
@@ -132,12 +140,15 @@ namespace VinteR.Streaming
         public void Pause()
         {
             StopTimer();
+            _playStopwatch.Stop();
         }
 
         public void Stop()
         {
             StopTimer();
-            _position = 0;
+            _playStopwatch.Stop();
+            _playStopwatch.Reset();
+            _lastElapsed = 0;
         }
 
         public void Jump(uint millis)
@@ -151,7 +162,7 @@ namespace VinteR.Streaming
             _position = millis;
         }
 
-        private void RunTimer()
+        private void StartTimer()
         {
             // start a timer that tries to fire events each millisecond
             _timer = new HighResolutionTimer(1);

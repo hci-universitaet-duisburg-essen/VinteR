@@ -21,7 +21,7 @@ namespace VinteR.Rest
         public event RecordCalledEventHandler OnStopRecordCalled;
 
         // ignored as they are threaded in the SessionRouter
-        public event EventHandler<Session> OnPlayCalled;
+        public event SessionPlayEventHandler OnPlayCalled;
         public event EventHandler OnPausePlaybackCalled;
         public event EventHandler OnStopPlaybackCalled;
         public event EventHandler<uint> OnJumpPlaybackCalled;

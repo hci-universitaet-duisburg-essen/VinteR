@@ -9,6 +9,7 @@ using VinteR.Datamerge;
 using VinteR.Model;
 using VinteR.OutputAdapter;
 using VinteR.OutputManager;
+using VinteR.Streaming;
 
 namespace VinteR.MainApplication
 {
@@ -16,6 +17,9 @@ namespace VinteR.MainApplication
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly object StopwatchLock = new object();
+
+        public event PlayMocapFrameEventHandler FrameAvailable;
+
         public bool IsRecording { get; set; }
 
         public Session Session { get; private set; }
@@ -130,6 +134,7 @@ namespace VinteR.MainApplication
 
             //get the output from datamerger to output manager
             _outputManager.ReadyToOutput(mergedFrame);
+            FrameAvailable?.Invoke(frame);
         }
 
         private void HandleErrorEvent(IInputAdapter source, Exception e)

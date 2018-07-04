@@ -1,12 +1,15 @@
 ﻿using VinteR.Model;
+using VinteR.Streaming;
 
 namespace VinteR.MainApplication
 {
     public interface IPlaybackService
     {
-        void Start();
+        event PlayMocapFrameEventHandler FrameAvailable;
 
-        void Start(Session session);
+        bool IsPlaying { get; }
+
+        Session Play(string source, string sessionName);
 
         void Pause();
 

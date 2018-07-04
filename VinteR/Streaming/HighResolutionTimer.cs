@@ -23,7 +23,7 @@ namespace VinteR.Streaming
         /// <summary>
         /// Tick time length in [ms]
         /// </summary>
-        public static readonly long TickLength = 1000 / Stopwatch.Frequency;
+        public static readonly double TickLength = 1000f / Stopwatch.Frequency;
 
         /// <summary>
         /// True if the system/operating system supports HighResolution timer
@@ -38,7 +38,7 @@ namespace VinteR.Streaming
         /// <summary>
         /// The interval of timer ticks [ms]
         /// </summary>
-        private volatile uint _interval;
+        private volatile float _interval;
 
         /// <summary>
         /// The timer is running
@@ -62,7 +62,7 @@ namespace VinteR.Streaming
         /// <summary>
         /// The interval of a timer in [ms]
         /// </summary>
-        public uint Interval
+        public float Interval
         {
             get => _interval;
             set => _interval = value;
@@ -172,7 +172,7 @@ namespace VinteR.Streaming
             stopwatch.Stop();
         }
 
-        private static long ElapsedHiRes(Stopwatch stopwatch)
+        private static double ElapsedHiRes(Stopwatch stopwatch)
         {
             return stopwatch.ElapsedTicks * TickLength;
         }
