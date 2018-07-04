@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -14,12 +15,6 @@ namespace VinteR.Streaming
     public class UdpSender : IStreamingServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-        public event EventHandler OnRecordCalled;
-        public event EventHandler<Session> OnPlayCalled;
-        public event EventHandler OnPauseCalled;
-        public event EventHandler OnStopCalled;
-        public event EventHandler<uint> OnJumpCalled;
 
         public IList<UdpReceiver> UdpReceivers { get; set; }
 
@@ -61,7 +56,8 @@ namespace VinteR.Streaming
 
         public void AddReceiver(IPEndPoint receiverEndPoint)
         {
-            _endPoints.Enqueue(receiverEndPoint);
+            if (!_endPoints.Contains(receiverEndPoint))
+                _endPoints.Enqueue(receiverEndPoint);
         }
 
         public void Start()

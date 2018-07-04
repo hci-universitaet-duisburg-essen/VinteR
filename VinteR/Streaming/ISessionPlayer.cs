@@ -14,8 +14,9 @@ namespace VinteR.Streaming
         /// </summary>
         event PlayMocapFrameEventHandler FrameAvailable;
 
-
         Session Session { get; set; }
+
+        bool IsPlaying { get; }
 
         void Play();
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using VinteR.Configuration;
 using VinteR.Model;
-using VinteR.OutputManager;
 using VinteR.Rest;
 using VinteR.Streaming;
 
@@ -24,7 +23,6 @@ namespace VinteR.MainApplication
         private readonly IRestRouter[] _restRouters;
         private readonly IRestServer _restServer;
         private readonly IStreamingServer _streamingServer;
-        private readonly IOutputManager _outputManager;
         private ApplicationMode _currentMode;
 
         public MainApplication(IConfigurationService configurationService, 
@@ -32,8 +30,7 @@ namespace VinteR.MainApplication
             IPlaybackService playbackService, 
             IRestServer restServer,
             IRestRouter[] routers,
-            IStreamingServer streamingServer,
-            IOutputManager outputManager)
+            IStreamingServer streamingServer)
         {
             _startMode = configurationService.GetConfiguration().StartMode;
             _recordService = recordService;
@@ -41,7 +38,6 @@ namespace VinteR.MainApplication
             _streamingServer = streamingServer;
             _restServer = restServer;
             _restRouters = routers;
-            _outputManager = outputManager;
             _currentMode = ApplicationMode.Waiting;
         }
 
@@ -51,7 +47,9 @@ namespace VinteR.MainApplication
 
             // start streaming server
             _streamingServer.Start();
-            _outputManager.OutputNotification += _streamingServer.Send;
+
+            _playbackService.FrameAvailable += _streamingServer.Send;
+            _recordService.FrameAvailable += _streamingServer.Send;
 
             foreach (var restRouter in _restRouters)
             {
@@ -69,7 +67,7 @@ namespace VinteR.MainApplication
                     StartRecord();
                     break;
                 case "playback":
-                    StartPlayback();
+                    // nothing to to without session to play
                     break;
             }
         }
@@ -99,9 +97,9 @@ namespace VinteR.MainApplication
             PausePlayback();
         }
 
-        private void HandleOnPlayCalled(object sender, Session session)
+        private Session HandleOnPlayCalled(string source, string sessionName)
         {
-            StartPlayback(session);
+            return StartPlayback(source, sessionName);
         }
 
         public Session StartRecord()
@@ -134,34 +132,32 @@ namespace VinteR.MainApplication
                 _currentMode = ApplicationMode.Waiting;
                 return _recordService.Session;
             }
-            else
-            {
-                Logger.Warn("Application not in record");
-                return null;
-            }
+
+            Logger.Warn("Application not in record");
+            return null;
         }
 
-        public void StartPlayback(Session session = null)
+        public Session StartPlayback(string source, string sessionName)
         {
+            Session session;
             switch (_currentMode)
             {
                 case ApplicationMode.Live:
                     StopRecord();
-                    if (session == null) _playbackService.Start();
-                    else _playbackService.Start(session);
+                    session = _playbackService.Play(source, sessionName);
                     break;
                 case ApplicationMode.Play:
-                    Logger.Warn("Playback already running");
-                    break;
                 case ApplicationMode.Waiting:
-                    if (session == null) _playbackService.Start();
-                    else _playbackService.Start(session);
+                    session = _playbackService.Play(source, sessionName);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            _currentMode = ApplicationMode.Play;
+            _currentMode = _playbackService.IsPlaying 
+                ? ApplicationMode.Play 
+                : ApplicationMode.Waiting;
+            return session;
         }
 
         public void PausePlayback()
@@ -219,10 +215,10 @@ namespace VinteR.MainApplication
             }
 
             _restServer.Stop();
+            _streamingServer.Stop();
 
-            _streamingServer.Stop();
-            _outputManager.OutputNotification -= _streamingServer.Send;
-            _streamingServer.Stop();
+            _playbackService.FrameAvailable -= _streamingServer.Send;
+            _recordService.FrameAvailable -= _streamingServer.Send;
 
             Logger.Info("Application exited");
         }

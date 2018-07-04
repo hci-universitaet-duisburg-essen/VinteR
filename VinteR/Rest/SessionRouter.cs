@@ -7,10 +7,11 @@ using Grapevine.Server;
 using Grapevine.Shared;
 using NLog;
 using VinteR.Input;
-using VinteR.Model;
+using VinteR.Model.Gen;
 using VinteR.Serialization;
 using VinteR.Streaming;
 using HttpStatusCode = Grapevine.Shared.HttpStatusCode;
+using Session = VinteR.Model.Session;
 
 namespace VinteR.Rest
 {
@@ -18,9 +19,16 @@ namespace VinteR.Rest
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        private const string ParamSource = "source";
+        private const string ParamSessionName = "name";
+        private const string ParamStart = "start";
+        private const string ParamEnd = "end";
+        private const string ParamHost = "host";
+        private const string ParamPort = "port";
+
         public event RecordCalledEventHandler OnRecordSessionCalled;
         public event RecordCalledEventHandler OnStopRecordCalled;
-        public event EventHandler<Session> OnPlayCalled;
+        public event SessionPlayEventHandler OnPlayCalled;
         public event EventHandler OnPausePlaybackCalled;
         public event EventHandler OnStopPlaybackCalled;
         public event EventHandler<uint> OnJumpPlaybackCalled;
@@ -59,20 +67,21 @@ namespace VinteR.Rest
         {
             try
             {
-                var session = GetSession(context);
-                OnPlayCalled?.Invoke(this, session);
+                var source = GetParam(context, ParamSource);
+                var sessionName = GetParam(context, ParamSessionName);
+                var session = OnPlayCalled?.Invoke(source, sessionName);
                 context.Response.StatusCode = HttpStatusCode.Accepted;
 
-                var hostParam = context.Request.QueryString["host"] ?? string.Empty;
-                var portParam = context.Request.QueryString["port"] ?? string.Empty;
+                var hostParam = GetParam(context, ParamHost);
+                var portParam = GetParam(context, ParamPort);
                 if (hostParam != string.Empty && portParam != string.Empty)
                 {
                     var ipAddress = IPAddress.Parse(hostParam);
                     if (int.TryParse(portParam, out var port))
                     {
                         _streamingServer.AddReceiver(new IPEndPoint(ipAddress, port));
-                        var response = ToDict("udp.streaming.port", _streamingServer.Port);
-                        _responseWriter.SendJsonResponse(response, context);
+                        _serializer.ToProtoBuf(session, out SessionMetadata meta);
+                        _responseWriter.SendProtobufMessage(meta, context);
                     }
                     else
                     {
@@ -87,7 +96,7 @@ namespace VinteR.Rest
             }
             catch (InvalidArgumentException e)
             {
-                _responseWriter.SendError(e.StatusCode, e.Message, context);
+                _responseWriter.SendError(HttpStatusCode.BadRequest, e.Message, context);
             }
 
             return context;
@@ -173,36 +182,41 @@ namespace VinteR.Rest
         private Session GetSession(IHttpContext context)
         {
             // validate source parameter present
-            var source = context.Request.QueryString["source"] ?? string.Empty;
+            var source = GetParam(context, ParamSource);
             if (source == string.Empty)
-                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter 'source' is missing");
+                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter '" + ParamSource + "' is missing");
 
             // validate source is on query services
             if (!_queryServices.Select(qs => qs.GetStorageName()).Contains(source))
                 throw new InvalidArgumentException(HttpStatusCode.NotFound, "Source " + source + " not found");
 
             // validate session name parameter present
-            var sessionName = context.Request.QueryString["name"] ?? string.Empty;
+            var sessionName = GetParam(context, ParamSessionName);
             if (sessionName == string.Empty)
-                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter 'name' is missing");
+                throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter '" + ParamSessionName + "' is missing");
 
             // validate start time
-            var startTime = context.Request.QueryString["start"] ?? "0";
+            var startTime = GetParam(context, ParamStart, "0");
             if (!uint.TryParse(startTime, out var start))
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest,
-                    "Parameter 'start' contains no number >= 0");
+                    "Parameter '" + ParamStart + "' contains no number >= 0");
 
             // validate end time
-            var endTime = context.Request.QueryString["end"] ?? "-1";
+            var endTime = GetParam(context, ParamEnd, "-1");
             if (!int.TryParse(endTime, out var end))
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest,
-                    "Parameter 'end' contains no number >= -1");
+                    "Parameter '" + ParamEnd + "' contains no number >= -1");
 
             var queryService = _queryServices.Where(qs => qs.GetStorageName() == source)
                 .Select(qs => qs)
                 .First();
             var session = queryService.GetSession(sessionName, start, end);
             return session;
+        }
+
+        private static string GetParam(IHttpContext context, string key, string defaultValue = "")
+        {
+            return context.Request.QueryString[key] ?? defaultValue;
         }
 
         private static IDictionary<string, string> ToDict(string key, object value)
