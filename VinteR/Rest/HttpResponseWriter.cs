@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Google.Protobuf;
 using Grapevine.Interfaces.Server;
 using Grapevine.Shared;
@@ -8,6 +9,8 @@ namespace VinteR.Rest
 {
     public class HttpResponseWriter : IHttpResponseWriter
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public IHttpContext SendProtobufMessage(IMessage message, IHttpContext context)
         {
             var bytes = message.ToByteArray();
@@ -43,7 +46,14 @@ namespace VinteR.Rest
         {
             context.Response.ContentType = contentType;
             context.Response.ContentLength64 = data.Length;
-            context.Response.SendResponse(data);
+            try
+            {
+                context.Response.SendResponse(data);
+            }
+            catch (Exception)
+            {
+                Logger.Warn("Ignoring error on send response");
+            }
         }
 
         private class ErrorMessage
