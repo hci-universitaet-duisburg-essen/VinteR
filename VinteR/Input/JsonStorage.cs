@@ -67,6 +67,19 @@ namespace VinteR.Input
                            
                         }
                     }
+
+                    //if the session info is missing. And create new session, and try to find the raw data.
+
+                    if (System.IO.File.Exists(Path.Combine(_homeDir, "LoggingData", name + ".json")))
+                    {
+                        Session session = new Session(name)
+                        {
+                            Datetime = DateTime.Now,
+                            Duration = Int32.MaxValue
+                        };
+                        session.MocapFrames = GetSessionMocapFrames(session, startTimestamp, endTimestamp);
+                        return session;
+                    }
                 }
 
             }
@@ -235,9 +248,11 @@ namespace VinteR.Input
                 float.Parse(certroids[2])
                 );
 
-            body.Rotation = jObject["Rotation"].ToObject<Quaternion>();
+            //body.Rotation = jObject["Rotation"].ToObject<Quaternion>();
             //body.Rotation.IsIdentity is read only??
-            body.Rotation = Quaternion.Identity;
+            //body.Rotation = Quaternion.Identity; ??
+            float w = 0.0F; // There is now float w in logging data. So set the default value of 0.0
+            body.Rotation = new Quaternion(body.Centroid, w);
             serializer.Converters.Add(new PointTypeConverter());
             IList<Point> points = new List<Point>();
             foreach (var child in jObject["Points"])

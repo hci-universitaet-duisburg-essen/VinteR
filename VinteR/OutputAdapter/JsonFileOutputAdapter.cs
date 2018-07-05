@@ -24,8 +24,7 @@ namespace VinteR.OutputAdapter
         {
             // get the out put path from the configuration
             _homeDir = configurationService.GetConfiguration().HomeDir;
-         
-          
+
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
@@ -49,33 +48,40 @@ namespace VinteR.OutputAdapter
         public void Stop()
         {
 
-
-           
-            DateTime endTime = DateTime.Now;
-            TimeSpan ts1 = new TimeSpan(_currentSession.Datetime.Ticks);
-            TimeSpan ts2 = new TimeSpan(endTime.Ticks);
-            TimeSpan ts = ts1.Subtract(ts2).Duration();
-
-            var logFile = (FileTarget)LogManager.Configuration.FindTargetByName("JsonLogger");
-
-            logFile.FileName = Path.Combine(_homeDir, "LoggingData", "sessions.json");
-            logFile.Layout = new JsonLayout
+            try
             {
-                Attributes =
+                DateTime endTime = DateTime.Now;
+                TimeSpan ts1 = new TimeSpan(_currentSession.Datetime.Ticks);
+                TimeSpan ts2 = new TimeSpan(endTime.Ticks);
+                TimeSpan ts = ts1.Subtract(ts2).Duration();
+
+                var logFile = (FileTarget)LogManager.Configuration.FindTargetByName("JsonLogger");
+
+                logFile.FileName = Path.Combine(_homeDir, "LoggingData", "sessions.json");
+                logFile.Layout = new JsonLayout
                 {
-                    new JsonAttribute("Name", _currentSession.Name),
-                    new JsonAttribute("EndFlag", "true"),
-                    new JsonAttribute("Datetime", _currentSession.Datetime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
-                    new JsonAttribute("EndTime", endTime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
-                    new JsonAttribute("Duration", ts.TotalMilliseconds.ToString("####"))
-                }
+                    Attributes =
+                    {
+                        new JsonAttribute("Name", _currentSession.Name),
+                        new JsonAttribute("EndFlag", "true"),
+                        new JsonAttribute("Datetime", _currentSession.Datetime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
+                        new JsonAttribute("EndTime", endTime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
+                        new JsonAttribute("Duration", ts.TotalMilliseconds.ToString("####"))
+                    }
 
-            };
-            LogManager.ReconfigExistingLoggers();
+                };
+                LogManager.ReconfigExistingLoggers();
 
-            _logger?.Trace(DateTime.Now.ToString);
+                _logger?.Trace(DateTime.Now.ToString);
 
-            _currentSession = null;
+                _currentSession = null;
+            }
+            catch (SystemException e)
+            {
+                // nothing for now
+            }
+
+            
         }
 
         public void InitTargetFile(Session session)
