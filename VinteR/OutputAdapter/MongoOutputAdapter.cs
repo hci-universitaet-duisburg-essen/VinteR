@@ -140,7 +140,7 @@ namespace VinteR.OutputAdapter
             try
             {
                 // Serialize Session Meta in the database
-                this.sessionCollection.InsertOne(this._session);
+                this.sessionCollection?.InsertOne(this._session);
             } catch (Exception e)
             {
                 Logger.Error("Could not serialize session in database due to: {0}", e.ToString());

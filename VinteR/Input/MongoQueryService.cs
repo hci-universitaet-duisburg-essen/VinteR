@@ -13,9 +13,31 @@ namespace VinteR.Input
         private IMongoClient client;
         private IMongoDatabase database;
         private IMongoCollection<Session> sessionCollection;
+        private bool _enabled;
+
+        public MongoQueryService(IConfigurationService configurationService, IVinterMongoDBClient client)
+        {
+            _enabled = configurationService.GetConfiguration().Mongo.Enabled;
+            if (_enabled)
+            {
+                client.connect();
+                this.client = client.getMongoClient();
+
+                // Setup Database
+                this.database = this.client.GetDatabase(configurationService.GetConfiguration().Mongo.Database);
+                this.sessionCollection = this.database.GetCollection<Session>("Sessions");
+                Logger.Debug("MongoQuery Service initialized");
+            }
+        }
 
         public IList<Session> GetSessions()
         {
+            if (!_enabled)
+            {
+                Logger.Warn("MongoDB not enabled");
+                return new List<Session>();
+            }
+
             // return the Session from the database
             try
             {
@@ -31,6 +53,12 @@ namespace VinteR.Input
 
         public Session GetSession(string name, uint startTimestamp = 0, int endTimestamp = -1)
         {
+            if (!_enabled)
+            {
+                Logger.Warn("MongoDB not enabled");
+                return null;
+            }
+
             var collectionNameFrames = string.Format("Vinter-{0}-Frames", name);
             var collectionNameBodies = string.Format("Vinter-{0}-Bodies", name);
             var framesCollection = database.GetCollection<MocapFrame>(collectionNameFrames);
@@ -58,7 +86,7 @@ namespace VinteR.Input
             }
         }
 
-        public Session getSlice(uint startTimestamp, int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        private Session getSlice(uint startTimestamp, int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var gtFilter = Builders<MocapFrame>.Filter.Gt("ElapsedMillis", startTimestamp);
             var ltFilter = Builders<MocapFrame>.Filter.Lt("ElapsedMillis", endTimestamp);
@@ -69,14 +97,14 @@ namespace VinteR.Input
           
         }
 
-        public Session getFull(IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        private Session getFull(IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var frames = framesCollection.Find<MocapFrame>(_ => true).ToList();
             return mergeBuild(frames, bodyCollection, sessionName);
         }
 
 
-        public Session getStartTilDataEnd(uint startTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        private Session getStartTilDataEnd(uint startTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var gtFilter = Builders<MocapFrame>.Filter.Gt("ElapsedMillis", startTimestamp);
             var frames = framesCollection.Find<MocapFrame>(gtFilter).ToList();
@@ -85,7 +113,7 @@ namespace VinteR.Input
 
         }
 
-        public Session getDocumentStartTilEnd(int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
+        private Session getDocumentStartTilEnd(int endTimestamp, IMongoCollection<MocapFrame> framesCollection, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             var ltFilter = Builders<MocapFrame>.Filter.Lt("ElapsedMillis", endTimestamp);
             var frames = framesCollection.Find<MocapFrame>(ltFilter).ToList();
@@ -93,7 +121,7 @@ namespace VinteR.Input
             return mergeBuild(frames, bodyCollection, sessionName);
         }
 
-        public Session mergeBuild(IList<MocapFrame> frames, IMongoCollection<Body> bodyCollection, string sessionName)
+        private Session mergeBuild(IList<MocapFrame> frames, IMongoCollection<Body> bodyCollection, string sessionName)
         {
             foreach (MocapFrame mocap in frames)
             {
@@ -107,7 +135,7 @@ namespace VinteR.Input
             return session;
         }
 
-        public MocapFrame mergeFrameBody(MocapFrame mocap, IMongoCollection<Body> bodyCollection )
+        private MocapFrame mergeFrameBody(MocapFrame mocap, IMongoCollection<Body> bodyCollection )
         {
             var bodyFilter = Builders<Body>.Filter.In(x => x._id, mocap._referenceBodies);
             var bodies = bodyCollection.Find<Body>(bodyFilter).ToList();
@@ -119,25 +147,6 @@ namespace VinteR.Input
         public string GetStorageName()
         {
             return "mongo";
-        }
-
-        public MongoQueryService(IConfigurationService configurationService, IVinterMongoDBClient client)
-        {
-            if (configurationService.GetConfiguration().Mongo.Enabled)
-            {
-                client.connect();
-                this.client = client.getMongoClient();
-
-                // Setup Database
-                this.database = this.client.GetDatabase(configurationService.GetConfiguration().Mongo.Database);
-                this.sessionCollection = this.database.GetCollection<Session>("Sessions");
-                Logger.Debug("MongoQuery Service initialized");
-            } else
-            {
-                var exception =  new System.ApplicationException("MongoDB not enabled, but MongoQueryService requested");
-                Logger.Error(exception);
-                throw exception;
-            }
         }
     }
 }
