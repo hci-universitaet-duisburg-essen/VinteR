@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
+using NLog.Targets;
 using VinteR.Configuration;
+using VinteR.Input;
 using VinteR.Model;
 
 namespace VinteR.OutputAdapter
@@ -11,14 +15,79 @@ namespace VinteR.OutputAdapter
 
     public class JsonFileOutputAdapter: IOutputAdapter
     {
-        private readonly NLog.Logger _logger;
+        private static NLog.Logger _logger;
+        private static Session _currentSession;
+        private readonly string _homeDir;
 
 
         public JsonFileOutputAdapter(IConfigurationService configurationService)
         {
             // get the out put path from the configuration
-            var homeDir = configurationService.GetConfiguration().HomeDir;
-            string dataTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+            _homeDir = configurationService.GetConfiguration().HomeDir;
+
+        }
+
+        public void OnDataReceived(MocapFrame mocapFrame)
+        {
+            // logging the mocapFrame into JsonFile. 
+            _logger.Trace("mocapFrame {MocapFrame}", mocapFrame);
+        }
+
+        public void Start(Session session)
+        {
+
+            if (_currentSession == null)
+            {
+                _currentSession = session;
+                
+                InitTargetFile(_currentSession);
+            }
+
+        }
+
+        public void Stop()
+        {
+
+            try
+            {
+                DateTime endTime = DateTime.Now;
+                TimeSpan ts1 = new TimeSpan(_currentSession.Datetime.Ticks);
+                TimeSpan ts2 = new TimeSpan(endTime.Ticks);
+                TimeSpan ts = ts1.Subtract(ts2).Duration();
+
+                var logFile = (FileTarget)LogManager.Configuration.FindTargetByName("JsonLogger");
+
+                logFile.FileName = Path.Combine(_homeDir, "LoggingData", "sessions.json");
+                logFile.Layout = new JsonLayout
+                {
+                    Attributes =
+                    {
+                        new JsonAttribute("Name", _currentSession.Name),
+                        new JsonAttribute("EndFlag", "true"),
+                        new JsonAttribute("Datetime", _currentSession.Datetime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
+                        new JsonAttribute("EndTime", endTime.ToString("dd-MM-yyyy HH:mm:ss.fff")),
+                        new JsonAttribute("Duration", ts.TotalMilliseconds.ToString("####"))
+                    }
+
+                };
+                LogManager.ReconfigExistingLoggers();
+
+                _logger?.Trace(DateTime.Now.ToString);
+
+                _currentSession = null;
+            }
+            catch (SystemException e)
+            {
+                // nothing for now
+            }
+
+            
+        }
+
+        public void InitTargetFile(Session session)
+        {
+
+            //string dataTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
 
             //":" in Path is not possible by windows
@@ -27,9 +96,8 @@ namespace VinteR.OutputAdapter
             /*
              * Set and hold the file Path by every runing 
              */
-             var filePath = Path.Combine(homeDir, "LoggingData", dataTime+".json");
 
-            
+            var filePath = Path.Combine(_homeDir, "LoggingData", session.Name + ".json");
             var logfile = new NLog.Targets.FileTarget("JsonLogger");
 
 
@@ -38,6 +106,7 @@ namespace VinteR.OutputAdapter
             {
                 Attributes =
                 {
+                    new JsonAttribute("session", session.Name),
                     new JsonAttribute("time", "${longdate}"),
                     new JsonAttribute("level", "${level:upperCase=true}"),
                     new JsonAttribute("message", "${message}"),
@@ -60,7 +129,7 @@ namespace VinteR.OutputAdapter
             NLog.LogManager.Configuration.AddTarget(logfile);
 
             // create new rule
-            var rule = new LoggingRule("JsonLogger", LogLevel.Info, logfile);
+            var rule = new LoggingRule("JsonLogger", LogLevel.Trace, logfile);
             NLog.LogManager.Configuration.LoggingRules.Add(rule);
 
             /*
@@ -77,22 +146,6 @@ namespace VinteR.OutputAdapter
 
 
         }
-
-        public void OnDataReceived(MocapFrame mocapFrame)
-        {
-            // logging the mocapFrame into JsonFile. 
-            _logger.Debug("mocapFrame {frame}", mocapFrame);
-        }
-
-        public void Start(Session session)
-        {
-        }
-
-        public void Stop()
-        {
-            //nothing to do for now
-        }
-
 
     }
 
