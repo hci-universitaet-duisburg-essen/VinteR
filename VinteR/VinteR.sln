@@ -9,22 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinteR.Tests", "..\VinteR.T
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|x64.ActiveCfg = Debug|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Debug|x64.Build.0 = Debug|x64
-		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|Any CPU.ActiveCfg = Release|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.ActiveCfg = Release|x64
 		{B0D2D7E9-2B86-4F02-AABC-32137A86D52F}.Release|x64.Build.0 = Release|x64
-		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Debug|x64.ActiveCfg = Debug|x64
 		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Debug|x64.Build.0 = Debug|x64
-		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Release|Any CPU.ActiveCfg = Release|x64
 		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Release|x64.ActiveCfg = Release|x64
 		{3E9B1A61-5CEC-40DF-9972-B75F2ECE015E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
