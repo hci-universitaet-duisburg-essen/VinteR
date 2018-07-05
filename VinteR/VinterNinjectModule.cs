@@ -52,8 +52,8 @@ namespace VinteR
             Bind<ISerializer>().To<Serializer>();
             Bind<ISessionNameGenerator>().To<SessionNameGenerator>();
 
-            Bind<IQueryService>().To<MongoQueryService>();
-            Bind<IQueryService>().To<JsonStorage>();
+           // Bind<IQueryService>().To<MongoQueryService>();
+            Bind<IQueryService>().To<JsonStorage>().Named("JsonStorage");
 
             Bind<IHttpResponseWriter>().To<HttpResponseWriter>();
             Bind<IRestRouter>().To<DefaultRouter>().InSingletonScope();

@@ -5,6 +5,7 @@ using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using VinteR.Configuration;
+using VinteR.Input;
 using VinteR.Model;
 
 namespace VinteR.OutputAdapter
@@ -22,8 +23,6 @@ namespace VinteR.OutputAdapter
             // get the out put path from the configuration
             _homeDir = configurationService.GetConfiguration().HomeDir;
 
-
-            
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
