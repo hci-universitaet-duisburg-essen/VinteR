@@ -7,6 +7,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using VinteR.Configuration;
 using VinteR.Model;
+using VinteR.Model.LeapMotion;
 
 namespace VinteR.Input
 {
@@ -196,10 +197,14 @@ namespace VinteR.Input
             string adapter = (string)jo["AdapterType"];
 
             serializer.Converters.Add(new BodyTypeConverter());
+            serializer.Converters.Add(new HandTypeConverter());
             IList<Body> bodies = new List<Body>();
             foreach (var child in jo["Bodies"])
             {
-                Body body = child.ToObject<Body>(serializer);
+
+                Body body = adapter == "leapmotion" ? child.ToObject<Model.LeapMotion.Hand>(serializer) : child.ToObject<Body>(serializer);
+
+               
                 bodies.Add(body);
             }
 
@@ -298,6 +303,148 @@ namespace VinteR.Input
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(VinteR.Model.Point));
+        }
+    }
+
+    public class HandTypeConverter: JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jObject = JObject.Load(reader);
+            Model.LeapMotion.Hand modelHand = new Model.LeapMotion.Hand();
+
+            string localPositionString = jObject["LocalPosition"].ToString().TrimStart('<').TrimEnd('>');
+            string[] localPositions = localPositionString.Split(',');
+            modelHand.LocalPosition = new Vector3(
+                float.Parse(localPositions[0]),
+                float.Parse(localPositions[1]),
+                float.Parse(localPositions[2])
+                );
+
+            IList<Finger> fingers = new List<Finger>();
+            serializer.Converters.Add(new FingerTypeConverter());
+            foreach (var child in jObject["Fingers"])
+            {
+                Finger finger = child.ToObject<Finger>(serializer);
+                fingers.Add(finger);
+
+            }
+
+            modelHand.Fingers = fingers;
+            modelHand.Side = (ESideType) Enum.Parse(typeof(ESideType), jObject["Side"].ToString());
+            modelHand.BodyType = (Body.EBodyType) Enum.Parse(typeof(Body.EBodyType), jObject["BodyType"].ToString());
+            IList<Point> points = new List<Point>();
+            serializer.Converters.Add(new PointTypeConverter());
+            foreach (var child in jObject["Points"])
+            {
+                Point point = child.ToObject<Point>(serializer);
+                points.Add(point);
+
+            }
+
+            modelHand.Points = points;
+
+
+
+            string certroidString = jObject["Centroid"].ToString().TrimStart('<').TrimEnd('>');
+
+            string[] certroids = certroidString.Split(',');
+
+            modelHand.Centroid = new Vector3(
+                float.Parse(certroids[0]),
+                float.Parse(certroids[1]),
+                float.Parse(certroids[2])
+            );
+
+            float w = 0.0F; // There is now float w in logging data. So set the default value of 0.0
+            modelHand.Rotation = new Quaternion(modelHand.Centroid, w);
+            return modelHand;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+           return (objectType == typeof(Model.LeapMotion.Hand));
+        }
+    }
+
+    public class FingerTypeConverter: JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jObject = JObject.Load(reader);
+            Model.LeapMotion.EFingerType fingerType =
+                (EFingerType) Enum.Parse(typeof(Model.LeapMotion.EFingerType), jObject["Type"].ToString());
+            Finger finger = new Finger(fingerType);
+
+            IList<FingerBone> fingerBones = new List<FingerBone>();
+            serializer.Converters.Add(new FingerBoneTypeConverter());
+
+            foreach (var child in jObject["Bones"])
+            {
+                FingerBone fingerBone = child.ToObject<FingerBone>(serializer);
+                fingerBones.Add(fingerBone);
+
+            }
+
+            finger.Bones = fingerBones;
+
+            return finger;
+
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(Model.LeapMotion.Finger));
+        }
+    }
+
+    public class FingerBoneTypeConverter: JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jObject = JObject.Load(reader);
+            Model.LeapMotion.EFingerBoneType eFingerBoneType =
+                (EFingerBoneType) Enum.Parse(typeof(EFingerBoneType), jObject["Type"].ToString());
+            FingerBone fingerBone = new FingerBone(eFingerBoneType);
+
+            string localStartPositionString = jObject["LocalStartPosition"].ToString().TrimStart('<').TrimEnd('>');
+            string[] localStartPositions = localStartPositionString.Split(',');
+            fingerBone.LocalStartPosition = new Vector3(
+                float.Parse(localStartPositions[0]),
+                float.Parse(localStartPositions[1]),
+                float.Parse(localStartPositions[2])
+            );
+
+            string localEndPositionString = jObject["LocalEndPosition"].ToString().TrimStart('<').TrimEnd('>');
+            string[] localEndPositions = localEndPositionString.Split(',');
+            fingerBone.LocalEndPosition = new Vector3(
+                float.Parse(localEndPositions[0]),
+                float.Parse(localEndPositions[1]),
+                float.Parse(localEndPositions[2])
+            );
+
+
+            return fingerBone;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(Model.LeapMotion.FingerBone));
         }
     }
 }

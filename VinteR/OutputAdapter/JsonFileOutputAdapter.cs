@@ -7,6 +7,7 @@ using NLog.Targets;
 using VinteR.Configuration;
 using VinteR.Input;
 using VinteR.Model;
+using VinteR.Model.LeapMotion;
 
 namespace VinteR.OutputAdapter
 {
