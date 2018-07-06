@@ -12,7 +12,14 @@ namespace VinteR.MainApplication
         private readonly ISessionPlayer _player;
         private readonly IQueryService[] _queryServices;
 
-        private string _currentSource;
+        public Session Session => _player.Session;
+
+        public string SessionSource { get; private set; }
+
+        public uint Start { get; private set; }
+
+        public int End { get; private set; }
+
         private string _currentSessionName;
 
         public PlaybackService(ISessionPlayer player, IQueryService[] queryServices)
@@ -21,18 +28,21 @@ namespace VinteR.MainApplication
             _queryServices = queryServices;
         }
 
-        public Session Session => _player.Session;
-        public bool IsPlaying => _player.IsPlaying;
-
-        public Session Play(string source, string sessionName)
+        public Session Play(string source, string sessionName, uint start, int end)
         {
             // if the session is already loaded return it
-            if (_currentSource == source && _currentSessionName == sessionName)
+            if (SessionSource == source 
+                && _currentSessionName == sessionName
+                && Start == start
+                && End == end)
             {
                 // if playback has paused continue playback
-                if (!IsPlaying) _player.Play();
+                if (!IsPlaying()) _player.Play();
                 return _player.Session;
             }
+
+            Start = start;
+            End = end;
 
             // get the query service
             var queryService = _queryServices
@@ -40,16 +50,16 @@ namespace VinteR.MainApplication
                 .FirstOrDefault(qs => qs.GetStorageName() == source);
 
             // load the session. this takes long!
-            var session = queryService?.GetSession(sessionName);
+            var session = queryService?.GetSession(sessionName, start, end);
 
             // start playback if a session was loaded
             if (session != null)
             {
-                _currentSource = source;
+                SessionSource = source;
                 _currentSessionName = sessionName;
 
                 // stop current playback if needed
-                if (IsPlaying) _player.Stop();
+                if (IsPlaying()) _player.Stop();
 
                 _player.Session = session;
                 _player.FrameAvailable += FireFrameAvailable;
@@ -57,6 +67,19 @@ namespace VinteR.MainApplication
             }
 
             return _player.Session;
+        }
+
+        public bool IsPlaying()
+        {
+            return _player.IsPlaying;
+        }
+
+        public bool ContainsSession(string source, string sessionName, uint start, int end)
+        {
+            return SessionSource == source 
+                   && Session?.Name == sessionName 
+                   && Start == start 
+                   && End == end;
         }
 
         public void Pause()

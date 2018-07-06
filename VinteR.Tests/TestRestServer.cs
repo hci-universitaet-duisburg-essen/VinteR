@@ -4,6 +4,7 @@ using System.Net.Http;
 using Ninject;
 using NUnit.Framework;
 using VinteR.Configuration;
+using VinteR.MainApplication;
 using VinteR.Rest;
 
 namespace VinteR.Tests
@@ -12,46 +13,58 @@ namespace VinteR.Tests
     public class TestRestServer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private VinterRestServer _restServer;
+        private const int RestPort = 8050;
         private HttpClient _httpClient;
+        private IMainApplication _mainApplication;
 
         [OneTimeSetUp]
         public void SetUpTestOnce()
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
             var config = ninjectKernel.Get<IConfigurationService>();
+            config.GetConfiguration().Rest.Port = RestPort;
+            config.GetConfiguration().StartMode = "playback";
 
-            config.GetConfiguration().Rest.Port = 9001;
-            var restRouters = ninjectKernel.GetAll<IRestRouter>().Select(r => r).ToArray();
-            _restServer = new VinterRestServer(config, restRouters);
-            _restServer.Start();
+            _mainApplication = ninjectKernel.Get<IMainApplication>();
+            _mainApplication.Start();
             _httpClient = new HttpClient();
         }
 
         [OneTimeTearDown]
         public void TearDownOnce()
         {
-            _restServer.Stop();
+            _mainApplication.Exit();
         }
 
         [Test]
         public void TestGetSession()
         {
-            var uri = new Uri("http://localhost:9001/session?name=testsession&source=MongoDB");
-            var bytes = _httpClient.GetByteArrayAsync(uri).Result;
-            var session = Model.Gen.Session.Parser.ParseFrom(bytes);
+            var url = $"http://localhost:{RestPort}/session?name=testsession&source=MongoDB";
+            Logger.Info(url);
+            try
+            {
+                var bytes = _httpClient.GetByteArrayAsync(url).Result;
+                var session = Model.Gen.Session.Parser.ParseFrom(bytes);
 
-            Assert.AreEqual(20, session.Meta.Duration);
-            Assert.AreEqual(DateTime.MinValue.ToUniversalTime().ToBinary(), session.Meta.SessionStartMillis);
-            Assert.AreEqual("optitrack", session.Frames[0].SourceId);
-            Assert.AreEqual(new Model.Gen.MocapFrame.Types.Body.Types.Vector3() { X = 1, Y = 1, Z = 1 }, 
-                session.Frames[0].Bodies[0].Centroid);
+                Assert.AreEqual(20, session.Meta.Duration);
+                Assert.AreEqual(DateTime.MinValue.ToUniversalTime().ToBinary(), session.Meta.SessionStartMillis);
+                Assert.AreEqual("optitrack", session.Frames[0].SourceId);
+                Assert.AreEqual(new Model.Gen.MocapFrame.Types.Body.Types.Vector3() { X = 1, Y = 1, Z = 1 },
+                    session.Frames[0].Bodies[0].Centroid);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                throw;
+            }
         }
 
         [Test]
         public void TestGetSessions()
         {
-            var uri = new Uri("http://localhost:9001/sessions");
+            var url = $"http://localhost:{RestPort}/sessions";
+            Logger.Info(url);
+            var uri = new Uri(url);
             var bytes = _httpClient.GetByteArrayAsync(uri).Result;
             var meta = Model.Gen.SessionsMetadata.Parser.ParseFrom(bytes);
 

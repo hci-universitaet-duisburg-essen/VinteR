@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using VinteR.Configuration;
+using VinteR.Input;
 using VinteR.Model;
 using VinteR.Rest;
 using VinteR.Streaming;
@@ -23,6 +25,7 @@ namespace VinteR.MainApplication
         private readonly IRestRouter[] _restRouters;
         private readonly IRestServer _restServer;
         private readonly IStreamingServer _streamingServer;
+        private readonly IQueryService[] _queryServices;
         private ApplicationMode _currentMode;
 
         public MainApplication(IConfigurationService configurationService, 
@@ -30,7 +33,8 @@ namespace VinteR.MainApplication
             IPlaybackService playbackService, 
             IRestServer restServer,
             IRestRouter[] routers,
-            IStreamingServer streamingServer)
+            IStreamingServer streamingServer,
+            IQueryService[] queryServices)
         {
             _startMode = configurationService.GetConfiguration().StartMode;
             _recordService = recordService;
@@ -38,6 +42,7 @@ namespace VinteR.MainApplication
             _streamingServer = streamingServer;
             _restServer = restServer;
             _restRouters = routers;
+            _queryServices = queryServices;
             _currentMode = ApplicationMode.Waiting;
         }
 
@@ -53,6 +58,7 @@ namespace VinteR.MainApplication
 
             foreach (var restRouter in _restRouters)
             {
+                restRouter.OnGetSessionCalled += HandleOnGetSessionCalled;
                 restRouter.OnPlayCalled += HandleOnPlayCalled;
                 restRouter.OnPausePlaybackCalled += HandleOnPausePlaybackCalled;
                 restRouter.OnStopPlaybackCalled += HandleOnStopPlaybackCalled;
@@ -70,6 +76,22 @@ namespace VinteR.MainApplication
                     // nothing to to without session to play
                     break;
             }
+        }
+
+        private Session HandleOnGetSessionCalled(string source, string sessionName, uint start, int end)
+        {
+            // If the session is already playing return it
+            if (_playbackService.ContainsSession(source, sessionName, start, end))
+            {
+                return _playbackService.Session;
+            }
+
+            // otherwise load it from the query services
+            var queryService = _queryServices.Where(qs => qs.GetStorageName() == source)
+                .Select(qs => qs)
+                .First();
+            var session = queryService.GetSession(sessionName, start, end);
+            return session;
         }
 
         private Session HandleOnStopRecordCalled()
@@ -97,9 +119,9 @@ namespace VinteR.MainApplication
             PausePlayback();
         }
 
-        private Session HandleOnPlayCalled(string source, string sessionName)
+        private Session HandleOnPlayCalled(string source, string sessionName, uint start, int end)
         {
-            return StartPlayback(source, sessionName);
+            return StartPlayback(source, sessionName, start, end);
         }
 
         public Session StartRecord()
@@ -137,24 +159,24 @@ namespace VinteR.MainApplication
             return null;
         }
 
-        public Session StartPlayback(string source, string sessionName)
+        public Session StartPlayback(string source, string sessionName, uint start, int end)
         {
             Session session;
             switch (_currentMode)
             {
                 case ApplicationMode.Live:
                     StopRecord();
-                    session = _playbackService.Play(source, sessionName);
+                    session = _playbackService.Play(source, sessionName, start, end);
                     break;
                 case ApplicationMode.Play:
                 case ApplicationMode.Waiting:
-                    session = _playbackService.Play(source, sessionName);
+                    session = _playbackService.Play(source, sessionName, start, end);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            _currentMode = _playbackService.IsPlaying 
+            _currentMode = _playbackService.IsPlaying()
                 ? ApplicationMode.Play 
                 : ApplicationMode.Waiting;
             return session;

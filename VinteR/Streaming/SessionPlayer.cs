@@ -27,11 +27,11 @@ namespace VinteR.Streaming
         /// Contains the duration of the session calculated through all given
         /// frames.
         /// </summary>
-        public long Duration { get; private set; }
+        public long PlayDuration { get; private set; }
 
         private Session _session;
 
-        private IEnumerable<IGrouping<long, MocapFrame>> _groupedFrames;
+        private IGrouping<long, MocapFrame>[] _groupedFrames;
 
         /// <summary>
         /// Stopwatch with which the frames that should be played is
@@ -43,6 +43,18 @@ namespace VinteR.Streaming
         /// Current position which frames should be played.
         /// </summary>
         private long _position;
+
+        /// <summary>
+        /// Start point from which the session should be played. Also used
+        /// to calculate the duration.
+        /// </summary>
+        private uint _start;
+
+        /// <summary>
+        /// End point until the session should be played. Also used
+        /// to calculate the duration.
+        /// </summary>
+        private uint _end;
 
         /// <summary>
         /// Used to save the elapsed millis of the stopwatch and
@@ -95,8 +107,15 @@ namespace VinteR.Streaming
             // sort and group all frames by their elapsed milliseconds
             _groupedFrames = frames
                 .OrderBy(f => f.ElapsedMillis)
-                .GroupBy(f => f.ElapsedMillis, f => f);
-            Duration = Convert.ToInt64(_groupedFrames.Last().Key);
+                .GroupBy(f => f.ElapsedMillis, f => f)
+                .ToArray();
+
+            // starting point of session play
+            _start = Convert.ToUInt32(_groupedFrames.First().Key);
+            // end point of session play
+            _end = Convert.ToUInt32(_groupedFrames.Last().Key);
+            // time of play duration, NOT session duration
+            PlayDuration = _end - _start;
 
             Continue();
             _playbackDataLoaded = _timer.IsRunning;
@@ -115,8 +134,8 @@ namespace VinteR.Streaming
             _lastElapsed = _playStopwatch.ElapsedMilliseconds;
 
             // reset if needed
-            if (_position > Duration)
-                _position = 0;
+            if (_position > _end)
+                _position = _start;
 
             /*
              * As frames millis are stored as long values the current position
@@ -153,7 +172,7 @@ namespace VinteR.Streaming
 
         public void Jump(uint millis)
         {
-            if (millis > Duration)
+            if (millis > _end || millis < _start)
             {
                 Logger.Warn("Can not jump to {0}", millis);
                 return;
