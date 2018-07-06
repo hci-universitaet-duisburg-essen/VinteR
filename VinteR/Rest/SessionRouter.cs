@@ -11,7 +11,6 @@ using VinteR.Model.Gen;
 using VinteR.Serialization;
 using VinteR.Streaming;
 using HttpStatusCode = Grapevine.Shared.HttpStatusCode;
-using Session = VinteR.Model.Session;
 
 namespace VinteR.Rest
 {
@@ -29,6 +28,7 @@ namespace VinteR.Rest
         public event RecordCalledEventHandler OnRecordSessionCalled;
         public event RecordCalledEventHandler OnStopRecordCalled;
         public event SessionPlayEventHandler OnPlayCalled;
+        public event GetSessionEventHandler OnGetSessionCalled;
         public event EventHandler OnPausePlaybackCalled;
         public event EventHandler OnStopPlaybackCalled;
         public event EventHandler<uint> OnJumpPlaybackCalled;
@@ -69,7 +69,11 @@ namespace VinteR.Rest
             {
                 var source = GetParam(context, ParamSource);
                 var sessionName = GetParam(context, ParamSessionName);
-                var session = OnPlayCalled?.Invoke(source, sessionName);
+
+                if (!uint.TryParse(GetParam(context, ParamStart, "0"), out var start)) start = 0;
+                if (!int.TryParse(GetParam(context, ParamEnd, "-1"), out var end)) end = -1;
+
+                var session = OnPlayCalled?.Invoke(source, sessionName, start, end);
                 context.Response.StatusCode = HttpStatusCode.Accepted;
 
                 var hostParam = GetParam(context, ParamHost);
@@ -169,8 +173,10 @@ namespace VinteR.Rest
         {
             try
             {
-                var session = GetSession(context);
-                _serializer.ToProtoBuf(session, out Model.Gen.Session protoSession);
+                ValidateGetSessionParams(context, out var source, out var name, out var start, out var end);
+                var session = OnGetSessionCalled?.Invoke(source, name, start, end);
+                _serializer.ToProtoBuf(session, out Session protoSession);
+
                 return _responseWriter.SendProtobufMessage(protoSession, context);
             }
             catch (InvalidArgumentException e)
@@ -179,10 +185,10 @@ namespace VinteR.Rest
             }
         }
 
-        private Session GetSession(IHttpContext context)
+        private void ValidateGetSessionParams(IHttpContext context, out string source, out string name, out uint start, out int end)
         {
             // validate source parameter present
-            var source = GetParam(context, ParamSource);
+            source = GetParam(context, ParamSource);
             if (source == string.Empty)
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter '" + ParamSource + "' is missing");
 
@@ -191,27 +197,21 @@ namespace VinteR.Rest
                 throw new InvalidArgumentException(HttpStatusCode.NotFound, "Source " + source + " not found");
 
             // validate session name parameter present
-            var sessionName = GetParam(context, ParamSessionName);
-            if (sessionName == string.Empty)
+            name = GetParam(context, ParamSessionName);
+            if (name == string.Empty)
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest, "Parameter '" + ParamSessionName + "' is missing");
 
             // validate start time
             var startTime = GetParam(context, ParamStart, "0");
-            if (!uint.TryParse(startTime, out var start))
+            if (!uint.TryParse(startTime, out start))
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest,
                     "Parameter '" + ParamStart + "' contains no number >= 0");
 
             // validate end time
             var endTime = GetParam(context, ParamEnd, "-1");
-            if (!int.TryParse(endTime, out var end))
+            if (!int.TryParse(endTime, out end))
                 throw new InvalidArgumentException(HttpStatusCode.BadRequest,
                     "Parameter '" + ParamEnd + "' contains no number >= -1");
-
-            var queryService = _queryServices.Where(qs => qs.GetStorageName() == source)
-                .Select(qs => qs)
-                .First();
-            var session = queryService.GetSession(sessionName, start, end);
-            return session;
         }
 
         private static string GetParam(IHttpContext context, string key, string defaultValue = "")

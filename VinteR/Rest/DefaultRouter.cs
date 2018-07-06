@@ -12,6 +12,7 @@ namespace VinteR.Rest
 
         public event RecordCalledEventHandler OnRecordSessionCalled;
         public event RecordCalledEventHandler OnStopRecordCalled;
+        public event GetSessionEventHandler OnGetSessionCalled;
         public event SessionPlayEventHandler OnPlayCalled;
         public event EventHandler OnPausePlaybackCalled;
         public event EventHandler OnStopPlaybackCalled;

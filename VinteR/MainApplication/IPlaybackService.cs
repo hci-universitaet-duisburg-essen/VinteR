@@ -7,9 +7,13 @@ namespace VinteR.MainApplication
     {
         event PlayMocapFrameEventHandler FrameAvailable;
 
-        bool IsPlaying { get; }
+        Session Session { get; }
 
-        Session Play(string source, string sessionName);
+        Session Play(string source, string sessionName, uint start, int end);
+
+        bool IsPlaying();
+
+        bool ContainsSession(string source, string sessionName, uint start, int end);
 
         void Pause();
 

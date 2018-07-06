@@ -21,6 +21,7 @@ namespace VinteR.Rest
         public event RecordCalledEventHandler OnStopRecordCalled;
 
         // ignored as they are threaded in the SessionRouter
+        public event GetSessionEventHandler OnGetSessionCalled;
         public event SessionPlayEventHandler OnPlayCalled;
         public event EventHandler OnPausePlaybackCalled;
         public event EventHandler OnStopPlaybackCalled;
@@ -40,7 +41,7 @@ namespace VinteR.Rest
         public void Register(IRouter router)
         {
             Register(HandleGetSessions, HttpMethod.GET, "/sessions", router);
-            Register(HandleRecordSessions, HttpMethod.POST, "/sessions/record", router);
+            Register(HandleRecordSessions, HttpMethod.GET, "/sessions/record", router);
             Register(HandleStopRecord, HttpMethod.GET, "/sessions/record/stop", router);
         }
 
