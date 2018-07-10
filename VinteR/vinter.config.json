@@ -15,12 +15,12 @@
     ],
     "mongodb": {
         "enabled": true,
-        "write":  false,
-        "domain": "localhost",
+        "write": true,
+        "domain": "ds161710.mlab.com",
         "user": "dbvinter",
         "password": "dbvinter18",
         "database": "vinter",
-        "port": 27017,
+        "port": 61710,
         "bufferSize": 5000
     },
     "adapters": [
