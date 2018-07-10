@@ -51,7 +51,7 @@ namespace VinteR.OutputAdapter
                 Logger.Debug("Data Received for MongoDB");
 
                 // buffer frames before init
-                if ( (this.frameCollection == null) || (this.bodyCollection == null) )
+                if (this.frameCollection == null)
                 {
                     if (this._buffer.Count <= this._bufferSize )
                     {
@@ -63,7 +63,7 @@ namespace VinteR.OutputAdapter
                     }
                 }
 
-                if ((this.frameCollection != null) && (this.bodyCollection != null))
+                if (this.frameCollection != null)
                 {
                     // empty the buffer
                     if (this._buffer.Count > 0)
@@ -82,22 +82,10 @@ namespace VinteR.OutputAdapter
 
         public void writeToDatabase(MocapFrame mocapFrame)
         {
-            if ((this.frameCollection != null) && (this.bodyCollection != null))
+            if ((this.frameCollection != null))
             {
-                mocapFrame._id = new BsonObjectId(ObjectId.GenerateNewId());
-                foreach (Body body in mocapFrame.Bodies)
-                {
-                    body._id = new BsonObjectId(ObjectId.GenerateNewId());
-                    mocapFrame._referenceBodies.Add(body._id);
-                }
-                if (mocapFrame.Bodies.Count > 0)
-                {
-                    // Do only serialize Bodies if there are Bodies in the frame.
-                    this.bodyCollection.InsertManyAsync(mocapFrame.Bodies);
-                }
                 this.frameCollection.InsertOneAsync(mocapFrame);
                 Logger.Debug("Frame Async Insert started");
-
             }
         }
 
@@ -113,12 +101,10 @@ namespace VinteR.OutputAdapter
                     this.dbClient.connect();
                     this.client = this.dbClient.getMongoClient();
                     var frameCollectionForSession = string.Format("Vinter-{0}-Frames", this._session.Name);
-                    var bodyCollectionForSession = string.Format("Vinter-{0}-Bodies", this._session.Name);
 
                     // Setup Database
                     this.database = this.client.GetDatabase(this._configurationService.GetConfiguration().Mongo.Database);
                     this.frameCollection = this.database.GetCollection<MocapFrame>(frameCollectionForSession);
-                    this.bodyCollection = this.database.GetCollection<Body>(bodyCollectionForSession);
                     this.sessionCollection = this.database.GetCollection<Session>("Sessions");
                     Logger.Debug("MongoDB Client initialized");
                 }

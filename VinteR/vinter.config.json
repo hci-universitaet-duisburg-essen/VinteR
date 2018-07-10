@@ -15,7 +15,7 @@
     ],
     "mongodb": {
         "enabled": true,
-        "write":  false,
+        "write": true,
         "domain": "ds161710.mlab.com",
         "user": "dbvinter",
         "password": "dbvinter18",

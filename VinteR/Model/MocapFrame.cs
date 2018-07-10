@@ -51,24 +51,18 @@ namespace VinteR.Model
         /// </summary>
         
         public float Latency { get; set; }
-
-        // [BsonElement]
-        // private List<Body> _bson_bodies { get; set; }
-
-        
-        public List<BsonObjectId> _referenceBodies;
         
        
         [BsonIgnore]
-        private IList<Body> _bodies;
+        private List<Body> _bodies;
 
         /// <summary>
         /// Contains a list of bodies that the input adapter has
         /// detected.
         /// </summary>
 
-        [BsonIgnore]
-        public IList<Body> Bodies
+        [BsonElement]
+        public List<Body> Bodies
         {
             get => _bodies;
             set
@@ -89,15 +83,13 @@ namespace VinteR.Model
             this.Bodies = new List<Body>();
             this.SourceId = sourceId;
             this.AdapterType = adapter;
-            this._referenceBodies = new List<BsonObjectId>();
         }
 
         public MocapFrame(string sourceId, string adapter, IList<Body> bodies)
         {
-            this.Bodies = bodies;
+            this.Bodies = (List<Body>) bodies;
             this.SourceId = sourceId;
             this.AdapterType = adapter;
-            this._referenceBodies = new List<BsonObjectId>();
         }
 
         public void AddBody(ref Body body)
