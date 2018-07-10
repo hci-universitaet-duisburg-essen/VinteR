@@ -15,12 +15,12 @@
     ],
     "mongodb": {
         "enabled": true,
-        "write":  true,
-        "domain": "ds161710.mlab.com",
+        "write":  false,
+        "domain": "localhost",
         "user": "dbvinter",
         "password": "dbvinter18",
         "database": "vinter",
-        "port": 61710,
+        "port": 27017,
         "bufferSize": 5000
     },
     "adapters": [
@@ -33,14 +33,14 @@
             "colorStream.enabled": false,
             "colorStream.flush": true,
             "colorStream.flushSize": 60,
-            "colorStream.flush.dirname": "colorStreamData.json",
+            "colorStream.flush.dirname": "colorStreamData",
             "depthStream.enabled": false,
             "depthStream.flush": false,
             "depthStream.flushSize": 15,
-            "depthStream.flush.dirname": "DepthStreamData.json",
-            "skeletonStream.flush": true,
+            "depthStream.flush.dirname": "DepthStreamData",
+            "skeletonStream.flush": false,
             "skeletonStream.flushSize": 200,
-            "skeletonStream.flush.dirname": "skeletonStreamData.json"
+            "skeletonStream.flush.dirname": "skeletonStreamData"
         },
         {
             "enabled": false,
