@@ -50,9 +50,12 @@ namespace VinteR.Rest
             {
                 context.Response.SendResponse(data);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Logger.Warn("Ignoring error on send response");
+                if (Logger.IsDebugEnabled)
+                    Logger.Debug("Stacktrace: {0}", e.StackTrace);
+                else
+                    Logger.Warn("Ignoring error on send response");
             }
         }
 

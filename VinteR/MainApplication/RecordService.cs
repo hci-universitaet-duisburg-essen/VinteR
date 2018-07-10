@@ -153,6 +153,7 @@ namespace VinteR.MainApplication
             foreach (var adapter in _runningInputAdapters)
             {
                 adapter.FrameAvailable -= HandleFrameAvailable;
+                adapter.ErrorEvent -= HandleErrorEvent;
                 adapter.Stop();
             }
 
