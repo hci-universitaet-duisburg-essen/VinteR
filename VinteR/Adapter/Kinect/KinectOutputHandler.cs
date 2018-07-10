@@ -46,10 +46,10 @@ namespace VinteR.Adapter.Kinect
             this._configurationService = configurationService;
             this._config = _config;
             this.adapter = adapter;
-            this.DataDir = this._configurationService.GetConfiguration().HomeDir + "\\" + this._config.DataDir;
-            this.ColorStreamPath = this.DataDir + "\\" + this._config.ColorStreamFlushDir;
-            this.DepthStreamPath = this.DataDir + "\\" + this._config.DepthStreamFlushDir;
-            this.SkeletonStreamPath = this.DataDir + "\\" + this._config.SkeletonStreamFlushDir;
+            this.DataDir = Path.Combine(this._configurationService.GetConfiguration().HomeDir, this._config.DataDir);
+            this.ColorStreamPath = Path.Combine(this.DataDir, this._config.ColorStreamFlushDir);
+            this.DepthStreamPath = Path.Combine(this.DataDir, this._config.DepthStreamFlushDir);
+            this.SkeletonStreamPath = Path.Combine(this.DataDir, this._config.SkeletonStreamFlushDir);
 
             // Subscribe Frame Available Event
             this.adapter.FrameAvailable += flushFrames;
@@ -68,30 +68,29 @@ namespace VinteR.Adapter.Kinect
             // ColorStream
             if (this._config.ColorStreamEnabled && this._config.ColorStreamFlush)
             {
-                CreateDirectory(ColorStreamPath);
+                if (!Directory.Exists(this.ColorStreamPath))
+                {
+                    Directory.CreateDirectory(this.ColorStreamPath);
+                }  
             }
 
             // DepthStream
             if (this._config.DepthStreamEnabled && this._config.DepthStreamFlush)
             {
-                CreateDirectory(DepthStreamPath);
+                if (!Directory.Exists(this.DepthStreamPath))
+                {
+                    Directory.CreateDirectory(this.DepthStreamPath);
+                }
             }
 
 
             // SkeletonStream
             if (this._config.SkeletonStreamFlush)
             {
-                CreateDirectory(SkeletonStreamPath);
-            }
-        }
-
-        private static void CreateDirectory(string path)
-        {
-            var directory = Path.GetDirectoryName(path);
-            if (directory != null && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-                Logger.Info("Created directory {0}", directory);
+                if (!Directory.Exists(this.SkeletonStreamPath))
+                {
+                    Directory.CreateDirectory(this.SkeletonStreamPath);
+                }
             }
         }
 
@@ -106,7 +105,8 @@ namespace VinteR.Adapter.Kinect
                     // freeze to serialize
                     List<MocapFrame> serializeList = new List<MocapFrame>(frameList);
                     // Serialize 
-                    string flushPath = this.SkeletonStreamPath + "\\" + this.skeletonFlushCount.ToString() + ".json";
+                    string flushPath = Path.Combine(this.SkeletonStreamPath, (this.skeletonFlushCount.ToString() + ".json"));
+                   
                     try
                     {
                         using (StreamWriter sw = new StreamWriter(flushPath))
@@ -137,7 +137,8 @@ namespace VinteR.Adapter.Kinect
                 {
                     // freeze to serialize
                     List<DepthImagePixel[]> serializeList = new List<DepthImagePixel[]>(depthList);
-                    string flushPath = this.DepthStreamPath + "\\" + this.depthFlushCount.ToString() + ".json";
+                    string flushPath = Path.Combine(this.DepthStreamPath, (this.depthFlushCount.ToString() + ".json"));
+                    
                     try
                     {
                         using (StreamWriter sw = new StreamWriter(flushPath))
@@ -167,7 +168,8 @@ namespace VinteR.Adapter.Kinect
                 if (this.colorPixelList.Count > this._config.ColorStreamFlushSize)
                 {
                     List<byte[]> serializeList = new List<byte[]>(colorPixelList);
-                    string flushPath = this.ColorStreamPath + "\\" + this.colorFlushCount.ToString() + ".json";
+                    string flushPath = Path.Combine(this.ColorStreamPath, (this.colorFlushCount.ToString() + ".json"));
+                   
                     try
                     {
                         using (StreamWriter sw = new StreamWriter(flushPath))
