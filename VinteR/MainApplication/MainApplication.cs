@@ -186,7 +186,7 @@ namespace VinteR.MainApplication
         {
             if (_currentMode == ApplicationMode.Play)
             {
-                _playbackService.Stop();
+                _playbackService.Pause();
             }
             else
             {
@@ -198,7 +198,7 @@ namespace VinteR.MainApplication
         {
             if (_currentMode == ApplicationMode.Play)
             {
-                _playbackService.Pause();
+                _playbackService.Stop();
                 _currentMode = ApplicationMode.Waiting;
             }
             else

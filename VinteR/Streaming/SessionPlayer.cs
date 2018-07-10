@@ -168,6 +168,7 @@ namespace VinteR.Streaming
             _playStopwatch.Stop();
             _playStopwatch.Reset();
             _lastElapsed = 0;
+            _position = _start;
         }
 
         public void Jump(uint millis)
