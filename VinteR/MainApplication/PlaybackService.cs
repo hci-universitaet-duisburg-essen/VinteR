@@ -24,8 +24,9 @@ namespace VinteR.MainApplication
 
         public PlaybackService(ISessionPlayer player, IQueryService[] queryServices)
         {
-            _player = player;
             _queryServices = queryServices;
+            _player = player;
+            _player.FrameAvailable += FireFrameAvailable;
         }
 
         public Session Play(string source, string sessionName, uint start, int end)
@@ -62,7 +63,6 @@ namespace VinteR.MainApplication
                 if (IsPlaying()) _player.Stop();
 
                 _player.Session = session;
-                _player.FrameAvailable += FireFrameAvailable;
                 _player.Play();
             }
 
