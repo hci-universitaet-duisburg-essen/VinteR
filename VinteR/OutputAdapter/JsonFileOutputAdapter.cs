@@ -17,19 +17,27 @@ namespace VinteR.OutputAdapter
         private static NLog.Logger _logger;
         private static Session _currentSession;
         private readonly string _homeDir;
+        private readonly bool _enabled;
 
 
         public JsonFileOutputAdapter(IConfigurationService configurationService)
         {
+            _enabled = configurationService.GetConfiguration().JsonLoggerEnable;
             // get the out put path from the configuration
             _homeDir = configurationService.GetConfiguration().HomeDir;
-
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
         {
-            // logging the mocapFrame into JsonFile. 
-            _logger.Trace("mocapFrame {MocapFrame}", mocapFrame);
+
+
+            if (this._enabled)
+            {
+                // logging the mocapFrame into JsonFile. 
+                _logger?.Trace("mocapFrame {MocapFrame}", mocapFrame);
+            }
+
+          
         }
 
         public void Start(Session session)

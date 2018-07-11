@@ -55,5 +55,6 @@
             "client.ip": "10.23.112.25",
             "connection.type": "multicast"
         }
-    ]
+    ],
+    "jsonLoggerEnable": false
 }

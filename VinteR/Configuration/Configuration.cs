@@ -18,6 +18,7 @@ namespace VinteR.Configuration
         [JsonProperty("udp.receivers")] public IList<UdpReceiver> UdpReceivers { get; set; }
         [JsonProperty("mongodb")] public MongoDB Mongo { get; set;  }
         [JsonProperty("adapters")] public IList<Adapter> Adapters { get; set; }
+        [JsonProperty("jsonLoggerEnable")] public bool JsonLoggerEnable { get; set; }
     }
 
     public class Rest
