@@ -7,21 +7,25 @@
         "port": 8010
     },
     "udp.server.port": 5060,
-    "udp.receivers": [
-        {
-            "ip": "127.0.0.1",
-            "port": 5080
-        }
-    ],
+  "udp.receivers": [
+    {
+      "ip": "127.0.0.1",
+      "port": 5080
+    },
+    {
+      "ip": "10.23.112.11",
+      "port": 5080
+    }
+  ],
     "mongodb": {
         "enabled": true,
         "write": true,
-        "domain": "ds161710.mlab.com",
+        "domain": "localhost",
         "user": "dbvinter",
         "password": "dbvinter18",
         "database": "vinter",
-        "port": 61710,
-        "bufferSize": 5000
+        "port": 27017,
+        "bufferSize": 35000
     },
     "adapters": [
         {
@@ -43,16 +47,16 @@
             "skeletonStream.flush.dirname": "skeletonStreamData"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion",
             "adaptertype": "leapmotion"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "server.ip": "10.23.112.35",
-            "client.ip": "10.23.112.25",
+            "client.ip": "10.23.112.35",
             "connection.type": "multicast"
         }
     ],

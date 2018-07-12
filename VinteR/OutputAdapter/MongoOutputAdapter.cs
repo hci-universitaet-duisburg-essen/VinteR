@@ -29,7 +29,8 @@ namespace VinteR.OutputAdapter
         private IMongoCollection<Session> sessionCollection;
         private Session _session;
         private bool Enabled;
-        private bool Write; 
+        private bool Write;
+        private InsertManyOptions _insertOptions;
 
         public MongoOutputAdapter(IConfigurationService configurationService, IVinterMongoDBClient dbClient)
         {
@@ -42,6 +43,7 @@ namespace VinteR.OutputAdapter
             this._bufferSize = this._configurationService.GetConfiguration().Mongo.MongoBufferSize;
             this.Enabled = this._configurationService.GetConfiguration().Mongo.Enabled;
             this.Write = this._configurationService.GetConfiguration().Mongo.Write;
+            this._insertOptions = new InsertManyOptions();
         }
 
         public void OnDataReceived(MocapFrame mocapFrame)
@@ -50,42 +52,38 @@ namespace VinteR.OutputAdapter
             {
                 Logger.Debug("Data Received for MongoDB");
 
-                // buffer frames before init
-                if (this.frameCollection == null)
-                {
+                // Buffer Frames
                     if (this._buffer.Count <= this._bufferSize )
                     {
                         this._buffer.Add(mocapFrame);
+                        Logger.Debug("MongoDB Frame appended to List");
                     }
                     else
                     {
-                        this._buffer.Clear();
+                        writeToDatabase();
                     }
-                }
 
-                if (this.frameCollection != null)
-                {
-                    // empty the buffer
-                    if (this._buffer.Count > 0)
-                    {
-                        foreach (MocapFrame frame in this._buffer)
-                        {
-                            writeToDatabase(frame);
-                        }
-                    }
-                }
-
-                // write the current Frame
-                writeToDatabase(mocapFrame);
             }
         }
 
-        public void writeToDatabase(MocapFrame mocapFrame)
+
+        public void writeToDatabase()
         {
             if ((this.frameCollection != null))
             {
-                this.frameCollection.InsertOneAsync(mocapFrame);
-                Logger.Debug("Frame Async Insert started");
+                this.frameCollection.InsertManyAsync( (IEnumerable<MocapFrame>) this._buffer );
+                Logger.Debug("Bulk Insert started, executed asynchroniously");
+                this._buffer.Clear();
+            }
+        }
+
+        public void flush()
+        {
+            if ((this.frameCollection != null))
+            {
+                this.frameCollection.InsertMany((IEnumerable<MocapFrame>)this._buffer);
+                Logger.Debug("Bulk Insert flush, executed synchroniously");
+                this._buffer.Clear();
             }
         }
 
@@ -106,6 +104,8 @@ namespace VinteR.OutputAdapter
                     this.database = this.client.GetDatabase(this._configurationService.GetConfiguration().Mongo.Database);
                     this.frameCollection = this.database.GetCollection<MocapFrame>(frameCollectionForSession);
                     this.sessionCollection = this.database.GetCollection<Session>("Sessions");
+                    this._insertOptions.IsOrdered = false; // Improves performance, order of documents does not matter on bulk insert!
+
                     Logger.Debug("MongoDB Client initialized");
                 }
                 catch (Exception e)
@@ -127,6 +127,7 @@ namespace VinteR.OutputAdapter
             {
                 // Serialize Session Meta in the database
                 this.sessionCollection?.InsertOne(this._session);
+                flush();
             } catch (Exception e)
             {
                 Logger.Error("Could not serialize session in database due to: {0}", e.ToString());

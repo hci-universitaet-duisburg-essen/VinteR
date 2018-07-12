@@ -35,7 +35,7 @@ namespace VinteR.Adapter.OptiTrack
             ExtractBodies(data, ref handledFrame);
 
             _adapter.OnFrameAvailable(handledFrame);
-            handledFrame.Bodies.Clear();
+            //handledFrame.Bodies.Clear();
         }
 
         /*
