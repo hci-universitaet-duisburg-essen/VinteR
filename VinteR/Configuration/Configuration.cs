@@ -51,6 +51,7 @@ namespace VinteR.Configuration
         [JsonProperty("enabled")] public bool Enabled { get; set; }
         [JsonProperty("name")] public string Name { get; set; }
         [JsonProperty("adaptertype")] public string AdapterType { get; set; }
+        [JsonProperty("framedroprate")] public int FramedropRate { get; set; }
         [JsonExtensionData] private readonly IDictionary<string, JToken> _additionalSettings;
 
         public IDictionary<string, JToken> AdditionalSettings => _additionalSettings;

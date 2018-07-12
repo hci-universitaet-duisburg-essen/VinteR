@@ -50,6 +50,10 @@ namespace VinteR.Adapter.Kinect
 
         public string Name => _config?.Name;
 
+        public int Framedrop => Config?.FramedropRate ?? 1;
+
+        private int _counter = 0;
+
         public string AdapterType => HardwareSystems.Kinect;
 
         private Configuration.Adapter _config;
@@ -145,8 +149,15 @@ namespace VinteR.Adapter.Kinect
         {
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
-                if (frame.Bodies.Count > 0)
-                FrameAvailable(this, frame);
+                if (_counter % Framedrop == 0)
+                {
+                    if (frame.Bodies.Count > 0)
+                    {
+                        FrameAvailable(this, frame);
+                    }
+                }
+
+                _counter++;
             }
         }
 

@@ -11,6 +11,11 @@
             "type": "string",
             "description": "Used to identify the object"
         },
+        "framedroprate": {
+			"type": "integer",
+			"default":  1,
+			"description": "Tell the application which frames to send, e.g. all or every second"
+        },
         "mongodb": {
             "type": "object",
             "properties": {
@@ -30,6 +35,7 @@
             "properties": {
                 "enabled": { "$ref": "#/definitions/enabled" },
                 "name": { "$ref": "#/definitions/name" },
+                "framedroprate": { "$ref": "#/definitions/framedroprate"},
                 "adaptertype": {
                     "type": "string",
                     "enum": [ "leapmotion" ]
@@ -42,6 +48,7 @@
             "properties": {
                 "enabled": { "$ref": "#/definitions/enabled" },
                 "name": { "$ref": "#/definitions/name" },
+                "framedroprate": { "$ref": "#/definitions/framedroprate"},
                 "adaptertype": {
                     "type": "string",
                     "enum": [ "kinect" ]
@@ -63,6 +70,7 @@
                     "type": "string",
                     "enum": [ "optitrack" ]
                 },
+				"framedroprate": { "$ref": "#/definitions/framedroprate"},
                 "server.ip": {
                     "type": "string",
                     "default": "127.0.0.1",
