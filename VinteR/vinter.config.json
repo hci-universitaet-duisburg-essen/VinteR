@@ -1,22 +1,18 @@
-﻿{
+{
     "start.mode": "record",
     "home.dir": "C:\\VinteRData",
     "rest": {
-        "enabled": true,
+    "enabled": true,
         "host": "localhost",
         "port": 8010
     },
     "udp.server.port": 5060,
-  "udp.receivers": [
-    {
-      "ip": "127.0.0.1",
-      "port": 5080
-    },
-    {
-      "ip": "10.23.112.11",
-      "port": 5080
-    }
-  ],
+    "udp.receivers": [
+        {
+            "ip": "127.0.0.1",
+            "port": 5080
+        }
+    ],
     "mongodb": {
         "enabled": true,
         "write": true,
