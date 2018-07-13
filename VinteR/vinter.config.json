@@ -27,7 +27,7 @@
         {
             "enabled": false,
             "name": "kinect",
-			"framedroprate": 1, 
+            "framedroprate": 1, 
             "adaptertype": "kinect",
             "skeleton.TrackingFilter.enabled": true,
             "data.dir": "KinectData",
@@ -47,13 +47,13 @@
             "enabled": false,
             "name": "leapmotion",
             "adaptertype": "leapmotion",
-			"framedroprate": 2
+            "framedroprate": 2
         },
         {
             "enabled": false,
             "name": "optitrack",
             "adaptertype": "optitrack",
-			"framedroprate":  2,
+            "framedroprate":  2,
             "server.ip": "10.23.112.35",
             "client.ip": "10.23.112.25",
             "connection.type": "multicast"
