@@ -2,7 +2,7 @@
     "start.mode": "record",
     "home.dir": "C:\\VinteRData",
     "rest": {
-    "enabled": true,
+        "enabled": true,
         "host": "localhost",
         "port": 8010
     },
