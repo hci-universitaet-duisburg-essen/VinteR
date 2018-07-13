@@ -1,4 +1,4 @@
-﻿{
+{
     "start.mode": "record",
     "home.dir": "C:\\VinteRData",
     "rest": {
@@ -16,12 +16,12 @@
     "mongodb": {
         "enabled": true,
         "write": true,
-        "domain": "ds161710.mlab.com",
+        "domain": "localhost",
         "user": "dbvinter",
         "password": "dbvinter18",
         "database": "vinter",
-        "port": 61710,
-        "bufferSize": 5000
+        "port": 27017,
+        "bufferSize": 35000
     },
     "adapters": [
         {
@@ -44,18 +44,18 @@
             "skeletonStream.flush.dirname": "skeletonStreamData"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "leapmotion",
             "adaptertype": "leapmotion",
             "framedroprate": 2
         },
         {
-            "enabled": false,
+            "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
             "framedroprate":  2,
             "server.ip": "10.23.112.35",
-            "client.ip": "10.23.112.25",
+            "client.ip": "10.23.112.35",
             "connection.type": "multicast"
         }
     ],
