@@ -15,6 +15,10 @@ namespace VinteR.Adapter.OptiTrack
 
         public string Name => Config?.Name;
 
+        public int Framedrop => Config?.FramedropRate ?? 1;
+
+        private int _counter = 0;
+
         private Configuration.Adapter _config;
 
         public string AdapterType => HardwareSystems.OptiTrack;
@@ -62,7 +66,12 @@ namespace VinteR.Adapter.OptiTrack
         {
             if (FrameAvailable != null)
             {
-                FrameAvailable(this, frame);
+                if (_counter % Framedrop == 0)
+                {
+                    FrameAvailable(this, frame);
+                }
+
+                _counter++;
             }
         }
 

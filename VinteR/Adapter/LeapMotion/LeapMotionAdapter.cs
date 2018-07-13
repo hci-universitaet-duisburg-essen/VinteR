@@ -19,6 +19,10 @@ namespace VinteR.Adapter.LeapMotion
 
         public string Name => Config?.Name;
 
+        public int Framedrop => Config?.FramedropRate ?? 1;
+
+        private int _counter = 0;
+
         public string AdapterType => HardwareSystems.LeapMotion;
 
         public Configuration.Adapter Config { get; set; }       
@@ -53,7 +57,12 @@ namespace VinteR.Adapter.LeapMotion
         {
             if (FrameAvailable != null) // Check if there are subscribers to the event
             {
-                FrameAvailable(this, frame);
+                if (_counter % Framedrop == 0)
+                {
+                    FrameAvailable(this, frame);
+                }
+
+                _counter++;
             }
         }
 
