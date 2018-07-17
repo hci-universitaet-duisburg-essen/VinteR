@@ -14,18 +14,24 @@ namespace VinteR.Tests
     [TestFixture]
     public class TestUdpSender
     {
+        private const int UdpServerPort = 6060;
+        private const int UdpClientPort = 6080;
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private UdpSender _udpSender;
 
         [OneTimeSetUp]
         public void OnSetupFixture()
         {
             var ninjectKernel = new StandardKernel(new VinterNinjectTestModule());
+            var config = ninjectKernel.Get<IConfigurationService>();
+            config.GetConfiguration().UdpServerPort = UdpServerPort;
             _udpSender = new UdpSender(ninjectKernel.Get<IConfigurationService>(), ninjectKernel.Get<ISerializer>())
             {
                 UdpReceivers = new List<UdpReceiver>()
                 {
-                    new UdpReceiver() {Port = 5080, Ip = "127.0.0.1"}
+                    new UdpReceiver() {Port = UdpClientPort, Ip = "127.0.0.1"}
                 }
             };
             _udpSender.Start();
@@ -39,8 +45,8 @@ namespace VinteR.Tests
             {
                 Logger.Debug("{0}:{1}", receiver.Ip, receiver.Port);
             }
-            var client = new UdpClient(5080);
-            var serverAddress = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5060);
+            var client = new UdpClient(UdpClientPort);
+            var serverAddress = new IPEndPoint(IPAddress.Parse("127.0.0.1"), UdpServerPort);
 
             _udpSender.Send(new MocapFrame("root", "optitrack")
             {
