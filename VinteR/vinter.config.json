@@ -1,5 +1,5 @@
 {
-    "start.mode": "record",
+    "start.mode": "playback",
     "home.dir": "C:\\VinteRData",
     "rest": {
         "enabled": true,
@@ -27,7 +27,7 @@
         {
             "enabled": false,
             "name": "kinect",
-            "framedroprate": 1, 
+            "framedroprate": 1,
             "adaptertype": "kinect",
             "skeleton.TrackingFilter.enabled": true,
             "data.dir": "KinectData",
@@ -53,7 +53,7 @@
             "enabled": true,
             "name": "optitrack",
             "adaptertype": "optitrack",
-            "framedroprate":  2,
+            "framedroprate": 2,
             "server.ip": "10.23.112.35",
             "client.ip": "10.23.112.35",
             "connection.type": "multicast"
