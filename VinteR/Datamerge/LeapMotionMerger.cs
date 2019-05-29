@@ -52,18 +52,18 @@ namespace VinteR.Datamerge
          */
         private Body Merge(Hand hand, string sourceId)
         {
-            var result = new Body
-            {
-                BodyType = Body.EBodyType.Hand,
-                Side = hand.Side,
-                Centroid = hand.LocalPosition,
-                Rotation = hand.LocalRotation
-            };
             IList<Point> points = new List<Point>();
             var leapMotionPosition = _adapterTracker.Locate(sourceId);
             leapMotionPosition.Rotation = Quaternion.Multiply(leapMotionPosition.Rotation, LeapMotionOptiTrackAdjustment);
             Logger.Debug("Leap motion position: {0}", leapMotionPosition);
 
+            var result = new Body
+            {
+                BodyType = Body.EBodyType.Hand,
+                Side = hand.Side,
+                Centroid = _transformator.GetGlobalPosition(leapMotionPosition, hand.LocalPosition),
+                Rotation = hand.LocalRotation
+            };
             // Convert all joints to points (each position only once!)
             if (hand.Fingers != null)
             {
